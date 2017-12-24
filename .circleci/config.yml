@@ -13,7 +13,7 @@ jobs:
             . venv/bin/activate
             pip install -r requirements/develop.txt
       - save_cache:
-          key: v1-dependency-cache-{{ checksum "setup.py" }}
+          key: deps1-{{ .Branch }}-{{ checksum "requirements/develop.txt" }}
           paths:
             - "venv"
       - run:
