@@ -26,7 +26,7 @@ class API(object):
     @property
     def last_response(self):
         return self.__session.last_response_data
-    
+
     @property
     def last_request(self):
         return self.__session.last_request_data
@@ -35,7 +35,7 @@ class API(object):
 class TimeTableBuilder(object):
     def __init__(self, xml, json):
         # Признак уточнения станции
-        self.is_clarify = json.get('IsClarify', None)
+        self.is_clarify = json.get('UC', None)
         if self.is_clarify is not None:
             # Признак начальной или конечной станции следования
             self.train_point = json.get('TrainPoint', None)
@@ -50,9 +50,8 @@ class TimeTableBuilder(object):
 class StationRoute(object):
     def __init__(self, xml, json):
         # УФС слишком крутые, им не надо описание данного поля. Нам, видимо, тоже...
-        self.additional_info = get_item(json.get('AdditionalInfo'), AdditionalInfoStationRoute)
-        self.route_params = get_item(json.get('RouteParams'), RouteParamsStationRoute)
+        self.additional_info = get_item(json.get('Z1'), AdditionalInfoStationRoute)
+        self.route_params = get_item(json.get('PP'), RouteParamsStationRoute)
 
         self.xml = xml
         self.json = json
-

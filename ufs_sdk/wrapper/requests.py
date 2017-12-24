@@ -1,42 +1,8 @@
 from ufs_sdk.utils import get_ufs_datetime
 
 REQUEST_PARAM_NAMES = {'from_': 'from'}
-RESPONSE_PARAM_NAMES = {
-    # TimeTableClarify
-    'UC': 'IsClarify',
-    'SC': 'Stations',
-    'PD': 'StationRoot',
-    'CC': 'StationCode',
-    'C': 'StationName',
-    # TimeTableNormal
-    'Z2': 'ReferenceParams',
-    'K': 'ReferenceCode',
-    'D': 'ReferenceDate',
-    'PP': 'RouteParams',
-    'N': 'Trains',
-    'C1': 'OriginCode',
-    'C2': 'DestinationCode',
-    'N1': 'Number',
-    'N2': 'ClientNumber',
-    'NP': 'Route',
-    'T1': 'PassengerDepartureDate',
-    'T2': 'OriginParkingTime',
-    'T3': 'TravelTime',
-    'T4': 'PassengerArrivalTime',
-    'T5': 'DestinationParkingTime',
-    'J': 'AdditionalInfo',
-    'DW': 'TrainDaysActivity',
-    'L': 'RouteLength',
-    'NN': 'TrainName',
-    # StationRoute
-    'Z1': 'AdditionalInfo',
-    'S1': 'ReferenceContent',
-    'D1': 'PassengerDepartureTime',
-    'D2': 'DocumentsFormationTime'
-}
-
 # Называть переменные разными именами ? Не, не слышал
-ARRAYS = ['Stations', 'Trains', 'StationName']
+ARRAYS = ['SC', 'N', 'C']
 
 
 class RequestWrapper(object):
@@ -57,24 +23,23 @@ class RequestWrapper(object):
         if s != {}:
             json['TrainPoint'] = s['parameter']
         for item in response.find('./S'):
-            param_name = self.convert_response_param_name(item.tag)
             if len(item.getchildren()) != 0:
                 tag_data = self.get_json_rec(item, {})
             else:
                 tag_data = True if item.text is None else (item.text
-                                                           if param_name not in ['ArrivalTime', 'DepartureTime']
+                                                           if item.tag not in ['ArrivalTime', 'DepartureTime']
                                                            else get_ufs_datetime(item))
 
-            if param_name not in json.keys():
-                if param_name in ARRAYS:
-                    json[param_name] = [tag_data]
+            if item.tag not in json.keys():
+                if item.tag in ARRAYS:
+                    json[item.tag] = [tag_data]
                 else:
-                    json[param_name] = tag_data
+                    json[item.tag] = tag_data
             else:
-                if param_name in ARRAYS:
-                    json[param_name].append(tag_data)
+                if item.tag in ARRAYS:
+                    json[item.tag].append(tag_data)
                 else:
-                    json[param_name] = tag_data
+                    json[item.tag] = tag_data
         print(json)
         return response.find('./S'), json
 
@@ -88,35 +53,34 @@ class RequestWrapper(object):
     # Уходим в рекурсивное преобразование тегов в json
     def get_json_rec(self, xml, json):
         for item in xml:
-            param_name = self.convert_response_param_name(item.tag)
             if len(item.getchildren()) == 0:
                 if len(item.getchildren()) != 0:
                     tag_data = self.get_json_rec(item, {})
                 else:
                     tag_data = True if item.text is None else (item.text
-                                                               if param_name not in ['ArrivalTime', 'DepartureTime']
+                                                               if item.tag not in ['ArrivalTime', 'DepartureTime']
                                                                else get_ufs_datetime(item))
-                if param_name not in json.keys():
-                    if param_name in ARRAYS:
-                        json[param_name] = [tag_data]
+                if item.tag not in json.keys():
+                    if item.tag in ARRAYS:
+                        json[item.tag] = [tag_data]
                     else:
-                        json[param_name] = tag_data
+                        json[item.tag] = tag_data
                 else:
-                    if param_name in ARRAYS:
-                        json[param_name].append(tag_data)
+                    if item.tag in ARRAYS:
+                        json[item.tag].append(tag_data)
                     else:
-                        json[param_name] = tag_data
+                        json[item.tag] = tag_data
             else:
-                if param_name not in json.keys():
-                    if param_name in ARRAYS:
-                        json[param_name] = [self.get_json_rec(item, {})]
+                if item.tag not in json.keys():
+                    if item.tag in ARRAYS:
+                        json[item.tag] = [self.get_json_rec(item, {})]
                     else:
-                        json[param_name] = self.get_json_rec(item, {})
+                        json[item.tag] = self.get_json_rec(item, {})
                 else:
-                    if param_name in ARRAYS:
-                        json[param_name].append(self.get_json_rec(item, {}))
+                    if item.tag in ARRAYS:
+                        json[item.tag].append(self.get_json_rec(item, {}))
                     else:
-                        json[param_name] = self.get_json_rec(item, {})
+                        json[item.tag] = self.get_json_rec(item, {})
         return json
 
     # Строим get строку запроса
@@ -135,12 +99,4 @@ class RequestWrapper(object):
     def convert_request_param_name(param):
         if param in REQUEST_PARAM_NAMES.keys():
             return REQUEST_PARAM_NAMES[param]
-        return param
-
-    # УФСМАТЬВАШУ не умею давать имена
-    # Так что меняем весь их бред на адекватные названия
-    @staticmethod
-    def convert_response_param_name(param):
-        if param in RESPONSE_PARAM_NAMES.keys():
-            return RESPONSE_PARAM_NAMES[param]
         return param
