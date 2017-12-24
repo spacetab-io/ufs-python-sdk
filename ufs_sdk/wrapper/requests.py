@@ -27,7 +27,12 @@ RESPONSE_PARAM_NAMES = {
     'J': 'AdditionalInfo',
     'DW': 'TrainDaysActivity',
     'L': 'RouteLength',
-    'NN': 'TrainName'
+    'NN': 'TrainName',
+    # StationRoute
+    'Z1': 'AdditionalInfo',
+    'S1': 'ReferenceContent',
+    'D1': 'PassengerDepartureTime',
+    'D2': 'DocumentsFormationTime'
 }
 
 # Называть переменные разными именами ? Не, не слышал
@@ -69,7 +74,7 @@ class RequestWrapper(object):
                 if param_name in ARRAYS:
                     json[param_name].append(tag_data)
                 else:
-                    json[param_name] = [json[param_name]]
+                    json[param_name] = tag_data
         print(json)
         return response.find('./S'), json
 
@@ -100,9 +105,18 @@ class RequestWrapper(object):
                     if param_name in ARRAYS:
                         json[param_name].append(tag_data)
                     else:
-                        json[param_name] = [json[param_name]]
+                        json[param_name] = tag_data
             else:
-                json[param_name] = self.get_json_rec(item, {})
+                if param_name not in json.keys():
+                    if param_name in ARRAYS:
+                        json[param_name] = [self.get_json_rec(item, {})]
+                    else:
+                        json[param_name] = self.get_json_rec(item, {})
+                else:
+                    if param_name in ARRAYS:
+                        json[param_name].append(self.get_json_rec(item, {}))
+                    else:
+                        json[param_name] = self.get_json_rec(item, {})
         return json
 
     # Строим get строку запроса
@@ -110,7 +124,8 @@ class RequestWrapper(object):
         get_params = ''
         for key in params.keys():
             get_params += '&%s=%s' % (self.convert_request_param_name(key),
-                                      params[key].encode('cp1251') if type(params[key]) is str else params[key])
+                                      params[key].encode('cp1251') if type(params[key]) is str else
+                                      (int(params[key]) if type(params[key]) is bool else params[key]))
         return get_params
 
     # Получаем имя запроса

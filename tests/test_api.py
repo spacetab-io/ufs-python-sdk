@@ -91,3 +91,22 @@ class TestAPI(unittest.TestCase):
         self.assertEquals(time_table.data.trains[0].arrival_time.date, self.datetime)
         self.assertEquals(time_table.data.trains[0].arrival_time.time_offset, '+03:00')
         self.assertEquals(time_table.data.trains[0].arrival_time.time_type, 0)
+
+    def test_station_route(self):
+        station_route = self.api.station_route(4043, 5, 8, True, True)
+
+        self.assertEquals(station_route.additional_info.reference_content, 'СРАНЫЙУФС')
+        self.assertEquals(station_route.additional_info.station_name, 'МОСКВА-ПАССАЖИРСКАЯ-ПАВЕЛЕЦКАЯ')
+        self.assertEquals(station_route.additional_info.passenger_departure_time, '05.08')
+        self.assertEquals(station_route.additional_info.documents_formation_time, '04.08')
+
+        self.assertEquals(station_route.route_params.trains[0].number, '967363')
+        self.assertEquals(station_route.route_params.trains[0].client_number, '7271')
+        self.assertEquals(station_route.route_params.trains[0].route.origin, 'МОСКВА-ПАССАЖИРСКАЯ-ПАВЕЛЕЦКАЯ')
+        self.assertEquals(station_route.route_params.trains[0].route.destination, 'АЭРОПОРТ-ДОМОДЕДОВО')
+        self.assertEquals(station_route.route_params.trains[0].route.origin_code, 4043)
+        self.assertEquals(station_route.route_params.trains[0].route.destination_code, 4036)
+        self.assertEquals(station_route.route_params.trains[0].passenger_departure_date, '00:01:00')
+        self.assertEquals(station_route.route_params.trains[0].travel_time, '00:01:00')
+        self.assertEquals(station_route.route_params.trains[0].passenger_arrival_time, '00:01:00')
+        self.assertEquals(station_route.route_params.trains[0].train_days_activity, 'ежедн.')

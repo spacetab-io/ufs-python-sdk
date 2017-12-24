@@ -119,3 +119,40 @@ class TimeTable(object):
         # Информация о поезде
         self.trains = get_array(json.get('Trains'), TrainsTimeTable)
 
+
+class AdditionalInfoStationRoute(object):
+    def __init__(self, json):
+        # Описание содержимого справки
+        self.reference_content = json.get('ReferenceContent')
+        # Наименование или код станции отправления пассажира
+        self.station_name = json.get('StationName')[0]
+        # Дата отправления пассажира
+        self.passenger_departure_time = json.get('PassengerDepartureTime')
+        # Дата формирования справки
+        self.documents_formation_time = json.get('DocumentsFormationTime')
+
+
+class TrainsStationRoute(object):
+    def __init__(self, json):
+        # Номер поезда
+        self.number = json.get('Number')
+        # Номер поезда, отображаемый пассажиру. Данный номер поезда печатается в контрольном купоне
+        self.client_number = json.get('ClientNumber')
+        # Маршрут поезда
+        self.route = get_item(json.get('Route'), RouteTimeTable)
+        # Время отправления со станции отправления пассажира
+        self.passenger_departure_date = json.get('PassengerDepartureDate')
+        # Время в пути от станции отправления до станции прибытия пассажира
+        self.travel_time = json.get('TravelTime')
+        # Время прибытия на станцию прибытия пассажира
+        self.passenger_arrival_time = json.get('PassengerArrivalTime')
+        # Дни следования поезда
+        self.train_days_activity = json.get('TrainDaysActivity')
+
+
+class RouteParamsStationRoute(object):
+    def __init__(self, json):
+        # Информация о поезде
+        self.trains = get_array(json.get('Trains'), TrainsStationRoute)
+
+
