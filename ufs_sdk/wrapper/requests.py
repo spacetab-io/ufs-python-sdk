@@ -2,7 +2,7 @@ from ufs_sdk.utils import get_ufs_datetime
 
 REQUEST_PARAM_NAMES = {'from_': 'from'}
 # Называть переменные разными именами ? Не, не слышал
-ARRAYS = ['SC', 'N', 'C']
+ARRAYS = ['SC', 'N', 'C', 'CK']
 
 
 class RequestWrapper(object):
@@ -19,16 +19,11 @@ class RequestWrapper(object):
     # Для этого использую слой конвертации в json, где исправляются имена и их чудеса с массивами
     def get_json_xml(self, response):
         json = {}
-        s = self.get_child_by_name(response, 'S').attrib
-        if s != {}:
-            json['TrainPoint'] = s['parameter']
-        for item in response.find('./S'):
+        for item in response:
             if len(item.getchildren()) != 0:
                 tag_data = self.get_json_rec(item, {})
             else:
-                tag_data = True if item.text is None else (item.text
-                                                           if item.tag not in ['ArrivalTime', 'DepartureTime']
-                                                           else get_ufs_datetime(item))
+                tag_data = self.get_item(item)
 
             if item.tag not in json.keys():
                 if item.tag in ARRAYS:
@@ -40,15 +35,19 @@ class RequestWrapper(object):
                     json[item.tag].append(tag_data)
                 else:
                     json[item.tag] = tag_data
-        print(json)
-        return response.find('./S'), json
 
-    # Получаю тег по имени
-    @staticmethod
-    def get_child_by_name(xml, child_name):
-        for item in xml:
-            if item.tag == child_name:
-                return item
+            if type(json[item.tag]) is dict and item.attrib != {}:
+                for key in item.attrib.keys():
+                    json[item.tag][key] = item.attrib[key]
+            if type(json[item.tag]) is list and item.attrib != {}:
+                for key in item.attrib.keys():
+                    json[item.tag][-1][key] = item.attrib[key]
+            if type(json[item.tag]) is bool and item.attrib != {}:
+                json[item.tag] = {}
+                for key in item.attrib.keys():
+                    json[item.tag][key] = item.attrib[key]
+
+        return response, json
 
     # Уходим в рекурсивное преобразование тегов в json
     def get_json_rec(self, xml, json):
@@ -57,9 +56,7 @@ class RequestWrapper(object):
                 if len(item.getchildren()) != 0:
                     tag_data = self.get_json_rec(item, {})
                 else:
-                    tag_data = True if item.text is None else (item.text
-                                                               if item.tag not in ['ArrivalTime', 'DepartureTime']
-                                                               else get_ufs_datetime(item))
+                    tag_data = self.get_item(item)
                 if item.tag not in json.keys():
                     if item.tag in ARRAYS:
                         json[item.tag] = [tag_data]
@@ -81,15 +78,46 @@ class RequestWrapper(object):
                         json[item.tag].append(self.get_json_rec(item, {}))
                     else:
                         json[item.tag] = self.get_json_rec(item, {})
+
+            if type(json[item.tag]) is dict and item.attrib != {}:
+                for key in item.attrib.keys():
+                    json[item.tag][key] = item.attrib[key]
+            if type(json[item.tag]) is list and item.attrib != {}:
+                for key in item.attrib.keys():
+                    json[item.tag][-1][key] = item.attrib[key]
+            if type(json[item.tag]) is bool and item.attrib != {}:
+                json[item.tag] = {}
+                for key in item.attrib.keys():
+                    json[item.tag][key] = item.attrib[key]
         return json
+
+    @staticmethod
+    def get_item(item):
+        if item.text is None:
+            return True
+        if item.tag in ['ArrivalTime', 'DepartureTime']:
+            return get_ufs_datetime(item)
+        if item.tag in ['C']:
+            tag_data = item.text
+            if '[ ' in tag_data:
+                tag_data = tag_data.replace('[ ')
+            elif ' ]' in tag_data:
+                tag_data = tag_data.replace(' ]')
+            if '[' in tag_data:
+                tag_data = tag_data.replace('[')
+            elif ']' in tag_data:
+                tag_data = tag_data.replace(']')
+            return tag_data
+        return item.text
 
     # Строим get строку запроса
     def get_params(self, params):
         get_params = ''
         for key in params.keys():
-            get_params += '&%s=%s' % (self.convert_request_param_name(key),
-                                      params[key].encode('cp1251') if type(params[key]) is str else
-                                      (int(params[key]) if type(params[key]) is bool else params[key]))
+            if params[key] is not None:
+                get_params += '&%s=%s' % (self.convert_request_param_name(key),
+                                          params[key].encode('cp1251') if type(params[key]) is str else
+                                          (int(params[key]) if type(params[key]) is bool else params[key]))
         return get_params
 
     # Получаем имя запроса

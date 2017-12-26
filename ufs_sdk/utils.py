@@ -13,6 +13,12 @@ def get_item(item, item_class):
     return None
 
 
+def get_bool_item(item):
+    if item is not None:
+        return bool(item)
+    return item
+
+
 def get_datetime(item):
     if item is not None:
         return datetime.strptime(item, '%Y-%m-%dT%X')

@@ -1,0 +1,33 @@
+<UFS_RZhD_Gate>
+ <Status>1</Status>
+ <Error></Error>
+ <Code>14</Code>
+ <DescrId>5061</DescrId>
+ <Descr>Прямого сообщения между указанными станциями не существует</Descr>
+ <EventId>bf8fde2a-c728-4088-a830-0b9a9da1533b</EventId>
+ <AdditionalInfo>
+  <IsAllowedMultiStationSearch>True</IsAllowedMultiStationSearch>
+  <Stations>
+   <Station>
+    <Code>2064788</Code>
+    <Name>КРАСНОДАР</Name>
+    <OptionCount>1</OptionCount>
+    <MinTripTime>1.08:14:00</MinTripTime>
+    <MaxTripTime>1.20:08:00</MaxTripTime>
+    <MinArrivalWaitTime>0.00:42:00</MinArrivalWaitTime>
+    <MaxArrivalWaitTime>0.20:43:00</MaxArrivalWaitTime>
+    <IsMultiStation>true</IsMultiStation>
+   </Station>
+   <Station>
+    <Code>2064188</Code>
+    <Name>АНАПА</Name>
+    <OptionCount>1</OptionCount>
+    <MinTripTime>1.08:14:00</MinTripTime>
+    <MaxTripTime>1.20:08:00</MaxTripTime>
+    <MinArrivalWaitTime>0.00:42:00</MinArrivalWaitTime>
+    <MaxArrivalWaitTime>0.20:43:00</MaxArrivalWaitTime>
+    <IsMultiStation>false</IsMultiStation>
+   </Station>
+  </Stations>
+ </AdditionalInfo>
+</UFS_RZhD_Gate>

@@ -2,7 +2,7 @@ import json
 import requests
 from xml.etree import ElementTree
 from requests.auth import HTTPBasicAuth
-from .exceptions import UfsAPIError
+from .exceptions import UfsAPIError, UfsTrainListError
 
 
 class Session(object):
@@ -24,9 +24,10 @@ class Session(object):
     def make_api_request(self, method, params, get):
         response = self.__send_api_request(method, params, get)
         response = ElementTree.fromstring(response.text)
-        for item in response:
-            if item.tag == 'Error':
-                raise UfsAPIError(method, response, params)
+        if 'AdditionalInfo' in [item.tag for item in response]:
+            raise UfsTrainListError(method, response)
+        if 'Error' in [item.tag for item in response]:
+            raise UfsAPIError(method, response)
 
         self.last_response_data = response
 
