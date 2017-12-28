@@ -46,7 +46,7 @@ class RequestWrapper(object):
                 json[item.tag] = {}
                 for key in item.attrib.keys():
                     json[item.tag][key] = item.attrib[key]
-
+        print(json)
         return response, json
 
     # Уходим в рекурсивное преобразование тегов в json

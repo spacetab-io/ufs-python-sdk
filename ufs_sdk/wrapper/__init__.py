@@ -186,7 +186,7 @@ class AdditionalInfoTrainList(object):
         self.xml = xml
 
 
-class GeneralInformationTrainList(object):
+class GeneralInformation(object):
     def __init__(self, json):
         # Код справки в системе «Экспресс-3»
         self.reference_code = get_item(json.get('K'), int)
@@ -353,9 +353,215 @@ class TrainTrainList(object):
 class TrainList(object):
     def __init__(self, json):
         # Общая информация по запросу
-        self.general_information = get_item(json.get('Z3'), GeneralInformationTrainList)
+        self.general_information = get_item(json.get('Z3'), GeneralInformation)
         # Информация о поезде
         self.trains = get_array(json.get('N'), TrainTrainList)
         # Признак неполной (урезанной по времени) справки. Его наличие означает, что показаны не все поезда.
         # Чтобы просмотреть все, необходимо указать более узкий диапазон времени отправления или прибытия
         self.is_full_reference = get_bool_item(json.get('U', False))
+
+
+class RouteCarListEx(object):
+    def __init__(self, json):
+        # Станции отправления
+        self.origin = json.get('C')[0]
+        # Станции прибытия
+        self.destination = json.get('C')[1]
+
+
+class PlacesCarListEx(object):
+    def __init__(self, json):
+        self.amount = json.get('Amount')
+        self.places = json.get('Places')
+
+
+class CarInfoCarListEx(object):
+    def __init__(self, json):
+        # Признак того, что на поезд возможна электронная регистрация.
+        # Если в ответе тег ER отображается, то на поезд возможна ЭР
+        self.is_electronic_registration = get_bool_item(json.get('ER'))
+        # Номер вагона
+        self.car_num = get_item(json.get('VH'), int)
+        # Количество свободных мест без определения верхних и нижних
+        self.free_places = get_item(json.get('M4'), int)
+        # Количество нижних купейных мест
+        self.kupe_down_free_places = get_item(json.get('M5'), int)
+        # Количество верхних купейных мест
+        self.kupe_up_free_places = get_item(json.get('M6'), int)
+        # Количество нижних боковых мест
+        self.kupe_down_side_free_places = get_item(json.get('M7'), int)
+        # Количество верхних боковых мест
+        self.kupe_up_side_free_places = get_item(json.get('M8'), int)
+        # Мужские места
+        self.man_places = get_item(json.get('X1'), int)
+        # Женские места
+        self.women_places = get_item(json.get('X2'), int)
+        # Целые купе
+        self.whole_kupe = get_item(json.get('X3'), int)
+        # Смешанные купе
+        self.mixed_kupe = get_item(json.get('X4'), int)
+        # Количество целых купе
+        self.count_whole_kupe = get_item(json.get('KU'), int)
+        # Выбор постельного белья Если данный тег вернулся, то есть возможность выбрать/отказаться от белья.
+        # Если данного тега нет, то нет возможности выбора бель
+        self.linens = get_item(json.get('BL'), int)
+        # Номера свободных мест (через запятую). К номеру места может быть добавлен символ для гендерных вагонов
+        self.free_places_list = json.get('H').split(', ') if json.get('H') is not None else None
+        # Категория вагона
+        self.car_category = json.get('KV')
+        # Признак двухэтажного вагона
+        self.is_two_storey = get_bool_item(json.get('TwoStorey'))
+        # Описание типа маршрута Может принимать значение БП - беспересадочный вагон. Данный вагон может выйти в составе одного поезда, а приехать в пункт назначения в составе другого поезда
+        self.route_type = json.get('AA')
+        # Номера свободных мест у стола.
+        self.table_free_places = json.get('MP')
+        # Номера свободных мест рядом с детской площадкой
+        self.playground_free_places = json.get('MV')
+        # Номера свободных мест у стола рядом с детской площадкой
+        self.table_playground_free_places = json.get('MB')
+        # Номера свободных мест рядом с местами для пассажиров с животными.
+        self.animals_free_places = json.get('MD')
+        # Номера свободных обычных мест (не у стола)
+        self.default_free_places = json.get('MN')
+        # Признак выбора РП.
+        self.is_rp_selected = get_bool_item(json.get('PIT'))
+        # Дата прибытия вагона в формате «ДД.ММ». Тег является обязательным для беспересадочного вагона
+        self.car_arrival_time = json.get('D1')
+        # Время прибытия вагона на станцию прибытия пассажира Тег является обязательным для беспересадочного вагона
+        self.car_passenger_arrival_time = json.get('T4')
+        # Номера мест в отсеке
+        self.place_numbers = json.get('MCP')
+        # Номера откидных мест
+        self.folding_place_numbers = json.get('MFP')
+        # Номера мест для пассажиров с животными.
+        self.animals_place_numbers = json.get('MPP')
+        # Номера мест для матери и ребенка
+        self.mother_place_numbers = json.get('MMB')
+        # Номера мест для пассажиров с детьми
+        self.children_place_numbers = json.get('MPC')
+        # Признак плавающего поезда (переправа по средствам парома)
+        self.is_floating = get_bool_item(json.get('PLP'))
+        # Код типа мест
+        self.place_type_number = json.get('HK')
+        # Подтип вагона
+        self.subtype = json.get('PT')
+        # Верхние купейные места
+        self.up_place = get_item(json.get('UpPlace'), PlacesCarListEx)
+        # Нижние купейные места
+        self.down_place = get_item(json.get('DownPlace'), PlacesCarListEx)
+        # Нижние боковые места
+        self.down_side_place = get_item(json.get('DownSidePlace'), PlacesCarListEx)
+        # Верхние боковые места
+        self.up_side_place = get_item(json.get('UpSidePlace'), PlacesCarListEx)
+        # Нижние купейние места у туалета (места 33, 35)
+        self.down_near_wc_place = get_item(json.get('DownNearWcPlace'), PlacesCarListEx)
+        # Верхние купейние места у туалета (места 34, 36)
+        self.up_near_wc_place = get_item(json.get('UpNearWcPlace'), PlacesCarListEx)
+        # Нижнее боковое место у туалета (место 37)
+        self.down_side_near_wc_place = get_item(json.get('DownSideNearWcPlace'), PlacesCarListEx)
+        # Верхнее боковое место у туалета (место 38)
+        self.up_side_near_wc_place = get_item(json.get('UpSideNearWcPlace'), PlacesCarListEx)
+
+
+class CarCarListEx(object):
+    def __init__(self, json):
+        # Категория вагона
+        self.category = json.get('KV')
+        # Категория вагона для отображения пассажиру
+        self.car_category = json.get('KV1')
+        # Информация о вагоне. Записывается в виде «X/Y», где X- класс обслуживания вагона, У – количество мест в купе
+        # Является обязательным для международного направления DirectionGroup = 1 и DirectionGroup =2
+        self.car_gen_info = json.get('MKL')
+        # Класс обслуживания вагона
+        self.service_class = json.get('CO')
+        # Список услуг
+        self.services = json.get('CO_SRV').split(',') if json.get('CO_SRV') is not None else None
+        # Список услуг
+        self.services_info = json.get('CO_DESC').split(',') if json.get('CO_DESC') is not None else None
+        # Государство/дорога принадлежности вагона
+        self.country_way = json.get('W2')
+        # Владелец вагона
+        self.car_owner = json.get('VB')
+        # Признак категории вагона
+        self.car_category_belonging = json.get('R')
+        # Стоимость билета. Разделитель точка. Один знак после разделителя
+        self.ticket_price = get_item(json.get('TF'), float)
+        # Минимальная стоимость сервиса. Разделитель точка. Один знак после разделителя
+        self.min_ticket_price = get_item(json.get('TF1'), float)
+        # Стоимость максимальная. Разделитель точка. Один знак после разделителя
+        self.max_service_price = get_item(json.get('TF2'), float)
+        # Стоимость сервиса. Разделитель точка. Один знак после разделителя
+        self.service_price = get_item(json.get('TF3'), float)
+        # Признак участия поезда в программе «Динамическое ценообразование»
+        self.is_dynamic_price = get_bool_item(json.get('UD'))
+        # Признак стоимости за два места
+        self.is_two_place = get_bool_item(json.get('DM'))
+        # Признак стоимости за 4 места
+        self.is_four_place = get_bool_item(json.get('QM'))
+        # Информация о вагоне (Таблица 53)
+        self.car_info = get_item(json.get('CV'), CarInfoCarListEx)
+        # Признак того, что на данную категорию вагонов снижена стоимость билетов
+        self.is_discount = get_bool_item(json.get('Discount'))
+        # Возможность трехчасового бронирования
+        self.is_reservation = get_bool_item(json.get('Reservation'))
+        # Список действующих тарифов для данного вагона.
+        # Тег обязателен для DirectionGroup=0,2
+        self.available_tariffs = [int(item) for item in json.get('AvailableTariffs').split(';')] \
+                                    if json.get('AvailableTariffs') is not None else None
+        # Возможность применения карт лояльности при оформлении билетов в данный вагон.
+        self.is_loyalty_cards = get_bool_item(json.get('LoyaltyCards'))
+        # Признак «выкуп купе целиком».
+        # Если в ответе тег FullKupe отображается, то в данном вагоне возможен выкуп всего купе целиком.
+        self.is_full_kupe = get_bool_item(json.get('FullKupe'))
+
+
+class TrainCarListEx(object):
+    def __init__(self, json):
+        # Номер поезда
+        self.number = json.get('N1')
+        # Номер поезда, отображаемый пассажиру. Данный номер поезда печатается в контрольном купоне
+        self.client_number = json.get('N2')
+        # Категория поезда
+        self.category = json.get('KN')
+        # Наименование фирменного поезда
+        self.train_name = json.get('NN')
+        # Маршрут поезда
+        self.route = get_item(json.get('NP'), RouteCarListEx)
+        # Дата отправления пассажира в формате «ДД.ММ»
+        self.passenger_departure_time = json.get('D')
+        # Дата прибытия поезда в формате «ДД.ММ»
+        self.passenger_arrival_time = json.get('D1')
+        # Время отправления со станции отправления пассажира
+        self.passenger_departure_date = json.get('T1')
+        # Время стоянки на станции отправления пассажира. Элемент не обязательный в случае, если станция отправления является начальной станцией
+        self.origin_parking_time = json.get('T2')
+        # Время в пути от станции отправления до станции прибытия пассажира
+        self.travel_time = json.get('T3')
+        # Время прибытия на станцию прибытия пассажира
+        self.passenger_arrival_date = json.get('T4')
+        # Время стоянки на станции прибытия пассажира
+        self.destination_parking_time = json.get('T5')
+        # Признак того, что на поезд возможна электронная регистрация. Если в ответе тег ER отображается, то на поезд возможна ЭР
+        self.is_electronic_registration = get_bool_item(json.get('ER'))
+        # Дата отправления поезда с начальной станции в формате «ДД.ММ»
+        self.origin_departure_time = json.get('DZ')
+        # Протяженность маршрута, км
+        self.route_length = get_item(json.get('LL'), int)
+        # Информация о вагонах определенной категории
+        self.cars = get_array(json.get('CK'), CarCarListEx)
+        # Уведомление пассажира об особых условиях поездки
+        self.special_conditions = get_item(json.get('GA'), SpecialConditions)
+        # Бренд поезда
+        self.brand = json.get('BRN')
+        # Признак пригородного поезда
+        self.is_suburban_train = get_bool_item(json.get('IsSuburbanTrain'))
+        # Время и дата отправления поезда
+        self.departure_time = get_item(json.get('DepartureTime'), DateTime)
+        # Время и дата прибытия поезда
+        self.arrival_time = get_item(json.get('ArrivalTime'), DateTime)
+        # Информация о вокзале отправления и прибытия пассажира
+        self.passenger_railway_station = get_item(json.get('VOK'), PassengerRailwayStation)
+        # Информация о вокзале отправления пассажира
+        self.passenger_departure_station = get_item(json.get('PassengerDepartureStation'), PassengerStation)
+        # Информация о вокзале прибытия пассажира
+        self.passenger_arrival_station = get_item(json.get('PassengerArrivalStation'), PassengerStation)

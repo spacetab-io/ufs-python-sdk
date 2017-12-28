@@ -16,7 +16,7 @@ def get_item(item, item_class):
 def get_bool_item(item):
     if item is not None:
         return bool(item)
-    return item
+    return False
 
 
 def get_datetime(item):

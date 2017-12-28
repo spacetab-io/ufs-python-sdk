@@ -1,8 +1,10 @@
 from .utils import get_item
 from .session import Session
+from .utils import get_array
 from .wrapper.requests import RequestWrapper
 from .wrapper.types import TimeSw, Lang, TrainWithSeat, GrouppingType, JoinTrains, SearchOption
-from .wrapper import Clarify, TimeTable, AdditionalInfoStationRoute, RouteParamsStationRoute, TrainList
+from .wrapper import (Clarify, TimeTable, AdditionalInfoStationRoute, RouteParamsStationRoute, TrainList,
+                      GeneralInformation, TrainCarListEx)
 
 
 class API(object):
@@ -10,8 +12,8 @@ class API(object):
         self.__session = Session(username, password, terminal)
         self.__request_wrapper = RequestWrapper(self.__session)
 
-    def time_table(self, from_: 'str or int', to, day: int, month: int, time_sw: TimeSw=TimeSw.NO_SW, time_from: int=None,
-                   time_to: int=None, suburban: bool=None):
+    def time_table(self, from_: 'str or int', to: 'str or int', day: int, month: int, time_sw: TimeSw=TimeSw.NO_SW,
+                   time_from: int=None, time_to: int=None, suburban: bool=None):
         xml, json = self.__request_wrapper.make_request('TimeTable', from_=from_, to=to, day=day, month=month,
                                                         time_sw=time_sw, time_from=time_from, time_to=time_to,
                                                         suburban=suburban)
@@ -23,8 +25,8 @@ class API(object):
                                                         suburban=suburban)
         return StationRoute(xml, json['S'])
 
-    def train_list(self, from_: 'str or int', to, day: int, month: int, advert_domain: str=None, lang: str=Lang.RU,
-                   time_sw: TimeSw=TimeSw.NO_SW, time_from: int=None, time_to: int=None,
+    def train_list(self, from_: 'str or int', to: 'str or int', day: int, month: int, advert_domain: str=None,
+                   lang: str=Lang.RU, time_sw: TimeSw=TimeSw.NO_SW, time_from: int=None, time_to: int=None,
                    train_with_seat: TrainWithSeat=None, join_train_complex: bool=None, groupping_type: GrouppingType=None,
                    join_trains: JoinTrains=None, search_option: SearchOption=None):
         xml, json = self.__request_wrapper.make_request('TrainList', from_=from_, to=to, day=day, month=month,
@@ -33,6 +35,14 @@ class API(object):
                                                         join_train_complex=join_train_complex, groupping_type=groupping_type,
                                                         join_trains=join_trains, search_option=search_option)
         return TrailListBuilder(xml, json)
+
+    def car_list_ex(self, from_: 'str or int', to: 'str or int', day: int, month: int, train: 'str or int',
+                    time: str=None, lang: Lang=Lang.RU, type_car=None, advert_domain: str=None,
+                    groupping_type: GrouppingType=None):
+        xml, json = self.__request_wrapper.make_request('CarListEx', from_=from_, to=to, day=day, month=month,
+                                                        train=train, time=time, lang=lang, type_car=type_car,
+                                                        advert_domain=advert_domain, groupping_type=groupping_type)
+        return CarListEx(xml, json['S'])
 
     @property
     def last_response(self):
@@ -84,3 +94,10 @@ class TrailListBuilder(object):
         self.xml = xml
         self.json = json
 
+
+class CarListEx(object):
+    def __init__(self, xml, json):
+        # Общая информация по запросу
+        self.general_information = get_item(json.get('Z3'), GeneralInformation)
+        # Информация о поезде
+        self.trains = get_array(json.get('N'), TrainCarListEx)
