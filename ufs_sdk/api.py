@@ -1,6 +1,6 @@
 from .utils import get_item
 from .session import Session
-from .utils import get_array
+from .utils import get_array, get_bool_item
 from .wrapper.requests import RequestWrapper
 from .wrapper.types import TimeSw, Lang, TrainWithSeat, GrouppingType, JoinTrains, SearchOption
 from .wrapper import (Clarify, TimeTable, AdditionalInfoStationRoute, RouteParamsStationRoute, TrainList,
@@ -56,8 +56,8 @@ class API(object):
 class TimeTableBuilder(object):
     def __init__(self, xml, json):
         # Признак уточнения станции
-        self.is_clarify = json.get('UC', None)
-        if self.is_clarify is not None:
+        self.is_clarify = get_bool_item(json.get('UC', None))
+        if self.is_clarify:
             # Признак начальной или конечной станции следования
             self.train_point = json.get('parameter', None)
             self.data = Clarify(json)
@@ -81,15 +81,15 @@ class StationRoute(object):
 class TrailListBuilder(object):
     def __init__(self, xml, json):
         # Признак уточнения станции
-        self.is_clarify = json['S'].get('UC', None)
-        if self.is_clarify is not None:
+        self.is_clarify = get_bool_item(json['S'].get('UC', None))
+        if self.is_clarify:
             # Признак начальной или конечной станции следования
             self.train_point = json['S'].get('parameter', None)
             self.data = Clarify(json['S'])
         else:
             self.data = TrainList(json['S'])
             self.balance = get_item(json.get('Balance'), float)
-            self.balance_imit = get_item(json.get('BalanceLimit'), float)
+            self.balance_limit = get_item(json.get('BalanceLimit'), float)
 
         self.xml = xml
         self.json = json

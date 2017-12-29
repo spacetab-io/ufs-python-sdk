@@ -38,6 +38,11 @@ def set_datetime(item):
 
 
 def get_ufs_datetime(xml):
-    return {'Date': datetime.strptime(xml.text, '%d.%m.%Y %X'),
-            'TimeOffset': xml.attrib.get('timeOffset', None),
-            'TimeType': xml.attrib.get('timeType', None)}
+    try:
+        return {'Date': datetime.strptime(xml.text, '%d.%m.%Y %X'),
+                'TimeOffset': xml.attrib.get('timeOffset', None),
+                'TimeType': xml.attrib.get('timeType', None)}
+    except:
+        return {'Date': xml.text,
+                'TimeOffset': xml.attrib.get('timeOffset', None),
+                'TimeType': xml.attrib.get('timeType', None)}

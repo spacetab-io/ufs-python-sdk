@@ -1,4 +1,3 @@
-import json
 import requests
 from xml.etree import ElementTree
 from requests.auth import HTTPBasicAuth

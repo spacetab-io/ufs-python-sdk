@@ -47,7 +47,7 @@
     <NN>Лев Толстой</NN>
     <N2>00031</N2>
     <DepartureTime timeOffset="+02:00" timeType="1">01.01.1970 03:00:00</DepartureTime>
-    <ArrivalTime timeOffset="+03:00" timeType="0">01.01.1970 03:00:00</ArrivalTime>
+   <ArrivalTime timeType="0">03:00:00</ArrivalTime>
     <CK train="00031#031А">
      <KV>ЛЮКС</KV>
      <CO_SRV>COND,BED</CO_SRV>

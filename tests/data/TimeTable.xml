@@ -41,7 +41,7 @@
    <L>0650</L>
    <NN>Сапсан</NN>
    <DepartureTime timeOffset="+03:00" timeType="0">01.01.1970 03:00:00</DepartureTime>
-   <ArrivalTime timeOffset="+03:00" timeType="0">01.01.1970 03:00:00</ArrivalTime>
+   <ArrivalTime timeType="0">03:00:00</ArrivalTime>
   </N>
  </S>
 </UFS_RZhD_Gate>

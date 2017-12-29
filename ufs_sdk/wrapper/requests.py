@@ -46,7 +46,6 @@ class RequestWrapper(object):
                 json[item.tag] = {}
                 for key in item.attrib.keys():
                     json[item.tag][key] = item.attrib[key]
-        print(json)
         return response, json
 
     # Уходим в рекурсивное преобразование тегов в json
@@ -116,8 +115,9 @@ class RequestWrapper(object):
         for key in params.keys():
             if params[key] is not None:
                 get_params += '&%s=%s' % (self.convert_request_param_name(key),
-                                          params[key].encode('cp1251') if type(params[key]) is str else
+                                          params[key] if type(params[key]) is str else
                                           (int(params[key]) if type(params[key]) is bool else params[key]))
+
         return get_params
 
     # Получаем имя запроса

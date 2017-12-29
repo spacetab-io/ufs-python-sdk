@@ -20,14 +20,14 @@ class MockSession(object):
                     Во втором - инфу по конкретной станции
                 """
         if 'TimeTable' in url:
-            if str('МОСКВА'.encode('cp1251')) in url:
+            if str('МОСКВА') in url:
                 url = 'TimeTableClarify'
             else:
                 url = 'TimeTable'
         elif 'Train' in url:
-            if str('АГАПОВКА'.encode('cp1251')) in url:
+            if str('АГАПОВКА') in url:
                 url = 'TrainListClarify'
-            elif str('КРЫМ'.encode('cp1251')) in url:
+            elif str('КРЫМ') in url:
                 url = 'TrainListError'
             else:
                 url = 'TrainList'
@@ -62,7 +62,7 @@ class TestAPI(unittest.TestCase):
 
     def test_time_table(self):
         time_table = self.api.time_table(10000001, 10000002, 24, 12, TimeSw.NO_SW)
-        self.assertEquals(time_table.is_clarify, None)
+        self.assertEquals(time_table.is_clarify, False)
 
         self.assertEquals(time_table.data.reference_params.reference_code, 11)
         self.assertEquals(time_table.data.reference_params.reference_date, '02.02')
@@ -95,8 +95,8 @@ class TestAPI(unittest.TestCase):
         self.assertEquals(time_table.data.trains[0].departure_time.date, self.datetime)
         self.assertEquals(time_table.data.trains[0].departure_time.time_offset, '+03:00')
         self.assertEquals(time_table.data.trains[0].departure_time.time_type, 0)
-        self.assertEquals(time_table.data.trains[0].arrival_time.date, self.datetime)
-        self.assertEquals(time_table.data.trains[0].arrival_time.time_offset, '+03:00')
+        self.assertEquals(time_table.data.trains[0].arrival_time.date, '03:00:00')
+        self.assertEquals(time_table.data.trains[0].arrival_time.time_offset, None)
         self.assertEquals(time_table.data.trains[0].arrival_time.time_type, 0)
 
     def test_station_route(self):
@@ -203,8 +203,8 @@ class TestAPI(unittest.TestCase):
         self.assertEquals(train_list.data.trains[0].departure_time.date, self.datetime)
         self.assertEquals(train_list.data.trains[0].departure_time.time_offset, '+03:00')
         self.assertEquals(train_list.data.trains[0].departure_time.time_type, 0)
-        self.assertEquals(train_list.data.trains[0].arrival_time.date, self.datetime)
-        self.assertEquals(train_list.data.trains[0].arrival_time.time_offset, '+03:00')
+        self.assertEquals(train_list.data.trains[0].arrival_time.date, '03:00:00')
+        self.assertEquals(train_list.data.trains[0].arrival_time.time_offset, None)
         self.assertEquals(train_list.data.trains[0].arrival_time.time_type, 0)
         self.assertEquals(train_list.data.trains[0].passenger_railway_station.origin_code, 2000006)
         self.assertEquals(train_list.data.trains[0].passenger_railway_station.destination_code, 2000170)
@@ -214,11 +214,10 @@ class TestAPI(unittest.TestCase):
         self.assertEquals(train_list.data.trains[0].passenger_arrival_station.name, 'СМОЛЕНСК ЦЕНТРАЛЬНЫЙ')
 
         self.assertEquals(train_list.balance, 30000.00)
-        self.assertEquals(train_list.balance_imit, 0.00)
+        self.assertEquals(train_list.balance_limit, 0.00)
 
     def test_car_list_ex(self):
         car_list_ex = self.api.car_list_ex(1000001, 2000000, 3, 2, '00031#031А', '17:23')
-
 
         self.assertEquals(car_list_ex.general_information.reference_code, 62)
         self.assertEquals(car_list_ex.general_information.reference_type, 'М')
@@ -318,8 +317,8 @@ class TestAPI(unittest.TestCase):
         self.assertEquals(car_list_ex.trains[0].departure_time.date, self.datetime)
         self.assertEquals(car_list_ex.trains[0].departure_time.time_offset, '+02:00')
         self.assertEquals(car_list_ex.trains[0].departure_time.time_type, 1)
-        self.assertEquals(car_list_ex.trains[0].arrival_time.date, self.datetime)
-        self.assertEquals(car_list_ex.trains[0].arrival_time.time_offset, '+03:00')
+        self.assertEquals(car_list_ex.trains[0].arrival_time.date, '03:00:00')
+        self.assertEquals(car_list_ex.trains[0].arrival_time.time_offset, None)
         self.assertEquals(car_list_ex.trains[0].arrival_time.time_type, 0)
         self.assertEquals(car_list_ex.trains[0].passenger_railway_station.origin_code, 1000001)
         self.assertEquals(car_list_ex.trains[0].passenger_railway_station.destination_code, 2006004)

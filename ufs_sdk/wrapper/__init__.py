@@ -47,7 +47,7 @@ class RouteParams(object):
         # Код станции прибытия пассажира
         self.to_code = get_item(json.get('ToCode'), int)
         # Допустимые типы документов
-        self.allowed_doc_types = json.get('AllowedDocTypes').split(',')
+        self.allowed_doc_types = json.get('AllowedDocTypes').split(',') if json.get('AllowedDocTypes') is not None else None
         # Направление перевозки
         self.direction_group = get_item(json.get('DirectionGroup'), int)
 
