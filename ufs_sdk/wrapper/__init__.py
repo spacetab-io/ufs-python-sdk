@@ -509,7 +509,7 @@ class CarCarListEx(object):
         self.available_tariffs = [int(item) for item in json.get('AvailableTariffs').split(';')] \
                                     if json.get('AvailableTariffs') is not None else None
         # Возможность применения карт лояльности при оформлении билетов в данный вагон.
-        self.is_loyalty_cards = get_bool_item(json.get('LoyaltyCards'))
+        self.is_loyalty_cards = json.get('LoyaltyCards')
         # Признак «выкуп купе целиком».
         # Если в ответе тег FullKupe отображается, то в данном вагоне возможен выкуп всего купе целиком.
         self.is_full_kupe = get_bool_item(json.get('FullKupe'))

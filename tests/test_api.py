@@ -309,7 +309,7 @@ class TestAPI(unittest.TestCase):
         self.assertEquals(car_list_ex.trains[0].cars[0].is_discount, False)
         self.assertEquals(car_list_ex.trains[0].cars[0].is_reservation, False)
         self.assertEquals(car_list_ex.trains[0].cars[0].available_tariffs, [1, 9, 10])
-        self.assertEquals(car_list_ex.trains[0].cars[0].is_loyalty_cards, False)
+        self.assertEquals(car_list_ex.trains[0].cars[0].is_loyalty_cards, None)
         self.assertEquals(car_list_ex.trains[0].cars[0].is_full_kupe, True)
         self.assertEquals(car_list_ex.trains[0].special_conditions, None)
         self.assertEquals(car_list_ex.trains[0].brand, None)
