@@ -4,7 +4,7 @@ from ufs_sdk import API
 from datetime import datetime
 from ufs_sdk.exceptions import UfsTrainListError
 from ufs_sdk.wrapper import ReferenceParamsTimeTable, AdditionalInfoTimeTable, TrainTimeTable
-from ufs_sdk.wrapper.types import TimeSw, DirectionGroup, CarCategories, Services
+from ufs_sdk.wrapper.types import TimeSw, DirectionGroup, CarCategories, Services, Confirm, Test, ElectronicRegistration
 import mock
 
 
@@ -326,3 +326,21 @@ class TestAPI(unittest.TestCase):
         self.assertEquals(car_list_ex.trains[0].passenger_departure_station.name, 'ХЕЛЬСИНКИ')
         self.assertEquals(car_list_ex.trains[0].passenger_arrival_station.code, 2006004)
         self.assertEquals(car_list_ex.trains[0].passenger_arrival_station.name, 'МОСКВА ОКТЯБРЬСКАЯ')
+
+    def test_confirm_ticket(self):
+        confirm_ticket = self.api.confirm_ticket(48715626, Confirm.CONFIRM, 0)
+
+        self.assertEquals(confirm_ticket.status, 0)
+        self.assertEquals(confirm_ticket.transaction_id, 48715626)
+        self.assertEquals(confirm_ticket.confirm_time_limit.date, self.datetime)
+        self.assertEquals(confirm_ticket.confirm_time_limit.time_type, None)
+        self.assertEquals(confirm_ticket.confirm_time_limit.time_offset, '+03:00')
+        self.assertEquals(confirm_ticket.electronic_registration, ElectronicRegistration.CONFIRM)
+        self.assertEquals(confirm_ticket.order_number, 70864898287763)
+        self.assertEquals(confirm_ticket.electronic_registration_expire.date, self.datetime)
+        self.assertEquals(confirm_ticket.electronic_registration_expire.time_offset, '+03:00')
+        self.assertEquals(confirm_ticket.electronic_registration_expire.time_type, None)
+        self.assertEquals(confirm_ticket.blank[0].ticket_identifier, 5164710)
+        self.assertEquals(confirm_ticket.blank[0].ticket_number, 70864898287763)
+        self.assertEquals(confirm_ticket.is_test, Test.TEST)
+        self.assertEquals(confirm_ticket.reservation, None)

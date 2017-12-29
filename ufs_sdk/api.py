@@ -1,10 +1,10 @@
 from .utils import get_item
 from .session import Session
-from .utils import get_array, get_bool_item
+from .utils import get_array, get_bool_item, get_ufs_datetime
 from .wrapper.requests import RequestWrapper
-from .wrapper.types import TimeSw, Lang, TrainWithSeat, GrouppingType, JoinTrains, SearchOption
+from .wrapper.types import TimeSw, Lang, TrainWithSeat, GrouppingType, JoinTrains, SearchOption, Confirm
 from .wrapper import (Clarify, TimeTable, AdditionalInfoStationRoute, RouteParamsStationRoute, TrainList,
-                      GeneralInformation, TrainCarListEx)
+                      GeneralInformation, TrainCarListEx, Blank, DateTime)
 
 
 class API(object):
@@ -43,6 +43,12 @@ class API(object):
                                                         train=train, time=time, lang=lang, type_car=type_car,
                                                         advert_domain=advert_domain, groupping_type=groupping_type)
         return CarListEx(xml, json['S'])
+
+
+    def confirm_ticket(self, id_trans: int, confirm: Confirm, site_fee: int=None, lang: Lang=Lang.RU):
+        xml, json = self.__request_wrapper.make_request('ConfirmTicket', id_trans=id_trans, confirm=confirm,
+                                                        site_fee=site_fee, lang=lang)
+        return ConfirmTicket(xml, json)
 
     @property
     def last_response(self):
@@ -101,3 +107,22 @@ class CarListEx(object):
         self.general_information = get_item(json.get('Z3'), GeneralInformation)
         # Информация о поезде
         self.trains = get_array(json.get('N'), TrainCarListEx)
+
+        self.xml = xml
+        self.json = json
+
+
+class ConfirmTicket(object):
+    def __init__(self, xml, json):
+        self.status = get_item(json.get('Status'), int)
+        self.transaction_id = get_item(json.get('TransID'), int)
+        self.confirm_time_limit = get_item(json.get('ConfirmTimeLimit'), DateTime)
+        self.electronic_registration = get_item(json.get('RemoteCheckIn'), int)
+        self.order_number = get_item(json.get('OrderNum'), int)
+        self.electronic_registration_expire = get_item(json.get('ExpireSetEr'), DateTime)
+        self.blank = get_array(json.get('Blank'), Blank)
+        self.is_test = get_item(json.get('IsTest'), int)
+        self.reservation = json.get('Reservation')
+
+        self.xml = xml
+        self.json = json

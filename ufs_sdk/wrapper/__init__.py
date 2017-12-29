@@ -565,3 +565,11 @@ class TrainCarListEx(object):
         self.passenger_departure_station = get_item(json.get('PassengerDepartureStation'), PassengerStation)
         # Информация о вокзале прибытия пассажира
         self.passenger_arrival_station = get_item(json.get('PassengerArrivalStation'), PassengerStation)
+
+
+class Blank(object):
+    def __init__(self, json):
+        # Идентификатор билета в заказе в шлюзе
+        self.ticket_identifier = get_item(json.get('ID'), int)
+        # Номер билета в заказе в АСУ «Экспресс-3»
+        self.ticket_number = get_item(json.get('TicketNum'), int)

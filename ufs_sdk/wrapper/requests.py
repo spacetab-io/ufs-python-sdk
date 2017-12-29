@@ -2,7 +2,7 @@ from ufs_sdk.utils import get_ufs_datetime
 
 REQUEST_PARAM_NAMES = {'from_': 'from'}
 # Называть переменные разными именами ? Не, не слышал
-ARRAYS = ['SC', 'N', 'C', 'CK']
+ARRAYS = ['SC', 'N', 'C', 'CK', 'Blank']
 
 
 class RequestWrapper(object):
@@ -94,7 +94,7 @@ class RequestWrapper(object):
     def get_item(item):
         if item.text is None:
             return True
-        if item.tag in ['ArrivalTime', 'DepartureTime']:
+        if item.tag in ['ArrivalTime', 'DepartureTime', 'ConfirmTimeLimit', 'ExpireSetEr']:
             return get_ufs_datetime(item)
         if item.tag in ['C']:
             tag_data = item.text

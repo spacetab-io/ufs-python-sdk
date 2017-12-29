@@ -1,0 +1,24 @@
+<UFS_RZhD_Gate>
+ <System>
+     <CurrentTime timeOffset="+03:00">01.02.2016 11:00:04</CurrentTime>
+ </System>
+ <Status>0</Status>
+ <IDTrans>48715626</IDTrans>
+ <TransID>48715626</TransID>
+ <ConfirmTimeLimit timeOffset="+03:00">01.01.1970 03:00:00</ConfirmTimeLimit>
+ <Profit>60.00</Profit>
+ <RemoteCheckIn>1</RemoteCheckIn>
+ <IDZakaz>70864898287763</IDZakaz>
+ <OrderNum>70864898287763</OrderNum>
+ <ExpireSetEr timeOffset="+03:00">01.01.1970 03:00:00</ExpireSetEr>
+ <Blank ID="5164710">
+     <TicketNum>70864898287763</TicketNum>
+ </Blank>
+ <Blank ID="5164711">
+     <TicketNum>70864898287774</TicketNum>
+ </Blank>
+ <Blank ID="5164712">
+     <TicketNum>70864898287785</TicketNum>
+ </Blank>
+ <IsTest>1</IsTest>
+</UFS_RZhD_Gate>
