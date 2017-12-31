@@ -127,6 +127,4 @@ class RequestWrapper(object):
     # Пришлось делать преобразование
     @staticmethod
     def convert_request_param_name(param):
-        if param in REQUEST_PARAM_NAMES.keys():
-            return REQUEST_PARAM_NAMES[param]
-        return param
+        return param.replace('_', '')

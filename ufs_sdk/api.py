@@ -2,9 +2,10 @@ from .utils import get_item
 from .session import Session
 from .utils import get_array, get_bool_item, get_ufs_datetime
 from .wrapper.requests import RequestWrapper
-from .wrapper.types import TimeSw, Lang, TrainWithSeat, GrouppingType, JoinTrains, SearchOption, Confirm
+from .wrapper.types import TimeSw, Lang, TrainWithSeat, GrouppingType, JoinTrains, SearchOption, Confirm, Registration
 from .wrapper import (Clarify, TimeTable, AdditionalInfoStationRoute, RouteParamsStationRoute, TrainList,
-                      GeneralInformation, TrainCarListEx, Blank, DateTime, BlankUpdateOrderInfo, Order)
+                      GeneralInformation, TrainCarListEx, Blank, DateTime, BlankUpdateOrderInfo, Order,
+                      BlankElectronicRegistration)
 
 
 class API(object):
@@ -53,6 +54,11 @@ class API(object):
     def update_order_info(self, id_trans: int):
         xml, json = self.__request_wrapper.make_request('UpdateOrderInfo', id_trans=id_trans)
         return UpdateOrderInfo(xml, json)
+
+    def electronic_registration(self, id_trans: int, reg: Registration, id_blank: int=None):
+        xml, json = self.__request_wrapper.make_request('ElectronicRegistration', id_trans=id_trans, reg=reg,
+                                                        id_blank=id_blank)
+        return ElectronicRegistration(xml, json)
 
     @property
     def last_response(self):
@@ -145,6 +151,17 @@ class UpdateOrderInfo(object):
         self.change_food_before = get_item(json.get('ChangeFoodBefore'), DateTime)
         # Информация о заказе
         self.order = get_item(json.get('Order'), Order)
+
+        self.xml = xml
+        self.json = json
+
+
+class ElectronicRegistration(object):
+    def __init__(self, xml, json):
+        # Текущий статус операции: «0» – успешная
+        self.status = get_item(json.get('Status'), int)
+        # Информация о билете заказа
+        self.blank = get_array(json.get('Blank'), BlankElectronicRegistration)
 
         self.xml = xml
         self.json = json

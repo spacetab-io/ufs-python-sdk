@@ -243,3 +243,7 @@ class RzhdStatus:
     # Отложенная отплата (статус возвращается после создания бронирования)
     DEFERRED_PAYMENT = 7
 
+
+class Registration:
+    REFUSE = 0
+    CONFIRM = 1

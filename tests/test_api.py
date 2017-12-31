@@ -5,7 +5,7 @@ from datetime import datetime
 from ufs_sdk.exceptions import UfsTrainListError
 from ufs_sdk.wrapper import ReferenceParamsTimeTable, AdditionalInfoTimeTable, TrainTimeTable
 from ufs_sdk.wrapper.types import (TimeSw, DirectionGroup, CarCategories, Services, Confirm, ElectronicRegistration,
-                                   Test, PrintFlag, RzhdStatus)
+                                   Test, PrintFlag, RzhdStatus, Registration)
 import mock
 
 
@@ -374,3 +374,11 @@ class TestAPI(unittest.TestCase):
         self.assertEquals(update_order_info.order.order_item.blank[0].food.code, 'Б')
         self.assertEquals(update_order_info.order.order_item.blank[0].food.name, 'ЗАВТРАК-БЛИНЫ/СЫР')
         self.assertEquals(update_order_info.order.order_item.blank[0].food.description, 'ЗАКУСКА СЫРНАЯ, БЛИНЫ, СУХАЯ ЧАСТЬ К РАЦИОНУ')
+
+    def test_electronic_registration(self):
+        electronic_registration = self.api.electronic_registration(48715620, Registration.CONFIRM)
+
+        self.assertEquals(electronic_registration.status, 0)
+
+        self.assertEquals(electronic_registration.blank[0].ticket_identifier, 5164702)
+        self.assertEquals(electronic_registration.blank[0].electronic_registration, ElectronicRegistration.CONFIRM)

@@ -601,7 +601,6 @@ class BlankUpdateOrderInfo(object):
 
 class OrderItem(object):
     def __init__(self, json):
-        print(json)
         # Идентификатор заказа
         self.id = get_item(json.get('Id'), int)
         # Текущий статус операции: «0» - успешная операция «1»- неуспешная операция
@@ -625,3 +624,11 @@ class Order(object):
             self.order_item = get_item(json['OrderItems'].get('OrderItem'), OrderItem)
         else:
             self.order_item = None
+
+
+class BlankElectronicRegistration(object):
+    def __init__(self, json):
+        # Идентификатор билета в заказе в шлюзе
+        self.ticket_identifier = get_item(json.get('ID'), int)
+        # Признак наличия электронной регистрации
+        self.electronic_registration = get_item(json.get('RemoteCheckIn'), int)
