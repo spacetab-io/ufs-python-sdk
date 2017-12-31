@@ -37,6 +37,19 @@ def set_datetime(item):
     return None
 
 
+def get_list_from_string(string, item_type):
+    if string is not None and type(string) is str:
+        if ', ' in string:
+            return [item_type(item) for item in string.split(', ')]
+        elif ',' in string:
+            return [item_type(item) for item in string.split(',')]
+        elif '; ' in string:
+            return [item_type(item) for item in string.split('; ')]
+        elif ';' in string:
+            return [item_type(item) for item in string.split(';')]
+    return None
+
+
 def get_ufs_datetime(xml):
     try:
         return {'Date': datetime.strptime(xml.text, '%d.%m.%Y %X'),

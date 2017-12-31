@@ -1,4 +1,4 @@
-from ufs_sdk.utils import get_array, get_item, get_bool_item
+from ufs_sdk.utils import get_array, get_item, get_bool_item, get_list_from_string
 
 
 class DateTime(object):
@@ -47,7 +47,7 @@ class RouteParams(object):
         # Код станции прибытия пассажира
         self.to_code = get_item(json.get('ToCode'), int)
         # Допустимые типы документов
-        self.allowed_doc_types = json.get('AllowedDocTypes').split(',') if json.get('AllowedDocTypes') is not None else None
+        self.allowed_doc_types = get_list_from_string(json.get('AllowedDocTypes'), str)
         # Направление перевозки
         self.direction_group = get_item(json.get('DirectionGroup'), int)
 
@@ -239,7 +239,7 @@ class CarTrainList(object):
         # Класс обслуживания вагона
         self.service_class = json.get('CO')
         # Список услуг
-        self.services = json.get('CO_SRV').split(',') if json.get('CO_SRV') is not None else None
+        self.services = get_list_from_string(json.get('CO_SRV'), str)
         # Государство/дорога принадлежности вагона
         self.country_way = json.get('W2')
         # Владелец вагона
@@ -406,7 +406,7 @@ class CarInfoCarListEx(object):
         # Если данного тега нет, то нет возможности выбора бель
         self.linens = get_item(json.get('BL'), int)
         # Номера свободных мест (через запятую). К номеру места может быть добавлен символ для гендерных вагонов
-        self.free_places_list = json.get('H').split(', ') if json.get('H') is not None else None
+        self.free_places_list = get_list_from_string(json.get('H'), str)
         # Категория вагона
         self.car_category = json.get('KV')
         # Признак двухэтажного вагона
@@ -475,9 +475,9 @@ class CarCarListEx(object):
         # Класс обслуживания вагона
         self.service_class = json.get('CO')
         # Список услуг
-        self.services = json.get('CO_SRV').split(',') if json.get('CO_SRV') is not None else None
+        self.services = get_list_from_string(json.get('CO_SRV'), str)
         # Список услуг
-        self.services_info = json.get('CO_DESC').split(',') if json.get('CO_DESC') is not None else None
+        self.services_info = get_list_from_string(json.get('CO_DESC'), str)
         # Государство/дорога принадлежности вагона
         self.country_way = json.get('W2')
         # Владелец вагона
@@ -506,8 +506,7 @@ class CarCarListEx(object):
         self.is_reservation = get_bool_item(json.get('Reservation'))
         # Список действующих тарифов для данного вагона.
         # Тег обязателен для DirectionGroup=0,2
-        self.available_tariffs = [int(item) for item in json.get('AvailableTariffs').split(';')] \
-                                    if json.get('AvailableTariffs') is not None else None
+        self.available_tariffs = get_list_from_string(json.get('AvailableTariffs'), int)
         # Возможность применения карт лояльности при оформлении билетов в данный вагон.
         self.is_loyalty_cards = json.get('LoyaltyCards')
         # Признак «выкуп купе целиком».
