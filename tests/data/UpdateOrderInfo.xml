@@ -1,0 +1,49 @@
+<UFS_RZhD_Gate>
+ <System>
+     <CurrentTime timeOffset="+03:00">01.02.2016 10:51:18</CurrentTime>
+ </System>
+ <Status>0</Status>
+ <ChangeFoodBefore timeOffset="+03:00">01.01.1970 03:00:00</ChangeFoodBefore>
+ <Blank ID="5164702">
+     <RemoteCheckIn>1</RemoteCheckIn>
+     <PrintFlag>0</PrintFlag>
+     <RzhdStatus>1</RzhdStatus>
+     <Food Name="ЗАВТРАК-БЛИНЫ/СЫР" Description="ЗАКУСКА СЫРНАЯ, БЛИНЫ, СУХАЯ ЧАСТЬ К РАЦИОНУ">Б</Food>
+ </Blank>
+ <Blank ID="5164703">
+     <RemoteCheckIn>1</RemoteCheckIn>
+     <PrintFlag>0</PrintFlag>
+     <RzhdStatus>1</RzhdStatus>
+     <Food Name="ЗАВТРАК-БЛИНЫ/СЫР" Description="ЗАКУСКА СЫРНАЯ, БЛИНЫ, СУХАЯ ЧАСТЬ К РАЦИОНУ">Б</Food>
+ </Blank>
+ <Blank ID="5164704">
+     <RemoteCheckIn>1</RemoteCheckIn>
+     <PrintFlag>0</PrintFlag>
+     <RzhdStatus>1</RzhdStatus>
+ </Blank>
+ <Order Id="82596" RootTransId="48715620">
+     <OrderItems>
+         <OrderItem Id="48715620">
+         <Status>0</Status>
+         <ChangeFoodBefore timeOffset="+03:00">01.01.1970 03:00:00</ChangeFoodBefore>
+         <Blank ID="5164702">
+                 <RemoteCheckIn>1</RemoteCheckIn>
+                 <PrintFlag>0</PrintFlag>
+                 <RzhdStatus>1</RzhdStatus>
+                 <Food Name="ЗАВТРАК-БЛИНЫ/СЫР" Description="ЗАКУСКА СЫРНАЯ, БЛИНЫ, СУХАЯ ЧАСТЬ К РАЦИОНУ">Б</Food>
+         </Blank>
+         <Blank ID="5164703">
+                 <RemoteCheckIn>1</RemoteCheckIn>
+                 <PrintFlag>0</PrintFlag>
+                 <RzhdStatus>1</RzhdStatus>
+                 <Food Name="ЗАВТРАК-БЛИНЫ/СЫР" Description="ЗАКУСКА СЫРНАЯ, БЛИНЫ, СУХАЯ ЧАСТЬ К РАЦИОНУ">Б</Food>
+         </Blank>
+         <Blank ID="5164704">
+                 <RemoteCheckIn>1</RemoteCheckIn>
+                 <PrintFlag>0</PrintFlag>
+                 <RzhdStatus>1</RzhdStatus>
+         </Blank>
+         </OrderItem>
+     </OrderItems>
+ </Order>
+</UFS_RZhD_Gate>

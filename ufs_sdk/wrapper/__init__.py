@@ -533,7 +533,8 @@ class TrainCarListEx(object):
         self.passenger_arrival_time = json.get('D1')
         # Время отправления со станции отправления пассажира
         self.passenger_departure_date = json.get('T1')
-        # Время стоянки на станции отправления пассажира. Элемент не обязательный в случае, если станция отправления является начальной станцией
+        # Время стоянки на станции отправления пассажира. Элемент не обязательный в случае,
+        # если станция отправления является начальной станцией
         self.origin_parking_time = json.get('T2')
         # Время в пути от станции отправления до станции прибытия пассажира
         self.travel_time = json.get('T3')
@@ -573,3 +574,55 @@ class Blank(object):
         self.ticket_identifier = get_item(json.get('ID'), int)
         # Номер билета в заказе в АСУ «Экспресс-3»
         self.ticket_number = get_item(json.get('TicketNum'), int)
+
+
+class Food(object):
+    def __init__(self, json):
+        # Код РП.
+        self.code = json.get('data')
+        # Название РП
+        self.name = json.get('Name')
+        # Описание РП
+        self.description = json.get('Description')
+
+
+class BlankUpdateOrderInfo(object):
+    def __init__(self, json):
+        # Идентификатор билета в заказе в шлюзе
+        self.ticket_identifier = get_item(json.get('ID'), int)
+        # Признак наличия электронной регистрации
+        self.electronic_registration = get_item(json.get('RemoteCheckIn'), int)
+        # Признак того, что оригинал билета распечатан
+        self.print_flag = get_item(json.get('PrintFlag'), int)
+        # Статус билета в АСУ «Экспресс-3»
+        self.rzhd_status = get_item(json.get('RzhdStatus'), int)
+        # 
+        self.food = get_item(json.get('Food'), Food)
+
+
+class OrderItem(object):
+    def __init__(self, json):
+        print(json)
+        # Идентификатор заказа
+        self.id = get_item(json.get('Id'), int)
+        # Текущий статус операции: «0» - успешная операция «1»- неуспешная операция
+        self.status = get_item(json.get('Status'), int)
+        # воспользоваться  услугой смены РП. Атрибут «timeOffset="+ЧЧ:ММ"» содержит информацию
+        # о часовом поясе для данного элемента, где "+ЧЧ:ММ" разница в часах и минутах от
+        # UTC(Всемирное координированное время) конкретного места
+        self.change_food_before = get_item(json.get('ChangeFoodBefore'), DateTime)
+        # Информация о билете заказа
+        self.blank = get_array(json.get('Blank'), BlankUpdateOrderInfo)
+
+
+class Order(object):
+    def __init__(self, json):
+        # Номер заказа в системе «УФС»
+        self.id = get_item(json.get('Id'), int)
+        # Идентификатор родительской транзакции
+        self.root_id = get_item(json.get('RootTransId'), int)
+        #
+        if json.get('OrderItems') is not None:
+            self.order_item = get_item(json['OrderItems'].get('OrderItem'), OrderItem)
+        else:
+            self.order_item = None

@@ -39,11 +39,12 @@ class RequestWrapper(object):
             if type(json[item.tag]) is dict and item.attrib != {}:
                 for key in item.attrib.keys():
                     json[item.tag][key] = item.attrib[key]
-            if type(json[item.tag]) is list and item.attrib != {}:
+            elif type(json[item.tag]) is list and item.attrib != {}:
                 for key in item.attrib.keys():
                     json[item.tag][-1][key] = item.attrib[key]
-            if type(json[item.tag]) is bool and item.attrib != {}:
-                json[item.tag] = {}
+            elif item.attrib != {}:
+                data = json[item.tag] if json.get(item.tag) is not None else None
+                json[item.tag] = {'data': data}
                 for key in item.attrib.keys():
                     json[item.tag][key] = item.attrib[key]
         return response, json
@@ -81,11 +82,12 @@ class RequestWrapper(object):
             if type(json[item.tag]) is dict and item.attrib != {}:
                 for key in item.attrib.keys():
                     json[item.tag][key] = item.attrib[key]
-            if type(json[item.tag]) is list and item.attrib != {}:
+            elif type(json[item.tag]) is list and item.attrib != {}:
                 for key in item.attrib.keys():
                     json[item.tag][-1][key] = item.attrib[key]
-            if type(json[item.tag]) is bool and item.attrib != {}:
-                json[item.tag] = {}
+            elif item.attrib != {}:
+                data = json[item.tag] if json.get(item.tag) is not None else None
+                json[item.tag] = {'data': data}
                 for key in item.attrib.keys():
                     json[item.tag][key] = item.attrib[key]
         return json
@@ -94,7 +96,7 @@ class RequestWrapper(object):
     def get_item(item):
         if item.text is None:
             return True
-        if item.tag in ['ArrivalTime', 'DepartureTime', 'ConfirmTimeLimit', 'ExpireSetEr']:
+        if item.tag in ['ArrivalTime', 'DepartureTime', 'ConfirmTimeLimit', 'ExpireSetEr', 'ChangeFoodBefore']:
             return get_ufs_datetime(item)
         if item.tag in ['C']:
             tag_data = item.text

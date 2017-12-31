@@ -4,7 +4,8 @@ from ufs_sdk import API
 from datetime import datetime
 from ufs_sdk.exceptions import UfsTrainListError
 from ufs_sdk.wrapper import ReferenceParamsTimeTable, AdditionalInfoTimeTable, TrainTimeTable
-from ufs_sdk.wrapper.types import TimeSw, DirectionGroup, CarCategories, Services, Confirm, Test, ElectronicRegistration
+from ufs_sdk.wrapper.types import (TimeSw, DirectionGroup, CarCategories, Services, Confirm, ElectronicRegistration,
+                                   Test, PrintFlag, RzhdStatus)
 import mock
 
 
@@ -344,3 +345,32 @@ class TestAPI(unittest.TestCase):
         self.assertEquals(confirm_ticket.blank[0].ticket_number, 70864898287763)
         self.assertEquals(confirm_ticket.is_test, Test.TEST)
         self.assertEquals(confirm_ticket.reservation, None)
+
+    def test_update_order_info(self):
+        update_order_info = self.api.update_order_info(48715626)
+
+        self.assertEquals(update_order_info.status, 0)
+
+        self.assertEquals(update_order_info.blank[0].ticket_identifier, 5164702)
+        self.assertEquals(update_order_info.blank[0].electronic_registration, ElectronicRegistration.CONFIRM)
+        self.assertEquals(update_order_info.blank[0].print_flag, PrintFlag.NOT_PRINTED)
+        self.assertEquals(update_order_info.blank[0].rzhd_status, RzhdStatus.ELECTRONIC_REGISTRATION)
+        self.assertEquals(update_order_info.blank[0].food.code, 'Б')
+        self.assertEquals(update_order_info.blank[0].food.name, 'ЗАВТРАК-БЛИНЫ/СЫР')
+        self.assertEquals(update_order_info.blank[0].food.description, 'ЗАКУСКА СЫРНАЯ, БЛИНЫ, СУХАЯ ЧАСТЬ К РАЦИОНУ')
+
+        self.assertEquals(update_order_info.change_food_before.date, self.datetime)
+        self.assertEquals(update_order_info.change_food_before.time_offset, '+03:00')
+
+        self.assertEquals(update_order_info.order.id, 82596)
+        self.assertEquals(update_order_info.order.root_id, 48715620)
+        self.assertEquals(update_order_info.order.order_item.id, 48715620)
+        self.assertEquals(update_order_info.order.order_item.status, 0)
+
+        self.assertEquals(update_order_info.order.order_item.blank[0].ticket_identifier, 5164702)
+        self.assertEquals(update_order_info.order.order_item.blank[0].electronic_registration, ElectronicRegistration.CONFIRM)
+        self.assertEquals(update_order_info.order.order_item.blank[0].print_flag, PrintFlag.NOT_PRINTED)
+        self.assertEquals(update_order_info.order.order_item.blank[0].rzhd_status, RzhdStatus.ELECTRONIC_REGISTRATION)
+        self.assertEquals(update_order_info.order.order_item.blank[0].food.code, 'Б')
+        self.assertEquals(update_order_info.order.order_item.blank[0].food.name, 'ЗАВТРАК-БЛИНЫ/СЫР')
+        self.assertEquals(update_order_info.order.order_item.blank[0].food.description, 'ЗАКУСКА СЫРНАЯ, БЛИНЫ, СУХАЯ ЧАСТЬ К РАЦИОНУ')

@@ -4,7 +4,7 @@ from .utils import get_array, get_bool_item, get_ufs_datetime
 from .wrapper.requests import RequestWrapper
 from .wrapper.types import TimeSw, Lang, TrainWithSeat, GrouppingType, JoinTrains, SearchOption, Confirm
 from .wrapper import (Clarify, TimeTable, AdditionalInfoStationRoute, RouteParamsStationRoute, TrainList,
-                      GeneralInformation, TrainCarListEx, Blank, DateTime)
+                      GeneralInformation, TrainCarListEx, Blank, DateTime, BlankUpdateOrderInfo, Order)
 
 
 class API(object):
@@ -49,6 +49,10 @@ class API(object):
         xml, json = self.__request_wrapper.make_request('ConfirmTicket', id_trans=id_trans, confirm=confirm,
                                                         site_fee=site_fee, lang=lang)
         return ConfirmTicket(xml, json)
+
+    def update_order_info(self, id_trans: int):
+        xml, json = self.__request_wrapper.make_request('UpdateOrderInfo', id_trans=id_trans)
+        return UpdateOrderInfo(xml, json)
 
     @property
     def last_response(self):
@@ -123,6 +127,24 @@ class ConfirmTicket(object):
         self.blank = get_array(json.get('Blank'), Blank)
         self.is_test = get_item(json.get('IsTest'), int)
         self.reservation = json.get('Reservation')
+
+        self.xml = xml
+        self.json = json
+
+
+class UpdateOrderInfo(object):
+    def __init__(self, xml, json):
+        # Текущий статус операции: «0» - успешная операция «1»- неуспешная операция
+        self.status = get_item(json.get('Status'), int)
+        # Информация о билете заказа
+        self.blank = get_array(json.get('Blank'), BlankUpdateOrderInfo)
+        # Дата и время, до которого можно воспользоваться услугой смены РП.
+        # Атрибут «timeOffset="+ЧЧ:ММ"» содержит информацию о часовом поясе для данного элемента, где "+ЧЧ:ММ"
+        # разница в часах и минутах от UTC(Всемирное координированное время) конкретного места.
+        # Доступно для заказов с возможностью выбора РП
+        self.change_food_before = get_item(json.get('ChangeFoodBefore'), DateTime)
+        # Информация о заказе
+        self.order = get_item(json.get('Order'), Order)
 
         self.xml = xml
         self.json = json

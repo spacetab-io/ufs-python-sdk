@@ -210,8 +210,36 @@ class ElectronicRegistration:
     # Ошибочный статус ЭР
     ERROR_STATUS = 20
 
+
 class Test:
     # Покупка настоящая (после её подтверждения деньги будут списаны)
     REAL = 0
     # Покупка тестовая, обращения на резервирование мест в АСУ «Экспресс-3» не было
     TEST = 1
+
+
+class PrintFlag:
+    # Не распечатан
+    NOT_PRINTED = 0
+    # Распечатан
+    PRINTED = 1
+
+
+class RzhdStatus:
+    # Без электронной регистрации
+    WITHOUT_ELECTRONIC_REGISTRATION = 0
+    # Электронная регистрация
+    ELECTRONIC_REGISTRATION= 1
+    # Оплата не подтверждена
+    FAILED_PAYMENT = 2
+    # Аннулирован
+    CANCELED = 3
+    # Возвращен
+    RETURNED = 4
+    # Возвращены места
+    RETURNED_PLACES= 5
+    # Выдан посадочный купон (проездной документ) на бланке строгой отчетности
+    TICKET_ISSUED = 6
+    # Отложенная отплата (статус возвращается после создания бронирования)
+    DEFERRED_PAYMENT = 7
+
