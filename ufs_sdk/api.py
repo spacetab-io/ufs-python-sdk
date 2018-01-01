@@ -5,7 +5,7 @@ from .wrapper.requests import RequestWrapper
 from .wrapper.types import TimeSw, Lang, TrainWithSeat, GrouppingType, JoinTrains, SearchOption, Confirm, Registration
 from .wrapper import (Clarify, TimeTable, AdditionalInfoStationRoute, RouteParamsStationRoute, TrainList,
                       GeneralInformation, TrainCarListEx, Blank, DateTime, BlankUpdateOrderInfo, Order,
-                      BlankElectronicRegistration, Food)
+                      BlankElectronicRegistration, Food, BlankRefundAmount)
 
 
 class API(object):
@@ -71,6 +71,11 @@ class API(object):
                                                         food_allowance_code=food_allowance_code,
                                                         advert_domain=advert_domain, lang=lang)
         return ChangeFood(xml, json['PIT'])
+
+    def refund_amount(self, id_trans: int, id_blank: int, doc: int, lang: Lang.RU=Lang.RU):
+        xml, json = self.__request_wrapper.make_request('RefundAmount', id_trans=id_trans, id_blank=id_blank,
+                                                        doc=doc, lang=lang)
+        return RefundAmount(xml, json)
 
     @property
     def last_response(self):
@@ -216,6 +221,24 @@ class ChangeFood(object):
         self.food_name = json.get('NAME')
         # Описание РП
         self.food_description = json.get('DESC')
+
+        self.xml = xml
+        self.json = json
+
+
+class RefundAmount(object):
+    def __init__(self, xml, json):
+        # Статус операции: «0» – успешная
+        self.status = get_item(json.get('Status'), int)
+        # Сумма сервисного сбора за возврат
+        self.fee = get_item(json.get('Fee'), float)
+        # Величина комиссионного сбора УФС в %, В случае, если комиссия является фиксированной величиной,
+        # то передается в данном параметре «0»
+        self.tax_percent = get_item(json.get('TaxPercent'), float)
+        # Общая сумма к возврату
+        self.amount = get_item(json.get('Amount'), float)
+        # Информация о билете заказа
+        self.blanks = get_array(json.get('Blank'), BlankRefundAmount)
 
         self.xml = xml
         self.json = json

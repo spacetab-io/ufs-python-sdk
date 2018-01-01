@@ -409,3 +409,26 @@ class TestAPI(unittest.TestCase):
         self.assertEquals(change_food.food_code, 'Л')
         self.assertEquals(change_food.food_name, 'ЗАВТРАК-БЛИНЫ/МЯСН')
         self.assertEquals(change_food.food_description, 'ЗАКУСКА МЯСНАЯ, БЛИНЫ, СУХАЯ ЧАСТЬ К РАЦИОНУ')
+
+    def test_refund_amount(self):
+        refund_amount = self.api.refund_amount(48715620, 1, 0)
+
+        self.assertEquals(refund_amount.status, 0)
+        self.assertEquals(refund_amount.fee, 0.00)
+        self.assertEquals(refund_amount.tax_percent, 0.00)
+        self.assertEquals(refund_amount.amount, 8083.5)
+
+        self.assertEquals(refund_amount.blanks[0].ticket_identifier, 5279650)
+        self.assertEquals(refund_amount.blanks[0].tariff_nds, 0.0)
+        self.assertEquals(refund_amount.blanks[0].service_nds, 0.0)
+        self.assertEquals(refund_amount.blanks[0].commission_nds, 18.0)
+        self.assertEquals(refund_amount.blanks[0].ads_nds, 18.0)
+        self.assertEquals(refund_amount.blanks[0].returning_tariff_nds, 0.00)
+        self.assertEquals(refund_amount.blanks[0].returning_service_nds, 0.00)
+        self.assertEquals(refund_amount.blanks[0].returning_commission_nds, 0.00)
+        self.assertEquals(refund_amount.blanks[0].returning_ads_nds, 28.28)
+        self.assertEquals(refund_amount.blanks[0].returning_full_ticket_amount, None)
+        self.assertEquals(refund_amount.blanks[0].returning_kupe_amount, None)
+        self.assertEquals(refund_amount.blanks[0].returning_service_amount, None)
+        self.assertEquals(refund_amount.blanks[0].fine_amount, None)
+        self.assertEquals(refund_amount.blanks[0].amount, 6031.10)

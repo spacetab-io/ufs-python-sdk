@@ -635,3 +635,35 @@ class BlankElectronicRegistration(object):
         self.ticket_identifier = get_item(json.get('ID'), int)
         # Признак наличия электронной регистрации
         self.electronic_registration = get_item(json.get('RemoteCheckIn'), int)
+
+
+class BlankRefundAmount(object):
+    def __init__(self, json):
+        # Атрибут ID N Да Идентификатор билета в системе «УФС»
+        self.ticket_identifier = get_item(json.get('ID'), int)
+        # Ставка НДС с тарифа (в процентах)
+        self.tariff_nds = get_item(json.get('STV1'), float)
+        # Ставка НДС с сервиса (в процентах)
+        self.service_nds = get_item(json.get('STV2'), float)
+        # Ставка НДС с комиссионного сбора (в процентах)
+        self.commission_nds = get_item(json.get('STV3'), float)
+        # Ставка НДС с рекламационногосбора (сбор за возврат) (в процентах)
+        self.ads_nds = get_item(json.get('STV4'), float)
+        # Сумма возвращаемого НДС со стоимости перевозки по ставке STV1
+        self.returning_tariff_nds = get_item(json.get('ETF4'), float)
+        # Сумма возвращаемого НДС со стоимости сервисных услуг по ставке STV2
+        self.returning_service_nds = get_item(json.get('ETF5'), float)
+        # Сумма возвращаемого НДС со стоимости комиссионного сбора по ставке STV3
+        self.returning_commission_nds = get_item(json.get('ETFC'), float)
+        # Сумма взимаемого НДС со стоимости комиссионного сбора за возврат по ставке STV4
+        self.returning_ads_nds = get_item(json.get('ETFB'), float)
+        # Сумма возвращаемой стоимости билетной части
+        self.returning_full_ticket_amount = get_item(json.get('ESB'), float)
+        # Сумма возвращаемой стоимости плацкарты
+        self.returning_kupe_amount = get_item(json.get('ESP'), float)
+        # Сумма возвращаемой стоимости сервисных услуг
+        self.returning_service_amount = get_item(json.get('ESS'), float)
+        # Сумма штрафа за возврат
+        self.fine_amount = get_item(json.get('ESKV'), float)
+        # Сумма к возврату по данному билету
+        self.amount = get_item(json.get('Amount'), float)

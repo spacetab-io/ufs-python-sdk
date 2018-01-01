@@ -1,0 +1,31 @@
+<UFS_RZhD_Gate>
+    <System>
+        <CurrentTime timeOffset="+03:00">02.02.2016 15:10:08</CurrentTime>
+    </System>
+    <Status>0</Status>
+    <Fee>0.00</Fee>
+    <TaxPercent>0.00</TaxPercent>
+    <Amount>8083.5</Amount>
+    <Blank ID="5279650">
+        <STV1>0.0</STV1>
+        <STV2>0.0</STV2>
+        <STV3>18.0</STV3>
+        <STV4>18.0</STV4>
+        <ETF4>0.00</ETF4>
+        <ETF5>0.00</ETF5>
+        <ETFC>0.00</ETFC>
+        <ETFB>28.28</ETFB>
+        <Amount>6031.10</Amount>
+    </Blank>
+    <Blank ID="5279652">
+        <STV1>0.0</STV1>
+        <STV2>0.0</STV2>
+        <STV3>18.0</STV3>
+        <STV4>18.0</STV4>
+        <ETF4>0.00</ETF4>
+        <ETF5>0.00</ETF5>
+        <ETFC>0.00</ETFC>
+        <ETFB>28.28</ETFB>
+        <Amount>2052.40</Amount>
+    </Blank>
+</UFS_RZhD_Gate>
