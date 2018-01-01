@@ -5,7 +5,7 @@ from .wrapper.requests import RequestWrapper
 from .wrapper.types import TimeSw, Lang, TrainWithSeat, GrouppingType, JoinTrains, SearchOption, Confirm, Registration
 from .wrapper import (Clarify, TimeTable, AdditionalInfoStationRoute, RouteParamsStationRoute, TrainList,
                       GeneralInformation, TrainCarListEx, Blank, DateTime, BlankUpdateOrderInfo, Order,
-                      BlankElectronicRegistration)
+                      BlankElectronicRegistration, Food)
 
 
 class API(object):
@@ -59,6 +59,11 @@ class API(object):
         xml, json = self.__request_wrapper.make_request('ElectronicRegistration', id_trans=id_trans, reg=reg,
                                                         id_blank=id_blank)
         return ElectronicRegistration(xml, json)
+
+    def available_food(self, id_trans: int, advert_domain: str, lang: Lang.RU=Lang.RU):
+        xml, json = self.__request_wrapper.make_request('AvailableFood', id_trans=id_trans, advert_domain=advert_domain,
+                                                        lang=lang)
+        return AvailableFood(xml, json)
 
     @property
     def last_response(self):
@@ -162,6 +167,15 @@ class ElectronicRegistration(object):
         self.status = get_item(json.get('Status'), int)
         # Информация о билете заказа
         self.blank = get_array(json.get('Blank'), BlankElectronicRegistration)
+
+        self.xml = xml
+        self.json = json
+
+
+class AvailableFood(object):
+    def __init__(self, xml, json):
+        self.change_food_before = get_item(json.get('ChangeFoodBefore'), DateTime)
+        self.food = get_array(json['FoodAllowances'].get('Food'), Food) if json.get('FoodAllowances') is not None else None
 
         self.xml = xml
         self.json = json

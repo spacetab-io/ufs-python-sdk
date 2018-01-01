@@ -13,25 +13,25 @@ class RequestWrapper(object):
         if get:
             params = self.get_params(kwargs)
             response = self.session.make_api_request(method_name, params, get)
-            return self.get_json_xml(response)
+            return self.get_json_xml(response, method_name)
 
     # Пытаться напрямую конвертировать их xml в объект - жопа
     # Для этого использую слой конвертации в json, где исправляются имена и их чудеса с массивами
-    def get_json_xml(self, response):
+    def get_json_xml(self, response, method_name):
         json = {}
         for item in response:
             if len(item.getchildren()) != 0:
-                tag_data = self.get_json_rec(item, {})
+                tag_data = self.get_json_rec(item, {}, method_name)
             else:
                 tag_data = self.get_item(item)
 
             if item.tag not in json.keys():
-                if item.tag in ARRAYS:
+                if item.tag in ARRAYS or (method_name == 'AvailableFood' and item.tag in ['Food']):
                     json[item.tag] = [tag_data]
                 else:
                     json[item.tag] = tag_data
             else:
-                if item.tag in ARRAYS:
+                if item.tag in ARRAYS or (method_name == 'AvailableFood' and item.tag in ['Food']):
                     json[item.tag].append(tag_data)
                 else:
                     json[item.tag] = tag_data
@@ -50,40 +50,42 @@ class RequestWrapper(object):
         return response, json
 
     # Уходим в рекурсивное преобразование тегов в json
-    def get_json_rec(self, xml, json):
+    def get_json_rec(self, xml, json, method_name):
         for item in xml:
             if len(item.getchildren()) == 0:
                 if len(item.getchildren()) != 0:
-                    tag_data = self.get_json_rec(item, {})
+                    tag_data = self.get_json_rec(item, {}, method_name)
                 else:
                     tag_data = self.get_item(item)
                 if item.tag not in json.keys():
-                    if item.tag in ARRAYS:
+                    if item.tag in ARRAYS or (method_name == 'AvailableFood' and item.tag in ['Food']):
                         json[item.tag] = [tag_data]
                     else:
                         json[item.tag] = tag_data
                 else:
-                    if item.tag in ARRAYS:
+                    if item.tag in ARRAYS or (method_name == 'AvailableFood' and item.tag in ['Food']):
                         json[item.tag].append(tag_data)
                     else:
                         json[item.tag] = tag_data
             else:
                 if item.tag not in json.keys():
-                    if item.tag in ARRAYS:
-                        json[item.tag] = [self.get_json_rec(item, {})]
+                    if item.tag in ARRAYS or (method_name == 'AvailableFood' and item.tag in ['Food']):
+                        json[item.tag] = [self.get_json_rec(item, {}, method_name)]
                     else:
-                        json[item.tag] = self.get_json_rec(item, {})
+                        json[item.tag] = self.get_json_rec(item, {}, method_name)
                 else:
-                    if item.tag in ARRAYS:
-                        json[item.tag].append(self.get_json_rec(item, {}))
+                    if item.tag in ARRAYS or (method_name == 'AvailableFood' and item.tag in ['Food']):
+                        json[item.tag].append(self.get_json_rec(item, {}, method_name))
                     else:
-                        json[item.tag] = self.get_json_rec(item, {})
+                        json[item.tag] = self.get_json_rec(item, {}, method_name)
 
             if type(json[item.tag]) is dict and item.attrib != {}:
                 for key in item.attrib.keys():
                     json[item.tag][key] = item.attrib[key]
             elif type(json[item.tag]) is list and item.attrib != {}:
                 for key in item.attrib.keys():
+                    if type(json[item.tag][-1]) is not dict:
+                        json[item.tag][-1] = {'data': json[item.tag][-1]}
                     json[item.tag][-1][key] = item.attrib[key]
             elif item.attrib != {}:
                 data = json[item.tag] if json.get(item.tag) is not None else None
@@ -96,7 +98,7 @@ class RequestWrapper(object):
     def get_item(item):
         if item.text is None:
             return True
-        if item.tag in ['ArrivalTime', 'DepartureTime', 'ConfirmTimeLimit', 'ExpireSetEr', 'ChangeFoodBefore']:
+        if item.tag in ['ArrivalTime', 'DepartureTime', 'ConfirmTimeLimit', 'ExpireSetEr', 'ChangeFoodBefore', 'ChangeFoodBefore']:
             return get_ufs_datetime(item)
         if item.tag in ['C']:
             tag_data = item.text

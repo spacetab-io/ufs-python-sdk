@@ -582,7 +582,10 @@ class Food(object):
         # Название РП
         self.name = json.get('Name')
         # Описание РП
-        self.description = json.get('Description')
+        if 'Description' in json.keys():
+            self.description = json.get('Description')
+        else:
+            self.description = json.get('Desc')
 
 
 class BlankUpdateOrderInfo(object):

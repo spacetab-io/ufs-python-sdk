@@ -382,3 +382,13 @@ class TestAPI(unittest.TestCase):
 
         self.assertEquals(electronic_registration.blank[0].ticket_identifier, 5164702)
         self.assertEquals(electronic_registration.blank[0].electronic_registration, ElectronicRegistration.CONFIRM)
+    def test_available_food(self):
+        available_food = self.api.available_food(48715620, '')
+        self.assertEquals(available_food.change_food_before.time_offset, '+03:00')
+        self.assertEquals(available_food.change_food_before.time_type, None)
+        self.assertEquals(available_food.change_food_before.date, self.datetime)
+
+        self.assertEquals(available_food.food[0].code, 'Б')
+        self.assertEquals(available_food.food[0].name, 'ЗАВТРАК-БЛИНЫ/СЫР')
+        self.assertEquals(available_food.food[0].description, 'ЗАКУСКА СЫРНАЯ, БЛИНЫ, СУХАЯ ЧАСТЬК РАЦИОНУ')
+
