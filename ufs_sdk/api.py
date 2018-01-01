@@ -65,6 +65,13 @@ class API(object):
                                                         lang=lang)
         return AvailableFood(xml, json)
 
+    def change_food(self, id_trans: int, blanks_id: int, food_allowance_code: str, advert_domain: str,
+                    lang: Lang.RU=Lang.RU):
+        xml, json = self.__request_wrapper.make_request('ChangeFood', id_trans=id_trans, blanks_id=blanks_id,
+                                                        food_allowance_code=food_allowance_code,
+                                                        advert_domain=advert_domain, lang=lang)
+        return ChangeFood(xml, json['PIT'])
+
     @property
     def last_response(self):
         return self.__session.last_response_data
@@ -176,6 +183,39 @@ class AvailableFood(object):
     def __init__(self, xml, json):
         self.change_food_before = get_item(json.get('ChangeFoodBefore'), DateTime)
         self.food = get_array(json['FoodAllowances'].get('Food'), Food) if json.get('FoodAllowances') is not None else None
+
+        self.xml = xml
+        self.json = json
+
+
+class ChangeFood(object):
+    def __init__(self, xml, json):
+        # Порядковый номер документа
+        self.number = json.get('PR')
+        # Номер поезда
+        self.train_number = json.get('N')
+        # Дата отправления поезда
+        self.departure_date = json.get('D')
+        # Код станции отправления
+        self.departure_number = get_item(json.get('C1'), int)
+        # Код станции прибытия
+        self.arrival_number = get_item(json.get('C2'), int)
+        # Номер вагона
+        self.car_number = get_item(json.get('B'), int)
+        # Класс обслуживания
+        self.service_class = json.get('KV')
+        # Номера мест
+        self.place_number = get_item(json.get('M'), int)
+        # Количество пассажиров
+        self.passengers_amount = get_item(json.get('KOL'), int)
+        # Номер электронного билета
+        self.electronic_number = get_item(json.get('NEB'), int)
+        # Код РП
+        self.food_code = json.get('V')
+        # Название РП
+        self.food_name = json.get('NAME')
+        # Описание РП
+        self.food_description = json.get('DESC')
 
         self.xml = xml
         self.json = json

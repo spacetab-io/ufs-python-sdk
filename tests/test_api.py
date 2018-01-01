@@ -382,6 +382,7 @@ class TestAPI(unittest.TestCase):
 
         self.assertEquals(electronic_registration.blank[0].ticket_identifier, 5164702)
         self.assertEquals(electronic_registration.blank[0].electronic_registration, ElectronicRegistration.CONFIRM)
+
     def test_available_food(self):
         available_food = self.api.available_food(48715620, '')
         self.assertEquals(available_food.change_food_before.time_offset, '+03:00')
@@ -392,3 +393,19 @@ class TestAPI(unittest.TestCase):
         self.assertEquals(available_food.food[0].name, 'ЗАВТРАК-БЛИНЫ/СЫР')
         self.assertEquals(available_food.food[0].description, 'ЗАКУСКА СЫРНАЯ, БЛИНЫ, СУХАЯ ЧАСТЬК РАЦИОНУ')
 
+    def test_change_food(self):
+        change_food = self.api.change_food(48715620, 1, '', '')
+
+        self.assertEquals(change_food.number, '1')
+        self.assertEquals(change_food.train_number, '002aa')
+        self.assertEquals(change_food.departure_date, '1910')
+        self.assertEquals(change_food.departure_number, 2006004)
+        self.assertEquals(change_food.arrival_number, 2004001)
+        self.assertEquals(change_food.car_number, 2)
+        self.assertEquals(change_food.service_class, '1Э')
+        self.assertEquals(change_food.place_number, 4)
+        self.assertEquals(change_food.passengers_amount, 1)
+        self.assertEquals(change_food.electronic_number, 77304832937966)
+        self.assertEquals(change_food.food_code, 'Л')
+        self.assertEquals(change_food.food_name, 'ЗАВТРАК-БЛИНЫ/МЯСН')
+        self.assertEquals(change_food.food_description, 'ЗАКУСКА МЯСНАЯ, БЛИНЫ, СУХАЯ ЧАСТЬ К РАЦИОНУ')
