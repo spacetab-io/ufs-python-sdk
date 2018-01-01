@@ -28,12 +28,12 @@ class API(object):
 
     def train_list(self, from_: 'str or int', to: 'str or int', day: int, month: int, advert_domain: str=None,
                    lang: str=Lang.RU, time_sw: TimeSw=TimeSw.NO_SW, time_from: int=None, time_to: int=None,
-                   train_with_seat: TrainWithSeat=None, join_train_complex: bool=None, groupping_type: GrouppingType=None,
+                   train_with_seat: TrainWithSeat=None, join_train_complex: bool=None, grouping_type: GrouppingType=None,
                    join_trains: JoinTrains=None, search_option: SearchOption=None):
         xml, json = self.__request_wrapper.make_request('TrainList', from_=from_, to=to, day=day, month=month,
                                                         advert_domain=advert_domain, time_sw=time_sw, lang=lang,
                                                         time_from=time_from, time_to=time_to, train_with_seat=train_with_seat,
-                                                        join_train_complex=join_train_complex, groupping_type=groupping_type,
+                                                        join_train_complex=join_train_complex, groupping_type=grouping_type,
                                                         join_trains=join_trains, search_option=search_option)
         return TrailListBuilder(xml, json)
 
@@ -59,6 +59,11 @@ class API(object):
         xml, json = self.__request_wrapper.make_request('ElectronicRegistration', id_trans=id_trans, reg=reg,
                                                         id_blank=id_blank)
         return ElectronicRegistration(xml, json)
+
+    def get_ticket_blank(self, id_trans: int, format=None):
+        response = self.__request_wrapper.make_request('GetTicketBlank', id_trans=id_trans, format=format)
+                                                       #, force_new_tech=1)
+        return GetTicketBlank(response, format)
 
     def available_food(self, id_trans: int, advert_domain: str, lang: Lang.RU=Lang.RU):
         xml, json = self.__request_wrapper.make_request('AvailableFood', id_trans=id_trans, advert_domain=advert_domain,
@@ -170,6 +175,11 @@ class ElectronicRegistration(object):
 
         self.xml = xml
         self.json = json
+
+
+class GetTicketBlank(object):
+    def __init__(self, response, format):
+        pass
 
 
 class AvailableFood(object):
