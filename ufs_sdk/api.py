@@ -1,11 +1,11 @@
 from .utils import get_item
 from .session import Session
-from .utils import get_array, get_bool_item, get_ufs_datetime
+from .utils import get_array, get_bool_item, get_datetime
 from .wrapper.requests import RequestWrapper
 from .wrapper.types import TimeSw, Lang, TrainWithSeat, GrouppingType, JoinTrains, SearchOption, Confirm, Registration
 from .wrapper import (Clarify, TimeTable, AdditionalInfoStationRoute, RouteParamsStationRoute, TrainList,
                       GeneralInformation, TrainCarListEx, Blank, DateTime, BlankUpdateOrderInfo, Order,
-                      BlankElectronicRegistration, Food, BlankRefundAmount)
+                      BlankElectronicRegistration, Food, BlankRefund)
 
 
 class API(object):
@@ -76,6 +76,11 @@ class API(object):
         xml, json = self.__request_wrapper.make_request('RefundAmount', id_trans=id_trans, id_blank=id_blank,
                                                         doc=doc, lang=lang)
         return RefundAmount(xml, json)
+
+    def refund(self, id_trans: int, id_blank: int, doc: int, stan: str=None, lang: Lang.RU=Lang.RU):
+        xml, json = self.__request_wrapper.make_request('Refund', id_trans=id_trans, id_blank=id_blank,
+                                                        doc=doc, stan=stan, lang=lang)
+        return Refund(xml, json)
 
     @property
     def last_response(self):
@@ -238,7 +243,29 @@ class RefundAmount(object):
         # Общая сумма к возврату
         self.amount = get_item(json.get('Amount'), float)
         # Информация о билете заказа
-        self.blanks = get_array(json.get('Blank'), BlankRefundAmount)
+        self.blanks = get_array(json.get('Blank'), BlankRefund)
+
+        self.xml = xml
+        self.json = json
+
+
+class Refund(object):
+    def __init__(self, xml, json):
+        # Статус операции: «0» – успешная
+        self.status = get_item(json.get('Status'), int)
+        # Номер транзакции возврата
+        self.refund_id = get_item(json.get('RefundTransID'), int)
+        # Время осуществления возврата
+        self.refund_date = get_datetime(json.get('RefundTime'))
+        # Сумма сервисного сбора за возврат
+        self.fee = get_item(json.get('Fee'), float)
+        # Величина комиссионного сбора УФС в %, В случае, если комиссия является фиксированной величиной,
+        # то передается в данном параметре «0»
+        self.tax_percent = get_item(json.get('TaxPercent'), float)
+        # Общая сумма к возврату
+        self.amount = get_item(json.get('Amount'), float)
+        # Информация о билете заказа
+        self.blanks = get_array(json.get('Blank'), BlankRefund)
 
         self.xml = xml
         self.json = json

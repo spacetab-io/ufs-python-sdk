@@ -637,7 +637,7 @@ class BlankElectronicRegistration(object):
         self.electronic_registration = get_item(json.get('RemoteCheckIn'), int)
 
 
-class BlankRefundAmount(object):
+class BlankRefund(object):
     def __init__(self, json):
         # Атрибут ID N Да Идентификатор билета в системе «УФС»
         self.ticket_identifier = get_item(json.get('ID'), int)

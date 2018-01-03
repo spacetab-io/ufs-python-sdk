@@ -21,19 +21,13 @@ def get_bool_item(item):
 
 def get_datetime(item):
     if item is not None:
-        return datetime.strptime(item, '%Y-%m-%dT%X')
-    return None
-
-
-def get_datetime_array(items):
-    if items is not None:
-        return [datetime.strptime(item, '%Y-%m-%dT%X') for item in items]
+        return datetime.strptime(item, '%d.%m.%Y %X')
     return None
 
 
 def set_datetime(item):
     if item is not None:
-        return item.strftime('%Y-%m-%dT%X')
+        return item.strftime('%d.%m.%Y %X')
     return None
 
 

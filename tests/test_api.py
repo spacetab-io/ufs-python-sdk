@@ -432,3 +432,28 @@ class TestAPI(unittest.TestCase):
         self.assertEquals(refund_amount.blanks[0].returning_service_amount, None)
         self.assertEquals(refund_amount.blanks[0].fine_amount, None)
         self.assertEquals(refund_amount.blanks[0].amount, 6031.10)
+
+    def test_refund(self):
+        refund = self.api.refund(48715620, 1, 0)
+
+        self.assertEquals(refund.status, 0)
+        self.assertEquals(refund.fee, 0.00)
+        self.assertEquals(refund.tax_percent, 0.00)
+        self.assertEquals(refund.amount, 8083.5)
+        self.assertEquals(refund.refund_id, 48716452)
+        self.assertEquals(refund.refund_date, self.datetime)
+
+        self.assertEquals(refund.blanks[0].ticket_identifier, 5279650)
+        self.assertEquals(refund.blanks[0].tariff_nds, 0.0)
+        self.assertEquals(refund.blanks[0].service_nds, 0.0)
+        self.assertEquals(refund.blanks[0].commission_nds, 18.0)
+        self.assertEquals(refund.blanks[0].ads_nds, 18.0)
+        self.assertEquals(refund.blanks[0].returning_tariff_nds, 0.00)
+        self.assertEquals(refund.blanks[0].returning_service_nds, 0.00)
+        self.assertEquals(refund.blanks[0].returning_commission_nds, 0.00)
+        self.assertEquals(refund.blanks[0].returning_ads_nds, 28.28)
+        self.assertEquals(refund.blanks[0].returning_full_ticket_amount, None)
+        self.assertEquals(refund.blanks[0].returning_kupe_amount, None)
+        self.assertEquals(refund.blanks[0].returning_service_amount, None)
+        self.assertEquals(refund.blanks[0].fine_amount, None)
+        self.assertEquals(refund.blanks[0].amount, 6031.10)
