@@ -2,10 +2,11 @@ from .utils import get_item
 from .session import Session
 from .utils import get_array, get_bool_item, get_datetime
 from .wrapper.requests import RequestWrapper
-from .wrapper.types import TimeSw, Lang, TrainWithSeat, GrouppingType, JoinTrains, SearchOption, Confirm, Registration
+from .wrapper.types import (TimeSw, Lang, TrainWithSeat, GrouppingType, JoinTrains, SearchOption, Confirm, Registration,
+                           ReferenceCode)
 from .wrapper import (Clarify, TimeTable, AdditionalInfoStationRoute, RouteParamsStationRoute, TrainList,
                       GeneralInformation, TrainCarListEx, Blank, DateTime, BlankUpdateOrderInfo, Order,
-                      BlankElectronicRegistration, Food, BlankRefund)
+                      BlankElectronicRegistration, Food, BlankRefund, Cards)
 
 
 class API(object):
@@ -81,6 +82,12 @@ class API(object):
         xml, json = self.__request_wrapper.make_request('Refund', id_trans=id_trans, id_blank=id_blank,
                                                         doc=doc, stan=stan, lang=lang)
         return Refund(xml, json)
+
+    def get_catalog(self, code: ReferenceCode, all_languages: int=None, lang: Lang.RU=Lang.RU,
+                    is_description: bool=None):
+        xml, json = self.__request_wrapper.make_request('GetCatalog', code=code, all_languages=all_languages, lang=lang,
+                                                        is_description=is_description)
+        return GetCatalog(xml, json)
 
     @property
     def last_response(self):
@@ -266,6 +273,15 @@ class Refund(object):
         self.amount = get_item(json.get('Amount'), float)
         # Информация о билете заказа
         self.blanks = get_array(json.get('Blank'), BlankRefund)
+
+        self.xml = xml
+        self.json = json
+
+
+class GetCatalog(object):
+    def __init__(self, xml, json):
+        self.loyalty_cards = get_array(json.get('LOYALTY_CARDS'), Cards)
+        self.co_services = get_array(json.get('CO_SERVICES'), Cards)
 
         self.xml = xml
         self.json = json

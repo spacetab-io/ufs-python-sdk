@@ -2,7 +2,7 @@ from ufs_sdk.utils import get_ufs_datetime
 
 REQUEST_PARAM_NAMES = {'from_': 'from'}
 # Называть переменные разными именами ? Не, не слышал
-ARRAYS = ['SC', 'N', 'C', 'CK', 'Blank']
+ARRAYS = ['SC', 'N', 'C', 'CK', 'Blank', 'CO_SERVICES', 'LOYALTY_CARDS']
 
 
 class RequestWrapper(object):
@@ -40,6 +40,8 @@ class RequestWrapper(object):
                 for key in item.attrib.keys():
                     json[item.tag][key] = item.attrib[key]
             elif type(json[item.tag]) is list and item.attrib != {}:
+                if type(json[item.tag][-1]) is not dict:
+                    json[item.tag][-1] = {'data': json[item.tag][-1]}
                 for key in item.attrib.keys():
                     json[item.tag][-1][key] = item.attrib[key]
             elif item.attrib != {}:

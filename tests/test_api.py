@@ -5,7 +5,7 @@ from datetime import datetime
 from ufs_sdk.exceptions import UfsTrainListError
 from ufs_sdk.wrapper import ReferenceParamsTimeTable, AdditionalInfoTimeTable, TrainTimeTable
 from ufs_sdk.wrapper.types import (TimeSw, DirectionGroup, CarCategories, Services, Confirm, ElectronicRegistration,
-                                   Test, PrintFlag, RzhdStatus, Registration)
+                                   Test, PrintFlag, RzhdStatus, Registration, ReferenceCode)
 import mock
 
 
@@ -457,3 +457,15 @@ class TestAPI(unittest.TestCase):
         self.assertEquals(refund.blanks[0].returning_service_amount, None)
         self.assertEquals(refund.blanks[0].fine_amount, None)
         self.assertEquals(refund.blanks[0].amount, 6031.10)
+
+    def test_get_catalog(self):
+        get_catalog = self.api.get_catalog(ReferenceCode.LOYALTY_CARDS, 1)
+
+        self.assertEquals(get_catalog.loyalty_cards[0].code, 'RzhdB')
+        self.assertEquals(get_catalog.loyalty_cards[0].name_ru, 'Начисление баллов "РЖД Бонус"')
+        self.assertEquals(get_catalog.loyalty_cards[0].name_en, 'RZD Bonus loyalty program')
+        self.assertEquals(get_catalog.loyalty_cards[0].name_de, 'RZhD-Bonus')
+        self.assertEquals(get_catalog.loyalty_cards[0].description_ru, 'Начисление баллов осуществляется в течение 30 дней с момента начала поездки. Билет будет оформлен на ФИО владельца карты.')
+        self.assertEquals(get_catalog.loyalty_cards[0].description_en, 'Reward miles will be credited within 30 days after your departure. The ticket will be issued for the full name of a cardholder.')
+        self.assertEquals(get_catalog.loyalty_cards[0].description_de, 'Die Punkte werden im Laufe von 30 Tagen ab dem Fahrt-Anfang angerechnet. Die Fahrkarte wird auf den Namen des Karteninhabers (der Karteninhaberin) ausgestellt.')
+

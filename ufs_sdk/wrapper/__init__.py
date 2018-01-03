@@ -667,3 +667,14 @@ class BlankRefund(object):
         self.fine_amount = get_item(json.get('ESKV'), float)
         # Сумма к возврату по данному билету
         self.amount = get_item(json.get('Amount'), float)
+
+
+class Cards(object):
+    def __init__(self, json):
+        self.code = json.get('Code')
+        self.name_ru = json.get('NameRU')
+        self.name_en = json.get('NameEN')
+        self.name_de = json.get('NameDE')
+        self.description_ru = json.get('DescriptionRU')
+        self.description_en = json.get('DescriptionEN')
+        self.description_de = json.get('DescriptionDE')

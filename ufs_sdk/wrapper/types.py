@@ -247,3 +247,8 @@ class RzhdStatus:
 class Registration:
     REFUSE = 0
     CONFIRM = 1
+
+
+class ReferenceCode:
+    CO_SERVICES = 'CO_SERVICES'
+    LOYALTY_CARDS = 'LOYALTY_CARDS'
