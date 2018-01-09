@@ -1,0 +1,89 @@
+<UFS_RZhD_Gate>
+    <System>
+        <CurrentTime timeOffset="+03:00">01.02.2016 08:09:31</CurrentTime>
+    </System>
+    <PER>ОАО "ФПК"</PER>
+    <INN>7708709686</INN>
+    <D2>010216</D2>
+    <TB>0809</TB>
+    <N1>032А</N1>
+    <D3>02.03</D3>
+    <T1>19:53</T1>
+    <KN></KN>
+    <KN1>ЛЕВ ТОЛСТОЙ</KN1>
+    <BRN>ЛЕВ ТОЛСТОЙ</BRN>
+    <C>МОСКВА</C>
+    <CC1>2000000</CC1>
+    <C>ХЕЛЬСИНКИ</C>
+    <CC2>1000001</CC2>
+    <VH>15</VH>
+    <SegmentType>1</SegmentType>
+    <KV>М</KV>
+    <KL>1А</KL>
+    <R></R>
+    <VB>ФПК</VB>
+    <M1>02</M1>
+    <H>001,002</H>
+    <TF0>35683.90</TF0>
+    <GB>ВРЕМЯ ОТПР И ПРИБ МОСКОВСКОЕ</GB>
+    <GA>КУРИТЬ ЗАПРЕЩЕНО</GA>
+    <R0>У0</R0>
+    <D1>03.03</D1>
+    <T4>10:26</T4>
+    <DepartureTime timeOffset="+02:00" timeType="1">01.01.1970 03:00:00</DepartureTime>
+   <ArrivalTime timeType="0">03:00:00</ArrivalTime>
+    <ET>
+        <PR>1</PR>
+        <TF>35683.90</TF>
+        <TF4>5438.23</TF4>
+        <TF5>0</TF5>
+        <STB>0.0</STB>
+        <STP>0.0</STP>
+        <TFB>0.0</TFB>
+        <STV1>0.0</STV1>
+        <STV2>0.0</STV2>
+        <STV3>0.0</STV3>
+        <PI>
+            <PS>ЗЗ934647165</PS>
+            <IZ>Ivanov=Petr</IZ>
+            <GD>01051956</GD>
+            <GR>KEN</GR>
+            <FM>M</FM>
+            <ID>14656796</ID>
+        </PI>
+        <GT>ПОЛНЫЙ</GT>
+        <CM description="НИЖНЕЕ">Н</CM>
+        <PIT></PIT>
+        <ER></ER>
+        <H>001,002</H>
+        <PlaceCount>2</PlaceCount>
+        <IDBlank>5164203</IDBlank>
+    </ET>
+    <Amount>35683.90</Amount>
+    <IDTrans>48715079</IDTrans>
+    <Status>0</Status>
+    <Balance>30000.00</Balance>
+    <BalanceLimit>0.00</BalanceLimit>
+    <PrintPoint>В кассах ОАО "РЖД", ОАО "ФПК", на транзакционных терминалах ТТС и ТТР</PrintPoint>
+    <Test>1</Test>
+    <IsEticketPrintPoint>true</IsEticketPrintPoint>
+    <ConfirmTimeLimit timeOffset="+03:00">01.01.1970 03:00:00</ConfirmTimeLimit>
+    <Reservation>1</Reservation>
+    <ReservationType>1</ReservationType>
+    <ClientFee>1760.00</ClientFee>
+    <OrderId>82328</OrderId>
+    <Warnings>
+        <Warning code="1" text="Уже есть бронирование с данными параметрами">
+            <ExternalData>
+                <Data key="Order ID" value="37859369841651"></Data>
+            </ExternalData>
+        </Warning>
+    </Warnings>
+    <printPoints>
+        <EPrintPoint>
+            <Station>СМОЛЕНСК ЦЕНТРАЛЬНЫЙ</Station>
+            <RunTime>03:10</RunTime>
+            <Direction>opposite</Direction>
+        </EPrintPoint>
+    </printPoints>
+</UFS_RZhD_Gate>

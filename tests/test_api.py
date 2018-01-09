@@ -3,9 +3,10 @@ import unittest
 from ufs_sdk import API
 from datetime import datetime
 from ufs_sdk.exceptions import UfsTrainListError
-from ufs_sdk.wrapper import ReferenceParamsTimeTable, AdditionalInfoTimeTable, TrainTimeTable
+from ufs_sdk.wrapper import ReferenceParamsTimeTable, AdditionalInfoTimeTable, TrainTimeTable, PassDoc
 from ufs_sdk.wrapper.types import (TimeSw, DirectionGroup, CarCategories, Services, Confirm, ElectronicRegistration,
-                                   Test, PrintFlag, RzhdStatus, Registration, ReferenceCode)
+                                   Test, PrintFlag, RzhdStatus, Registration, ReferenceCode, InOneKupe, Bedding,
+                                   FullKupe, RemoteCheckIn, PayType, Storey, Placedemands)
 import mock
 
 
@@ -327,6 +328,100 @@ class TestAPI(unittest.TestCase):
         self.assertEquals(car_list_ex.trains[0].passenger_departure_station.name, 'ХЕЛЬСИНКИ')
         self.assertEquals(car_list_ex.trains[0].passenger_arrival_station.code, 2006004)
         self.assertEquals(car_list_ex.trains[0].passenger_arrival_station.name, 'МОСКВА ОКТЯБРЬСКАЯ')
+
+    def test_buy_tickets(self):
+        pass_doc = PassDoc('ЗП', 'ЗЗ934647165', '01051956', '1', 'KEN', first_name='Вася', last_name='Пупкин')
+        buy_tickets = self.api.buy_ticket(2000000, 1000001, 2, 3, '032A', 'М', pass_doc, InOneKupe.NOT_SIDE,
+                                          RemoteCheckIn.TRY_AUTO_ER, PayType.CASH)
+
+        self.assertEquals(buy_tickets.creation_date, '010216')
+        self.assertEquals(buy_tickets.carrier, 'ОАО "ФПК"')
+        self.assertEquals(buy_tickets.carrier_inn, 7708709686)
+        self.assertEquals(buy_tickets.reservation_time, '0809')
+        self.assertEquals(buy_tickets.train_number, '032А')
+        self.assertEquals(buy_tickets.departure_date, '02.03')
+        self.assertEquals(buy_tickets.departure_time, '19:53')
+        self.assertEquals(buy_tickets.train_category, True)
+        self.assertEquals(buy_tickets.train_name, 'ЛЕВ ТОЛСТОЙ')
+        self.assertEquals(buy_tickets.train_brand, 'ЛЕВ ТОЛСТОЙ')
+        self.assertEquals(buy_tickets.origin, 'МОСКВА')
+        self.assertEquals(buy_tickets.destination, 'ХЕЛЬСИНКИ')
+        self.assertEquals(buy_tickets.origin_code, 2000000)
+        self.assertEquals(buy_tickets.destination_code, 1000001)
+        self.assertEquals(buy_tickets.car_number, 15)
+        self.assertEquals(buy_tickets.segment_type, 1)
+        self.assertEquals(buy_tickets.car_category, 'М')
+        self.assertEquals(buy_tickets.service_class, '1А')
+        self.assertEquals(buy_tickets.kupe_sex, True)
+        self.assertEquals(buy_tickets.carrier_name, 'ФПК')
+        self.assertEquals(buy_tickets.places_amount, 2)
+        self.assertEquals(buy_tickets.place_number, [1, 2])
+        self.assertEquals(buy_tickets.total_price, 35683.90)
+        self.assertEquals(buy_tickets.special_conditions, 'КУРИТЬ ЗАПРЕЩЕНО')
+        self.assertEquals(buy_tickets.departure_time_info, 'ВРЕМЯ ОТПР И ПРИБ МОСКОВСКОЕ')
+        self.assertEquals(buy_tickets.high_comfort, 'У0')
+        self.assertEquals(buy_tickets.arrival_date, '03.03')
+        self.assertEquals(buy_tickets.arrival_time, '10:26')
+
+        self.assertEquals(buy_tickets.ticket_info.ticket_number, 1)
+        self.assertEquals(buy_tickets.ticket_info.ticket_price, 35683.90)
+        self.assertEquals(buy_tickets.ticket_info.tariff_nds, 5438.23)
+        self.assertEquals(buy_tickets.ticket_info.service_nds, 0)
+        self.assertEquals(buy_tickets.ticket_info.ticket_eb_price, 0.0)
+        self.assertEquals(buy_tickets.ticket_info.ticket_platzkart_price, 0.0)
+        self.assertEquals(buy_tickets.ticket_info.ads_nds, 0.0)
+        self.assertEquals(buy_tickets.ticket_info.percent_tariff_nds, 0.0)
+        self.assertEquals(buy_tickets.ticket_info.percent_service_nds, 0.0)
+        self.assertEquals(buy_tickets.ticket_info.commission_nds, 0.0)
+        self.assertEquals(buy_tickets.ticket_info.privilege_info, None)
+        self.assertEquals(buy_tickets.ticket_info.ticket_category, 'ПОЛНЫЙ')
+        self.assertEquals(buy_tickets.ticket_info.place_tier, 'Н')
+        self.assertEquals(buy_tickets.ticket_info.place_tier_description, 'НИЖНЕЕ')
+        self.assertEquals(buy_tickets.ticket_info.passenger_info.doc, 'ЗЗ934647165')
+        self.assertEquals(buy_tickets.ticket_info.passenger_info.fio, 'Ivanov=Petr')
+        self.assertEquals(buy_tickets.ticket_info.passenger_info.identifier, 14656796)
+        self.assertEquals(buy_tickets.ticket_info.passenger_info.sex, 'M')
+        self.assertEquals(buy_tickets.ticket_info.passenger_info.citizenship, 'KEN')
+        self.assertEquals(buy_tickets.ticket_info.passenger_info.birth_date, '01051956')
+
+        self.assertEquals(buy_tickets.ticket_info.place_list, '001,002')
+        self.assertEquals(buy_tickets.ticket_info.storey, None)
+        self.assertEquals(buy_tickets.ticket_info.blank_id, 5164203)
+        self.assertEquals(buy_tickets.ticket_info.place_count, 2)
+        self.assertEquals(buy_tickets.ticket_info.is_rp_selected, True)
+
+        self.assertEquals(buy_tickets.departure_datetime.date, self.datetime)
+        self.assertEquals(buy_tickets.departure_datetime.time_offset, '+02:00')
+        self.assertEquals(buy_tickets.departure_datetime.time_type, 1)
+        self.assertEquals(buy_tickets.arrival_datetime.date, '03:00:00')
+        self.assertEquals(buy_tickets.arrival_datetime.time_offset, None)
+        self.assertEquals(buy_tickets.arrival_datetime.time_type, 0)
+        self.assertEquals(buy_tickets.amount, 35683.900)
+        self.assertEquals(buy_tickets.id_trans, 48715079)
+        self.assertEquals(buy_tickets.status, 0)
+        self.assertEquals(buy_tickets.balance, 30000.000)
+        self.assertEquals(buy_tickets.balance_limit, 0.000)
+        self.assertEquals(buy_tickets.print_point, 'В кассах ОАО "РЖД", ОАО "ФПК", на транзакционных терминалах ТТС и ТТР')
+        self.assertEquals(buy_tickets.print_point_phone, None)
+
+        self.assertEquals(buy_tickets.test, Test.TEST)
+        self.assertEquals(buy_tickets.is_eticket_print_point, True)
+        self.assertEquals(buy_tickets.confirm_time_limit.date, self.datetime)
+        self.assertEquals(buy_tickets.confirm_time_limit.time_offset, '+03:00')
+        self.assertEquals(buy_tickets.confirm_time_limit.time_type, None)
+        self.assertEquals(buy_tickets.reservation, True)
+        self.assertEquals(buy_tickets.reservation_type, 1)
+        self.assertEquals(buy_tickets.client_fee, 1760.00)
+        self.assertEquals(buy_tickets.order_id, 82328)
+
+        self.assertEquals(buy_tickets.warnings[0].code, 1)
+        self.assertEquals(buy_tickets.warnings[0].text, 'Уже есть бронирование с данными параметрами')
+        self.assertEquals(buy_tickets.warnings[0].external_data.key, 'Order ID')
+        self.assertEquals(buy_tickets.warnings[0].external_data.value, 37859369841651)
+
+        self.assertEquals(buy_tickets.print_points[0].station, 'СМОЛЕНСК ЦЕНТРАЛЬНЫЙ')
+        self.assertEquals(buy_tickets.print_points[0].run_time, '03:10')
+        self.assertEquals(buy_tickets.print_points[0].direction, 'opposite')
 
     def test_confirm_ticket(self):
         confirm_ticket = self.api.confirm_ticket(48715626, Confirm.CONFIRM, 0)

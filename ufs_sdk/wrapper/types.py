@@ -178,7 +178,7 @@ class PlaceTypeNumber:
     # (для сидячих) Откидное
     FOLDING = 'О'
     # (для сидячих вагонов) Отсек (купе) в поезде Ласточка
-    SITTING_KUPE = 7
+    SITTING_KUPE = '7'
 
 
 class Confirm:
@@ -229,7 +229,7 @@ class RzhdStatus:
     # Без электронной регистрации
     WITHOUT_ELECTRONIC_REGISTRATION = 0
     # Электронная регистрация
-    ELECTRONIC_REGISTRATION= 1
+    ELECTRONIC_REGISTRATION = 1
     # Оплата не подтверждена
     FAILED_PAYMENT = 2
     # Аннулирован
@@ -252,3 +252,85 @@ class Registration:
 class ReferenceCode:
     CO_SERVICES = 'CO_SERVICES'
     LOYALTY_CARDS = 'LOYALTY_CARDS'
+
+
+class InOneKupe:
+    # Требование не задано
+    NONE = 0
+    # В одном купе/в одном ряду (для вагонов с местами для сидения)
+    IN_ONE_KUPE_OR_ROW = 1
+    # Не боковые места
+    NOT_SIDE = 2
+    # Места в одном отсеке
+    IN_ONE_COMPARTMENT = 3
+
+
+class Bedding:
+    # В стоимость билета не включено постельное белье
+    NO_LINENS = 0
+    # В стоимость билета включено постельное белье
+    LINENS = 1
+
+
+class FullKupe:
+    # Выкуп купе целиком
+    ALL_KUPE = 1
+    # Выкуп СВ целиком
+    ALL_SV = 2
+
+
+class RemoteCheckIn:
+    # Без электронной регистрации
+    WITHOUT_ELECTRONIC_REGISTRATION = 0
+    # Электронная регистрация
+    ELECTRONIC_REGISTRATION = 1
+    # Если ЭР возможна, то при подтверждении ЭР устанавливается автоматически
+    TRY_AUTO_ER = 2
+
+
+class PayType:
+    # Оплата наличными
+    CASH = 'Cash'
+    # Credit card. Оплата банковской картой. Данный тип оплаты доступен не всем партнерам.
+    CREDIT_CARD = 'CC'
+
+
+class Storey:
+    # Требования к этажу не заданы
+    NONE = 0
+    # Первый этаж вагона
+    FIRST_STOREY = 1
+    # Второй этаж вагона
+    SECOND_STOREY = 2
+
+
+class Placedemands:
+    # Места не у стола
+    NO_TABLE = 'Н'
+    # Места у стола (обычные места)
+    TABLE = 'П'
+    # Места рядом с детской площадкой и не у стола
+    PLAYGROUND_NO_TABLE = 'В'
+    # Места рядом с детской площадкой и у стола
+    PLAYGROUND_TABLE = 'Б'
+    # Места рядом с местами для пассажиров с животными
+    BESIDE_ANIMALS = 'Д'
+    # Любое место у стола (включая рядом с местами для пассажиров с животными, детской площадкой и т.д)
+    ANY_TABLE = 'СТОЛ'
+    # Места не у стола, включая места рядом с детской площадкой и рядом с местами для пассажиров с животными.
+    # Обобщающее требование. Рекомендуется использовать в случае, если не выбран номер вагона
+    PLAYGROUND_ANIMALS_NO_TABLE = 'НСТ'
+    # Места рядом с детской площадкой
+    PLAYGROUND = 'ДЕТ'
+    # Места для инвалидов
+    INVALID = 'И'
+    # Места для пассажиров с животными
+    FOR_ANIMALS = 'Ж'
+    # Отсек (купе)
+    KUPE = '7'
+    # Откидное место
+    HINGED_SEAT = 'О'
+    # Место матери и ребенка до 1 года
+    MOTHER_AND_CHILDREN_TO_1 = 'М'
+    # Места для пассажиров с детьми
+    MOTHER_AND_CHILDREN = 'Р'

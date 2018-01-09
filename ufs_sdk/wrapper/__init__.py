@@ -678,3 +678,104 @@ class Cards(object):
         self.description_ru = json.get('DescriptionRU')
         self.description_en = json.get('DescriptionEN')
         self.description_de = json.get('DescriptionDE')
+
+
+class PassDoc(object):
+    def __init__(self, doc_type: str, doc_number, birth_data: str, tariff_code: str, country_iso: str='-',
+                 sex: str='-', last_name: str='-', first_name: str='-', patronymic: str='-', card_number: int='-'):
+
+        self.pass_doc = '%s%s/%s=%s=%s/%s*%s/%s/%s/%s' % (doc_type, doc_number, last_name, first_name, patronymic, birth_data,
+                                                          tariff_code, country_iso, sex, card_number)
+
+
+class PassengerInfo(object):
+    def __init__(self, json):
+        # Тип и номер документа
+        self.doc = json.get('PS')
+        # Фамилия, имя, отчество
+        self.fio = json.get('IZ')
+        # Уникальный идентификатор пассажира
+        self.identifier = get_item(json.get('ID'), int)
+        # Пол пассажира
+        self.sex = json.get('FM')
+        # Гражданство пассажира
+        self.citizenship = json.get('GR')
+        # Дата рождения в формате ddMMyyyy
+        self.birth_date = json.get('GD')
+
+
+class TicketInfo(object):
+    def __init__(self, json):
+        # Да Порядковый номер билета в заказе
+        self.ticket_number = get_item(json.get('PR'), int)
+        # Да Стоимость билета с учетом НДС
+        self.ticket_price = get_item(json.get('TF'), float)
+        # НДС со стоимости перевозки по электронному билету
+        self.tariff_nds = get_item(json.get('TF4'), float)
+        # НДС со стоимости сервиса по электронному билету
+        self.service_nds = get_item(json.get('TF5'), float)
+        # Стоимость билетной части по ЭБ
+        self.ticket_eb_price = get_item(json.get('STB'), float)
+        # Стоимость плацкарты по ЭБ
+        self.ticket_platzkart_price = get_item(json.get('STP'), float)
+        # НДС со стоимости комиссионного сбора и дополнительнвх услуг
+        self.ads_nds = get_item(json.get('TFB'), float)
+        # Ставка НДС с тарифа (в процентах)
+        self.percent_tariff_nds = get_item(json.get('STV1'), float)
+        # Ставка НДС с сервиса (в процентах)
+        self.percent_service_nds = get_item(json.get('STV2'), float)
+        # Ставка НДС с комиссионного сбора (в процентах)
+        self.commission_nds = get_item(json.get('STV3'), float)
+        # Информация о льготе или спецтарифе
+        self.privilege_info = get_item(json.get('DL'), int)
+        # Категория билета (Таблица 98)
+        self.ticket_category = json.get('GT')
+        # Ярус места Значение отсутствует для безденежных билетов.
+        # Атрибут description содержит описание занимаемого места
+        self.place_tier = None if json.get('CM') is None else json['CM'].get('data')
+        self.place_tier_description = None if json.get('CM') is None else json['CM'].get('description')
+        # Информация о пассажире (Таблица 103)
+        self.passenger_info = get_item(json.get('PI'), PassengerInfo)
+        # Да Список мест. Записывается в виде:
+        #   1) «ааа» - номер занимаемого места,
+        #   2) «aaa, bbb, ccc» – перечисление занимаемых мест,
+        #   3) «aaa-ccc» - диапазон занимаемых мест, где aaa, bbb, ccc – занимаемые места (произвольное строковое значение)
+        self.place_list = json.get('H')
+        # Storey EN Нет Требование к этажности вагона (Таблица 104)
+        self.storey = get_item(json.get('Storey'), int)
+        # IDBlank N Да Идентификатор бланка в системе «УФС»
+        self.blank_id = get_item(json.get('IDBlank'), int)
+        # PlaceCount N Да Количество мест, отведенных пассажиру
+        self.place_count = get_item(json.get('PlaceCount'), int)
+        # PIT B Нет Признак выбора РП
+        self.is_rp_selected = json.get('PIT')
+
+
+class ExternalData(object):
+    def __init__(self, json):
+        # Уникальный ключ, по которому выбирается значение из словаря
+        self.key = json.get('key')
+        # Значение уникального ключа
+        self.value = get_item(json.get('value'), int)
+
+
+class Warnings(object):
+    def __init__(self, json):
+        # code N Да Код предупреждения
+        self.code = get_item(json.get('code'), int)
+        # text C Да Описание предупреждения
+        self.text = json.get('text')
+        # ExternalData S Да (Таблица 100)
+        self.external_data = get_item(None if json.get('ExternalData') is None else json['ExternalData'].get('Data'), ExternalData)
+
+
+class PrintPoints(object):
+    def __init__(self, json):
+        # Название станции
+        self.station = json.get('Station')
+        # Время в пути от ближайшей точки распечатки ЭБ до станции отправления
+        self.run_time = json.get('RunTime')
+        # Направление движения до ближайшей точки распечатки ЭБ:
+        # Opposite – точка распечатки находится до станции отправления,
+        # Forward – точка распечатки находится впереди по маршруту.
+        self.direction = json.get('Direction')

@@ -1,12 +1,13 @@
 from .utils import get_item
 from .session import Session
-from .utils import get_array, get_bool_item, get_datetime
+from .utils import get_array, get_bool_item, get_datetime, get_list_from_string
 from .wrapper.requests import RequestWrapper
 from .wrapper.types import (TimeSw, Lang, TrainWithSeat, GrouppingType, JoinTrains, SearchOption, Confirm, Registration,
-                           ReferenceCode)
+                            ReferenceCode, InOneKupe, Bedding, FullKupe, RemoteCheckIn, PayType, Storey, Placedemands)
 from .wrapper import (Clarify, TimeTable, AdditionalInfoStationRoute, RouteParamsStationRoute, TrainList,
                       GeneralInformation, TrainCarListEx, Blank, DateTime, BlankUpdateOrderInfo, Order,
-                      BlankElectronicRegistration, Food, BlankRefund, Cards)
+                      BlankElectronicRegistration, Food, BlankRefund, Cards, PassDoc, TicketInfo, Fee, Warnings,
+                      PrintPoints)
 
 
 class API(object):
@@ -46,6 +47,21 @@ class API(object):
                                                         advert_domain=advert_domain, groupping_type=groupping_type)
         return CarListEx(xml, json['S'])
 
+    def buy_ticket(self, from_: 'str or int', to: 'str or int', day: int, month: int, train, type_car:str,
+                   pass_doc: PassDoc, in_one_kupe: InOneKupe, remote_check_in: RemoteCheckIn,  pay_type: PayType,
+                   n_car: int=None, service_class: str=None, sex: str=None, diapason=None, n_up: int=None,
+                   n_down: int=None, bedding: Bedding=None, stan: str=None, advert_domain: str=None, phone: int=None,
+                   lang: Lang=Lang.RU, id_cust: int=None, storey: Storey=None, time=None, comment: str=None,
+                   placedemands: Placedemands=None):
+        xml, json = self.__request_wrapper.make_request('BuyTicket', from_=from_, to=to, day=day, month=month,
+                                                        train=train, type_car=type_car, pass_doc=pass_doc.pass_doc,
+                                                        in_one_kupe=in_one_kupe, remote_check_in=remote_check_in,
+                                                        pay_type=pay_type, n_car=n_car, service_class=service_class,
+                                                        sex=sex, diapason=diapason, n_up=n_up, n_down=n_down,
+                                                        bedding=bedding, stan=stan, advert_domain=advert_domain,
+                                                        phone=phone, lang=lang, id_cust=id_cust, storey=storey,
+                                                        time=time, comment=comment, placedemands=placedemands)
+        return BuyTicket(xml, json)
 
     def confirm_ticket(self, id_trans: int, confirm: Confirm, site_fee: int=None, lang: Lang=Lang.RU):
         xml, json = self.__request_wrapper.make_request('ConfirmTicket', id_trans=id_trans, confirm=confirm,
@@ -282,6 +298,116 @@ class GetCatalog(object):
     def __init__(self, xml, json):
         self.loyalty_cards = get_array(json.get('LOYALTY_CARDS'), Cards)
         self.co_services = get_array(json.get('CO_SERVICES'), Cards)
+
+        self.xml = xml
+        self.json = json
+
+
+class BuyTicket(object):
+    def __init__(self, xml, json):
+        # Дата создания резервирования
+        self.creation_date = json.get('D2')
+        # Компания-перевозчик
+        self.carrier = json.get('PER')
+        # ИНН перевозчика
+        self.carrier_inn = get_item(json.get('INN'), int)
+        # Время резервирования
+        self.reservation_time = json.get('TB')
+        # Да Номер поезда (последняя буква – принадлежность «нитке»)
+        self.train_number = json.get('N1')
+        # Дата отправления
+        self.departure_date = json.get('D3')
+        # Время отправления
+        self.departure_time = json.get('T1')
+        # Категория поезда
+        self.train_category = json.get('KN')
+        # Название поезда
+        self.train_name = json.get('KN1')
+        # Бренд поезда
+        self.train_brand = json.get('BRN')
+        # Станция отправления
+        self.origin = json.get('C')[0]
+        # Станция прибытия
+        self.destination = json.get('C')[1]
+        # Код станции отправления
+        self.origin_code = get_item(json.get('CC1'), int)
+        # Код станции прибытия
+        self.destination_code = get_item(json.get('CC2'), int)
+        # Номер вагона
+        self.car_number = get_item(json.get('VH'), int)
+        # Тип сегмента (Таблица 106)
+        self.segment_type = get_item(json.get('SegmentType'), int)
+        # Категория вагона (Таблица 54)
+        self.car_category = json.get('KV')
+        # Класс обслуживания вагона (см. Приложение № 2)
+        self.service_class = json.get('KL')
+        # Признак купе «МУЖСКОЕ» / «ЖЕНСКОЕ». Если купе смешанное, значение не ставится.
+        self.kupe_sex = json.get('R')
+        # Название перевозчика
+        self.carrier_name = json.get('VB')
+        # Количество мест в заказе
+        self.places_amount = get_item(json.get('M1'), int)
+        # Номера мест в заказе
+        self.place_number = get_list_from_string(json.get('H'), int)
+        # Общая стоимость заказа с учетом НДС
+        self.total_price = get_item(json.get('TF0'), float)
+        # Уведомление пассажира об особых условиях поездки
+        self.special_conditions = json.get('GA')
+        # Информация о времени отправления
+        self.departure_time_info = json.get('GB')
+        # Признак вагона повышенной комфортности
+        self.high_comfort = json.get('R0')
+        # Дата прибытия
+        self.arrival_date = json.get('D1')
+        # Время прибытия
+        self.arrival_time = json.get('T4')
+        # Информация о заказанных билетах
+        self.ticket_info = get_item(json.get('ET'), TicketInfo)
+        # Время и дата отправления поезда
+        self.departure_datetime = get_item(json.get('DepartureTime'), DateTime)
+        # Время и дата прибытия поезда
+        self.arrival_datetime = get_item(json.get('ArrivalTime'), DateTime)
+        # Общая стоимость полученных билетов
+        self.amount = get_item(json.get('Amount'), float)
+        # Номер транзакции в системе «УФС»
+        self.id_trans = get_item(json.get('IDTrans'), int)
+        # Статус операции
+        self.status = get_item(json.get('Status'), int)
+        # Текущий баланс Агента
+        self.balance = get_item(json.get('Balance'), float)
+        # Актуальный кредит Агента в ЖД шлюзе
+        self.balance_limit = get_item(json.get('BalanceLimit'), float)
+        # Точка распечатки (пункт выдачи заказа)
+        self.print_point = json.get('PrintPoint')
+        # Телефон пункта выдачи билетов заказа
+        self.print_point_phone = get_item(json.get('PrintPointPhone'), int)
+        # Рекомендуется сверять значение этого признака со статусом терминала, использованного в запросе
+        # (значения не должны противоречить друг другу)
+        self.test = get_item(json.get('Test'), int)
+        # Возможность распечатки электронного билета на станции отправления клиента
+        self.is_eticket_print_point = get_bool_item(json.get('IsEticketPrintPoint'))
+        # Дата и время, до которого можно подтвердить заказ.
+        # Атрибут «timeOffset=»+ЧЧ:ММ»» содержит информацию о часовом поясе для данного элемента,
+        # где «+ЧЧ:ММ» разница в часах и минутах от UTC(Всемирное координированное время) конкретного места
+        self.confirm_time_limit = get_item(json.get('ConfirmTimeLimit'), DateTime)
+        # Reservation B Нет Возможность осуществления трехчасового резервирования с целью проведения отложенной оплаты
+        self.reservation = get_bool_item(json.get('Reservation'))
+        # ReservationType EN Да Вид бронирования (Таблица 105)
+        self.reservation_type = get_item(json.get('ReservationType'), int)
+        # ClientFee N Да Вознаграждение агента
+        self.client_fee = get_item(json.get('ClientFee'), float)
+        # OrderId N Да Идентификатор заказа
+        self.order_id = get_item(json.get('OrderId'), int)
+        # Информирование о повторном бронировании
+        if json.get('Warnings') is not None:
+            self.warnings = get_array(json['Warnings'].get('Warning'), Warnings)
+        else:
+            self.warnings = None
+        # Информация о станциях распечатки ЭБ
+        if json.get('printPoints') is not None:
+            self.print_points = get_array(json['printPoints'].get('EPrintPoint'), PrintPoints)
+        else:
+            self.print_points = None
 
         self.xml = xml
         self.json = json
