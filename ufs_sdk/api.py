@@ -47,12 +47,12 @@ class API(object):
                                                         advert_domain=advert_domain, groupping_type=groupping_type)
         return CarListEx(xml, json['S'])
 
-    def buy_ticket(self, from_: 'str or int', to: 'str or int', day: int, month: int, train, type_car:str,
+    def buy_ticket(self, from_: 'str or int', to: 'str or int', day: int, month: int, train, type_car: str,
                    pass_doc: PassDoc, in_one_kupe: InOneKupe, remote_check_in: RemoteCheckIn,  pay_type: PayType,
                    n_car: int=None, service_class: str=None, sex: str=None, diapason=None, n_up: int=None,
                    n_down: int=None, bedding: Bedding=None, stan: str=None, advert_domain: str=None, phone: int=None,
                    lang: Lang=Lang.RU, id_cust: int=None, storey: Storey=None, time=None, comment: str=None,
-                   placedemands: Placedemands=None):
+                   placedemands: Placedemands=None, international_service_class=None, full_kupe: FullKupe=None):
         xml, json = self.__request_wrapper.make_request('BuyTicket', from_=from_, to=to, day=day, month=month,
                                                         train=train, type_car=type_car, pass_doc=pass_doc.pass_doc,
                                                         in_one_kupe=in_one_kupe, remote_check_in=remote_check_in,
@@ -60,7 +60,9 @@ class API(object):
                                                         sex=sex, diapason=diapason, n_up=n_up, n_down=n_down,
                                                         bedding=bedding, stan=stan, advert_domain=advert_domain,
                                                         phone=phone, lang=lang, id_cust=id_cust, storey=storey,
-                                                        time=time, comment=comment, placedemands=placedemands)
+                                                        time=time, comment=comment, placedemands=placedemands,
+                                                        international_service_class=international_service_class,
+                                                        full_kupe=full_kupe)
         return BuyTicket(xml, json)
 
     def confirm_ticket(self, id_trans: int, confirm: Confirm, site_fee: int=None, lang: Lang=Lang.RU):

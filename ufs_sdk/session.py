@@ -35,6 +35,7 @@ class Session(object):
     def __send_api_request(self, method, params, get):
         if get:
             url = '{}/{}?terminal={}{}'.format(Session.API_URL, method, self.terminal, params)
+            print(url)
             self.last_request_data = params
             response = self.requests_session.get(url, timeout=120)
             return response

@@ -1,6 +1,25 @@
 from ufs_sdk.utils import get_ufs_datetime
 
-REQUEST_PARAM_NAMES = {'from_': 'from'}
+# Называть однотипно переменные для слабаков
+REQUEST_PARAM_NAMES = {
+    'from_': 'from',
+    'advert_domain': 'advertDomain',
+    'remote_check_in': 'RemoteCheckIn',
+    'id_cust': 'idcust',
+    'pay_type': 'PayType',
+    'international_service_class': 'internationalServiceClass',
+    'use_static_schedule': 'useStaticSchedule',
+    'join_train_complex': 'joinTrainComplex',
+    'groupping_type': 'GrouppingType',
+    'search_option': 'searchOption',
+    'id_trans': 'IdTrans',
+    'id_blank': 'IdBlank',
+    'force_new_tech': 'ForceNewTech',
+    'blanks_id': 'BlanksId',
+    'food_allowance_code': 'FoodAllowanceCode',
+    'all_languages': 'AllLanguages',
+    'is_description': 'IsDescription'
+}
 # Называть переменные разными именами ? Не, не слышал
 ARRAYS = ['SC', 'N', 'C', 'CK', 'Blank', 'CO_SERVICES', 'LOYALTY_CARDS', 'Warning', 'EPrintPoint']
 
@@ -132,4 +151,6 @@ class RequestWrapper(object):
     # Пришлось делать преобразование
     @staticmethod
     def convert_request_param_name(param):
-        return param.replace('_', '')
+        if param in REQUEST_PARAM_NAMES:
+            return REQUEST_PARAM_NAMES[param]
+        return param
