@@ -334,3 +334,8 @@ class Placedemands:
     MOTHER_AND_CHILDREN_TO_1 = 'М'
     # Места для пассажиров с детьми
     MOTHER_AND_CHILDREN = 'Р'
+
+
+class TicketFormat:
+    HTML = 'html'
+    PDF = 'pdf'

@@ -3,7 +3,8 @@ from .session import Session
 from .utils import get_array, get_bool_item, get_datetime, get_list_from_string
 from .wrapper.requests import RequestWrapper
 from .wrapper.types import (TimeSw, Lang, TrainWithSeat, GrouppingType, JoinTrains, SearchOption, Confirm, Registration,
-                            ReferenceCode, InOneKupe, Bedding, FullKupe, RemoteCheckIn, PayType, Storey, Placedemands)
+                            ReferenceCode, InOneKupe, Bedding, FullKupe, RemoteCheckIn, PayType, Storey, Placedemands,
+                            TicketFormat)
 from .wrapper import (Clarify, TimeTable, AdditionalInfoStationRoute, RouteParamsStationRoute, TrainList,
                       GeneralInformation, TrainCarListEx, Blank, DateTime, BlankUpdateOrderInfo, Order,
                       BlankElectronicRegistration, Food, BlankRefund, Cards, PassDoc, TicketInfo, Fee, Warnings,
@@ -30,12 +31,12 @@ class API(object):
 
     def train_list(self, from_: 'str or int', to: 'str or int', day: int, month: int, advert_domain: str=None,
                    lang: str=Lang.RU, time_sw: TimeSw=TimeSw.NO_SW, time_from: int=None, time_to: int=None,
-                   train_with_seat: TrainWithSeat=None, join_train_complex: bool=None, groupping_type: GrouppingType=None,
+                   train_with_seat: TrainWithSeat=None, join_train_complex: bool=None, grouping_type: GrouppingType=None,
                    join_trains: JoinTrains=None, search_option: SearchOption=None):
         xml, json = self.__request_wrapper.make_request('TrainList', from_=from_, to=to, day=day, month=month,
                                                         advert_domain=advert_domain, time_sw=time_sw, lang=lang,
                                                         time_from=time_from, time_to=time_to, train_with_seat=train_with_seat,
-                                                        join_train_complex=join_train_complex, groupping_type=groupping_type,
+                                                        join_train_complex=join_train_complex, groupping_type=grouping_type,
                                                         join_trains=join_trains, search_option=search_option)
         return TrailListBuilder(xml, json)
 
@@ -78,6 +79,11 @@ class API(object):
         xml, json = self.__request_wrapper.make_request('ElectronicRegistration', id_trans=id_trans, reg=reg,
                                                         id_blank=id_blank)
         return ElectronicRegistration(xml, json)
+
+    def get_ticket_blank(self, id_trans: int, format: TicketFormat=TicketFormat.HTML):
+        response = self.__request_wrapper.make_request('GetTicketBlank', id_trans=id_trans, format=format,
+                                                       force_new_tech=1)
+        return GetTicketBlank(response, format)
 
     def available_food(self, id_trans: int, advert_domain: str, lang: Lang.RU=Lang.RU):
         xml, json = self.__request_wrapper.make_request('AvailableFood', id_trans=id_trans, advert_domain=advert_domain,
@@ -212,6 +218,21 @@ class ElectronicRegistration(object):
 
         self.xml = xml
         self.json = json
+
+
+class GetTicketBlank(object):
+    def __init__(self, response, format):
+        self.format = format
+        self.__data = response
+
+    def save_blank(self, path):
+        open(path, 'wb').write(self.content)
+
+    @property
+    def content(self):
+        if self.format == TicketFormat.PDF:
+            return self.__data.content
+        return self.__data.text
 
 
 class AvailableFood(object):

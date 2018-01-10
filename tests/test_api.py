@@ -478,6 +478,9 @@ class TestAPI(unittest.TestCase):
         self.assertEquals(electronic_registration.blank[0].ticket_identifier, 5164702)
         self.assertEquals(electronic_registration.blank[0].electronic_registration, ElectronicRegistration.CONFIRM)
 
+    def get_ticket_blank(self):
+        pass
+
     def test_available_food(self):
         available_food = self.api.available_food(48715620, '')
         self.assertEquals(available_food.change_food_before.time_offset, '+03:00')

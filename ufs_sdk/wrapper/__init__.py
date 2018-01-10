@@ -179,7 +179,11 @@ class Station(object):
 class AdditionalInfoTrainList(object):
     def __init__(self, xml):
         # Признак, который разрешает в метод TrainListTransfer отправлять все станции пересадки
-        self.is_allowed_multi_station_search = xml.find('./IsAllowedMultiStationSearch').text
+        self.is_allowed_multi_station_search = xml.find('./IsAllowedMultiStationSearch')
+        if self.is_allowed_multi_station_search is not None:
+            self.is_allowed_multi_station_search = self.is_allowed_multi_station_search.text
+        else:
+            self.is_allowed_multi_station_search = False
         # Информация о станциях пересадки
         self.stations = get_array(xml.findall('./Stations/Station'), Station)
 
