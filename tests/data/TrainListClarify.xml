@@ -1,0 +1,13 @@
+<UFS_RZhD_Gate>
+ <System>
+    <CurrentTime timeOffset="+03:00">02.02.2016 16:35:48</CurrentTime>
+ </System>
+ <S parameter="to">
+     <UC></UC>
+     <SC>
+         <PD>КРАС</PD>
+         <CC>2038563</CC>
+         <C>ТОННЕЛЬНАЯ</C>
+     </SC>
+ </S>
+</UFS_RZhD_Gate>

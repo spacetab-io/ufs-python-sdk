@@ -1,0 +1,47 @@
+<UFS_RZhD_Gate>
+ <System>
+ <CurrentTime timeOffset="+03:00">01.02.2016 11:51:55</CurrentTime>
+ </System>
+ <S>
+  <Z2>
+   <K>11</K>
+   <D>02.02</D>
+  </Z2>
+  <PP>
+   <C>МОСКВА</C>
+   <C>С-ПЕТЕРБУР</C>
+   <C1>2000000</C1>
+   <C2>2004000</C2>
+   <FromCode>2000000</FromCode>
+   <ToCode>2004000</ToCode>
+   <AllowedDocTypes>ПН,СР,ЗП,ЗЗ,ПМ,ВБ</AllowedDocTypes>
+   <DirectionGroup>0</DirectionGroup>
+  </PP>
+  <N>
+   <N1>756А</N1>
+   <N2>756А</N2>
+   <NP>
+    <C>МОСКВА ОКТ</C>
+    <C>С-ПЕТЕР-ГЛ</C>
+    <C1>2006004</C1>
+    <C2>2004001</C2>
+   </NP>
+   <T1>07:40</T1>
+   <T2>07:40</T2>
+   <T3>07:40</T3>
+   <T4>07:40</T4>
+   <T5>07:40</T5>
+   <DepthTrainSales>
+    <Date>01.07.2017</Date>
+    <Days>59</Days>
+   </DepthTrainSales>
+   <J>
+    <DW>ЕЖ</DW>
+   </J>
+   <L>0650</L>
+   <NN>Сапсан</NN>
+   <DepartureTime timeOffset="+03:00" timeType="0">01.01.1970 03:00:00</DepartureTime>
+   <ArrivalTime timeType="0">03:00:00</ArrivalTime>
+  </N>
+ </S>
+</UFS_RZhD_Gate>

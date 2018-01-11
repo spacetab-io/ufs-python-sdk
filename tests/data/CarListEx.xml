@@ -1,0 +1,75 @@
+ <UFS_RZhD_Gate>
+  <System>
+   <CurrentTime timeOffset="+03:00">01.02.2016 14:34:44</CurrentTime>
+  </System>
+  <S>
+   <Z3>
+    <K>62</K>
+    <TS>М</TS>
+    <WM></WM>
+    <PP>
+     <C>ХЕЛЬСИНКИ</C>
+     <C>МОСКВА ОКТ</C>
+     <C1>1000001</C1>
+     <C2>2006004</C2>
+     <FromCode>1000001</FromCode>
+     <ToCode>2006004</ToCode>
+     <DirectionGroup>1</DirectionGroup>
+     <AllowedDocTypes>ЗП,ЗЗ</AllowedDocTypes>
+    </PP>
+   </Z3>
+   <N>
+    <N1>00031#031А</N1>
+    <KN></KN>
+    <NP>
+     <C>ХЕЛЬСИНКИ</C>
+     <C>МОСКВА</C>
+    </NP>
+    <LL>1073</LL>
+    <D>03.02</D>
+    <D1>04.02</D1>
+    <DZ></DZ>
+    <T1>17:23</T1>
+    <T3>014:56</T3>
+    <T4>09:19</T4>
+    <VOK>
+     <C1>1000001</C1>
+     <C2>2006004</C2>
+    </VOK>
+    <PassengerDepartureStation>
+     <Code>1000001</Code>
+     <Name>ХЕЛЬСИНКИ</Name>
+    </PassengerDepartureStation>
+    <PassengerArrivalStation>
+     <Code>2006004</Code>
+     <Name>МОСКВА ОКТЯБРЬСКАЯ</Name>
+    </PassengerArrivalStation>
+    <NN>Лев Толстой</NN>
+    <N2>00031</N2>
+    <DepartureTime timeOffset="+02:00" timeType="1">01.01.1970 03:00:00</DepartureTime>
+   <ArrivalTime timeType="0">03:00:00</ArrivalTime>
+    <CK train="00031#031А">
+     <KV>ЛЮКС</KV>
+     <CO_SRV>COND,BED</CO_SRV>
+     <TF>0</TF>
+     <R>МЖ</R>
+     <MKL>1/2</MKL>
+     <AvailableTariffs>1;9;10</AvailableTariffs>
+     <FullKupe></FullKupe>
+     <CV>
+      <KV>Л</KV>
+      <VH>11</VH>
+      <H>1Ц, 2Ц, 3Ц, 4Ц, 5Ц, 6Ц, 11Ц, 12Ц, 13Ц, 14Ц, 15Ц, 16Ц</H>
+      <M5>12</M5>
+      <M6>0</M6>
+      <X3>12</X3>
+      <KU>0</KU>
+      <ER></ER>
+      <PIT></PIT>
+     </CV>
+    </CK>
+   </N>
+  </S>
+  <Balance>30000.00</Balance>
+  <BalanceLimit>0.00</BalanceLimit>
+</UFS_RZhD_Gate>

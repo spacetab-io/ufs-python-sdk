@@ -1,0 +1,15 @@
+<UFS_RZhD_Gate>
+    <System>
+        <CurrentTime timeOffset="+03:00">15.10.2015 15:32:28</CurrentTime>
+    </System>
+    <ChangeFoodBefore timeOffset="+03:00">01.01.1970 03:00:00</ChangeFoodBefore>
+    <FoodAllowances>
+        <Food Name="ЗАВТРАК-БЛИНЫ/СЫР" Desc="ЗАКУСКА СЫРНАЯ, БЛИНЫ, СУХАЯ ЧАСТЬК РАЦИОНУ">Б</Food>
+        <Food Name="ЗАВТРАК-КАША/СЫР" Desc="ЗАКУСКА СЫРНАЯ, КАША, СУХАЯ ЧАСТЬ КРАЦИОНУ">К</Food>
+        <Food Name="ЗАВТРАК-БЛИНЫ/МЯСН" Desc="ЗАКУСКА МЯСНАЯ, БЛИНЫ, СУХАЯ ЧАСТЬК РАЦИОНУ">Л</Food>
+        <Food Name="ЗАВТРАК-СТАНДАРТ" Desc="ЗАВТРАК-СТАНДАРТ">С</Food>
+        <Food Name="ЗАВТРАК-ОМЛЕТ/СЫР" Desc="ЗАКУСКА СЫРНАЯ, ОМЛЕТ, СУХАЯ ЧАСТЬ КРАЦИОНУ">Т</Food>
+        <Food Name="ЗАВТРАК-ОМЛЕТ/МЯСН" Desc="ЗАКУСКА МЯСНАЯ, ОМЛЕТ, СУХАЯ ЧАСТЬК РАЦИОНУ">В</Food>
+        <Food Name="ЗАВТРАК-КАША/МЯСН" Desc="ЗАКУСКА МЯСНАЯ, КАША, СУХАЯ ЧАСТЬ КРАЦИОНУ">Ш</Food>
+    </FoodAllowances>
+</UFS_RZhD_Gate>

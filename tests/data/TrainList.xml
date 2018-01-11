@@ -1,0 +1,85 @@
+<UFS_RZhD_Gate>
+ <System>
+ <CurrentTime timeOffset="+03:00">01.02.2016 12:03:03</CurrentTime>
+ </System>
+ <S>
+ <Z3>
+  <K>62</K>
+  <TS>Ц</TS>
+  <PP>
+   <C>МОСКВА</C>
+   <C>С-ПЕТЕРБУР</C>
+   <C1>2000000</C1>
+   <C2>2004000</C2>
+   <DirectionGroup>0</DirectionGroup>
+   <AllowedDocTypes>ПН,СР,ЗП,ЗЗ,ПМ,ВБ</AllowedDocTypes>
+   <FromCode>2000000</FromCode>
+   <ToCode>2004000</ToCode>
+  </PP>
+  <WM>О</WM>
+ </Z3>
+ <N trainNum="116">
+  <N1>116С</N1>
+  <N2>116С</N2>
+  <KN>СК</KN>
+  <NP>
+   <C>АДЛЕР</C>
+   <C>С-ПЕТ-ЛАД</C>
+  </NP>
+  <LL>654</LL>
+  <ER/>
+  <D>02.02</D>
+  <D1>02.02</D1>
+  <T1>00:12</T1>
+  <T3>09:46</T3>
+  <T2>00:36</T2>
+  <T4>09:58</T4>
+  <VOK>
+   <C1>2000006</C1>
+   <C2>2000170</C2>
+  </VOK>
+  <PassengerDepartureStation>
+   <Code>2000006</Code>
+   <Name>МОСКВА БЕЛОРУССКАЯ</Name>
+  </PassengerDepartureStation>
+  <PassengerArrivalStation>
+   <Code>2000170</Code>
+   <Name>СМОЛЕНСК ЦЕНТРАЛЬНЫЙ</Name>
+  </PassengerArrivalStation>
+  <DZ>31.01</DZ>
+  <GA>
+   <G1>КУРИТЬ ЗАПРЕЩЕНО.ПРЕДВАРИТЕЛЬНЫЙ ДОСМОТР</G1>
+  </GA>
+  <BRN>САПСАН</BRN>
+  <IsSuburbanTrain>1</IsSuburbanTrain>
+  <CrossBorder></CrossBorder>
+  <DepartureTime timeOffset="+03:00" timeType="0">01.01.1970 03:00:00</DepartureTime>
+   <ArrivalTime timeType="0">03:00:00</ArrivalTime>
+  <CK train="116С">
+   <KV>ЛЮКС</KV>
+   <KV1>СВ</KV1>
+   <CO_SRV>COND,BED</CO_SRV>
+   <CO>1Л</CO>
+   <W2>РЖД/С-КВ</W2>
+   <VB>ФПК</VB>
+   <R>МЖ</R>
+   <TF>3934.0</TF>
+   <TF1>270.0</TF1>
+   <TF2>3934.0</TF2>
+   <TF3>270.0</TF3>
+   <UD></UD>
+   <reservation>1</reservation>
+   <ClientFee min="350" max="350"></ClientFee>
+   <CV>
+    <KV>Л</KV>
+    <M5>15</M5>
+    <X2>3</X2>
+    <X4>12</X4>
+    <KU>6</KU>
+   </CV>
+  </CK>
+ </N>
+ </S>
+ <Balance>30000.00</Balance>
+ <BalanceLimit>0.00</BalanceLimit>
+</UFS_RZhD_Gate>

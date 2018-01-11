@@ -1,0 +1,28 @@
+<UFS_RZhD_Gate>
+    <System>
+        <CurrentTime timeOffset="+03:00">01.02.2016 08:07:25</CurrentTime>
+    </System>
+    <LOYALTY_CARDS Code="RzhdB"
+                   NameRU="Начисление баллов &quot;РЖД Бонус&quot;"
+                   NameEN="RZD Bonus loyalty program"
+                   NameDE="RZhD-Bonus"
+                   DescriptionRU="Начисление баллов осуществляется в течение 30 дней с момента начала поездки. Билет будет оформлен на ФИО владельца карты."
+                   DescriptionEN="Reward miles will be credited within 30 days after your departure. The ticket will be issued for the full name of a cardholder."
+                   DescriptionDE="Die Punkte werden im Laufe von 30 Tagen ab dem Fahrt-Anfang angerechnet. Die Fahrkarte wird auf den Namen des Karteninhabers (der Karteninhaberin) ausgestellt."></LOYALTY_CARDS>
+    <LOYALTY_CARDS
+            Code="RzhdU"
+            NameRU="Дорожная карта"
+            NameEN="Universal card of Russian Railways"
+            NameDE="Universale RZhD-Karte"
+            DescriptionRU="Билет будет оформлен на ФИО владельца карты."
+            DescriptionEN="The ticket will be issued for the full name of a cardholder."
+            DescriptionDE="Die Fahrkarte wird auf den Namen des Karteninhabers (der Karteninhaberin) ausstellt."></LOYALTY_CARDS>
+    <LOYALTY_CARDS
+            Code="RzhdSU"
+            NameRU="Скидка по карте &quot;РЖД Бонус&quot;"
+            NameEN="Card &quot;RZD Bonus&quot; - get a discount"
+            NameDE="Karte &quot;RZhD Bonus&quot; - Rabatt erhalten"
+            DescriptionRU="Билет будет оформлен на ФИО владельца карты."
+            DescriptionEN="The ticket will be issued for the full name of a cardholder."
+            DescriptionDE="Die Fahrkarte wird auf den Namen des Karteninhabers (der Karteninhaberin) ausstellt."></LOYALTY_CARDS>
+</UFS_RZhD_Gate>
