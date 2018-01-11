@@ -348,3 +348,16 @@ class Placedemands:
 class TicketFormat:
     HTML = 'html'
     PDF = 'pdf'
+
+
+class Gender:
+    MALE = 'мужское'
+    FEMALE = 'Женское'
+    MIXED = 'Смешаное'
+
+
+class AllLanguages:
+    # Ответ на всех доступных языках;
+    ALL = 1
+    # Ответ только на одном конкретном языке, который указан в элементе Lang
+    AS_LANG = 0

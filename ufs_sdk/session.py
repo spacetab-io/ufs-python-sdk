@@ -22,20 +22,23 @@ class Session(object):
 
     def make_api_request(self, method, params, get):
         response = self.__send_api_request(method, params, get)
-        response = ElementTree.fromstring(response.text)
-        if 'AdditionalInfo' in [item.tag for item in response]:
-            raise UfsTrainListError(method, response)
-        if 'Error' in [item.tag for item in response]:
-            raise UfsAPIError(method, response)
+        response_data = ElementTree.fromstring(response.text)
+        if method == 'GetTicketBlank':
+            if response_data.tag == 'html' or response.headers['Content-Type'] == 'application/pdf':
+                return response
 
-        self.last_response_data = response
+        if 'AdditionalInfo' in [item.tag for item in response_data]:
+            raise UfsTrainListError(method, response_data)
+        if 'Error' in [item.tag for item in response_data]:
+            raise UfsAPIError(method, response_data)
 
-        return response
+        self.last_response_data = response_data
+
+        return response_data
 
     def __send_api_request(self, method, params, get):
         if get:
             url = '{}/{}?terminal={}{}'.format(Session.API_URL, method, self.terminal, params)
-            print(url)
             self.last_request_data = params
             response = self.requests_session.get(url, timeout=120)
             return response
