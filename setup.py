@@ -4,7 +4,7 @@ __version__ = '1.0.0'
 
 setup(
     version=__version__,
-    name='ufs_python_sdk',
+    name='ufs_sdk',
     packages=find_packages(),
 
     install_requires=[
