@@ -189,6 +189,162 @@ confirm_ticket = api.confirm_ticket(48715626, Confirm.CONFIRM, 0)
 - **[is_test](https://github.com/tmconsulting/ufs-python-sdk/blob/develop/ufs_sdk/wrapper/types.py#L223)** - Рекомендуется сверять значение этого признака со статусом терминала, использованного в запросе (значения не должны противоречить друг другу).
 - **reservation** - Отложенная оплата.
 
+### [UpdateOrderInfo](https://github.com/tmconsulting/ufs-python-sdk/blob/develop/ufs_sdk/api.py#L74)
+#### Запрос:
+- **id_trans** - Номер транзакции в системе «УФС»
+
+Пример запроса:
+```python
+update_order_info = api.update_order_info(48715626)
+```
+
+#### Ответ:
+- **status** - Текущий статус операции
+- **[blank](https://github.com/tmconsulting/ufs-python-sdk/blob/develop/ufs_sdk/wrapper/__init__.py#L595)** - Информация о билете заказа
+- **change_food_before** - Дата и время, до которого можно воспользоваться услугой смены РП([DateTime](https://github.com/tmconsulting/ufs-python-sdk/blob/develop/ufs_sdk/wrapper/__init__.py#L4))
+- **order** - Информация о заказе
+
+### [UpdateOrderInfo](https://github.com/tmconsulting/ufs-python-sdk/blob/develop/ufs_sdk/api.py#L74)
+#### Запрос:
+- **id_trans** - Номер транзакции в системе «УФС»
+
+Пример запроса:
+```python
+update_order_info = api.update_order_info(48715626)
+```
+
+#### Ответ:
+- **status** - Текущий статус операции
+- **[blank](https://github.com/tmconsulting/ufs-python-sdk/blob/develop/ufs_sdk/wrapper/__init__.py#L595)** - Информация о билете заказа
+- **change_food_before** - Дата и время, до которого можно воспользоваться услугой смены РП([DateTime](https://github.com/tmconsulting/ufs-python-sdk/blob/develop/ufs_sdk/wrapper/__init__.py#L4))
+- **order** - Информация о заказе
+
+### [ElectronicRegistration](https://github.com/tmconsulting/ufs-python-sdk/blob/develop/ufs_sdk/api.py#L78)
+#### Запрос:
+- **id_trans** - Номер транзакции в системе «УФС»
+- **[reg](https://github.com/tmconsulting/ufs-python-sdk/blob/develop/ufs_sdk/wrapper/types.py#L256)** - Признак запрашиваемого действия:
+- **id_blank** - Идентификаторы электронных билетов в системе «УФС», на которые необходимо установить/отменить электронную регистрацию (указываются через запятую)
+
+Пример запроса:
+```python
+electronic_registration = api.electronic_registration(48715620, Registration.CONFIRM)
+```
+
+#### Ответ:
+- **status** - Текущий статус операции
+- **[blank](https://github.com/tmconsulting/ufs-python-sdk/blob/develop/ufs_sdk/wrapper/__init__.py#L636)** - Информация о билете заказа
+
+### [GetTicketBlank](https://github.com/tmconsulting/ufs-python-sdk/blob/develop/ufs_sdk/api.py#L83)
+#### Запрос:
+- **id_trans** - Номер транзакции в системе «УФС»
+- **[format](https://github.com/tmconsulting/ufs-python-sdk/blob/develop/ufs_sdk/wrapper/types.py#L348)** - Формат вывода
+
+Пример запроса:
+```python
+get_ticket_blank = api.get_ticket_blank(1, TicketFormat.HTML)
+```
+
+#### Ответ:
+У объект ответа есть поле content, которое хранит либо html код, либо pdf файл, а так же метод save_blank, который позволяет сохранить pdf/html файл по указанному пути
+
+### [AvailableFood](https://github.com/tmconsulting/ufs-python-sdk/blob/develop/ufs_sdk/api.py#L88)
+#### Запрос:
+- **id_trans** - Номер транзакции в системе «УФС»
+- **advert_domain** - Доменное имя адверта
+- **[lang](https://github.com/tmconsulting/ufs-python-sdk/blob/develop/ufs_sdk/wrapper/types.py#L23)** - Язык
+
+Пример запроса:
+```python
+available_food = api.available_food(48715620, '')
+```
+
+#### Ответ:
+- **change_food_before** - Дата и время, до которого можно воспользоваться услугой смены РП.([DateTime](https://github.com/tmconsulting/ufs-python-sdk/blob/develop/ufs_sdk/wrapper/__init__.py#L4))
+- **[food](https://github.com/tmconsulting/ufs-python-sdk/blob/develop/ufs_sdk/wrapper/__init__.py#L582)** - Список доступных РП
+
+### [ChangeFood](https://github.com/tmconsulting/ufs-python-sdk/blob/develop/ufs_sdk/api.py#L93)
+#### Запрос:
+- **id_trans** - Номер транзакции в системе «УФС»
+- **blanks_id** - Идентификатор бланка в системе «УФС»
+- **food_allowance_code** - Код РП
+- **advert_domain** - Доменное имя адверта
+- **[lang](https://github.com/tmconsulting/ufs-python-sdk/blob/develop/ufs_sdk/wrapper/types.py#L23)** - Язык
+
+Пример запроса:
+```python
+change_food = api.change_food(48715620, 1, '', '')
+```
+
+#### Ответ:
+- **number** - Порядковый номер документа
+- **train_number** - Номер поезда
+- **departure_date** - Дата отправления поезда
+- **departure_number** - од станции отправления
+- **arrival_number** - Код станции прибытия
+- **car_number** - Номер вагона
+- **service_class** - Класс обслуживания
+- **place_number** - Номера мест
+- **passengers_amount** - Количество пассажиров
+- **food_code** - Код РП
+- **food_name** - Название РП
+- **food_description** - Описание РП
+
+### [RefundAmount](https://github.com/tmconsulting/ufs-python-sdk/blob/develop/ufs_sdk/api.py#L100)
+#### Запрос:
+- **id_trans** - Номер транзакции в системе «УФС»
+- **id_blank** - Идентификаторы билетов в системе «УФС», для которых необходимо произвести возврат (указываются через запятую)
+- **doc** - Номер документа, удостоверяющего личность
+- **[lang](https://github.com/tmconsulting/ufs-python-sdk/blob/develop/ufs_sdk/wrapper/types.py#L23)** - Язык
+
+Пример запроса:
+```python
+refund_amount = api.refund_amount(48715620, 1, 0)
+```
+
+#### Ответ:
+- **status** - Статус операции
+- **fee** - Сумма сервисного сбора за возврат
+- **tax_percent** - Величина комиссионного сбора УФС в %, В случае, если комиссия является фиксированной величиной, то передается в данном параметре «0»
+- **amount** - Общая сумма к возврату
+- **[blanks](https://github.com/tmconsulting/ufs-python-sdk/blob/develop/ufs_sdk/wrapper/__init__.py#L644)** - Информация о билете заказа
+
+### [Refund](https://github.com/tmconsulting/ufs-python-sdk/blob/develop/ufs_sdk/api.py#L105)
+#### Запрос:
+- **id_trans** - Номер транзакции в системе «УФС»
+- **id_blank** - Идентификаторы билетов в системе «УФС», для которых необходимо произвести возврат (указываются через запятую)
+- **doc** - Номер документа, удостоверяющего личность
+- **stan** - Уникальный идентификатор операции (транзакции), необходимый, в частности, для получения информации о транзакции в случае потери ответа (таймаут, разрыв связи и т.п.)
+- **[lang](https://github.com/tmconsulting/ufs-python-sdk/blob/develop/ufs_sdk/wrapper/types.py#L23)** - Язык
+
+Пример запроса:
+```python
+refund = api.refund(48715620, 1, 0)
+```
+
+#### Ответ:
+- **status** - Статус операции: «0» – успешная
+- **refund_id** - Номер транзакции возврата
+- **refund_date** - Время осуществления возврата
+- **fee** - Сумма сервисного сбора за возврат
+- **tax_percent** - Величина комиссионного сбора УФС в %, В случае, если комиссия является фиксированной величиной, то передается в данном параметре «0»
+- **amount** - Общая сумма к возврату
+- **[blanks](https://github.com/tmconsulting/ufs-python-sdk/blob/develop/ufs_sdk/wrapper/__init__.py#L644)** - Информация о билете заказа
+
+### [GetCatalog](https://github.com/tmconsulting/ufs-python-sdk/blob/develop/ufs_sdk/api.py#L110)
+#### Запрос:
+- **[code](https://github.com/tmconsulting/ufs-python-sdk/blob/develop/ufs_sdk/wrapper/types.py#L261)** - Код справочника
+- **[all_languages](https://github.com/tmconsulting/ufs-python-sdk/blob/develop/ufs_sdk/wrapper/types.py#L359)** - Признак ответа на всех языках.
+- **[lang](https://github.com/tmconsulting/ufs-python-sdk/blob/develop/ufs_sdk/wrapper/types.py#L23)** - Язык
+- **is_description** - Признак выдачи описания справочника
+
+Пример запроса:
+```python
+get_catalog = api.get_catalog(ReferenceCode.LOYALTY_CARDS, 1)
+```
+
+#### Ответ:
+- **[loyalty_cards](https://github.com/tmconsulting/ufs-python-sdk/blob/develop/ufs_sdk/wrapper/__init__.py#L676)** - Справочник Классов обслуживания
+- **[co_services](https://github.com/tmconsulting/ufs-python-sdk/blob/develop/ufs_sdk/wrapper/__init__.py#L676)** - Справочник карт лояльности
 
 ### Contact us.
 

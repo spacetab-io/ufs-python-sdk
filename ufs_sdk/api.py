@@ -75,7 +75,7 @@ class API(object):
         xml, json = self.__request_wrapper.make_request('UpdateOrderInfo', id_trans=id_trans)
         return UpdateOrderInfo(xml, json)
 
-    def electronic_registration(self, id_trans: int, reg: Registration, id_blank: int=None):
+    def electronic_registration(self, id_trans: int, reg: Registration, id_blank: str=None):
         xml, json = self.__request_wrapper.make_request('ElectronicRegistration', id_trans=id_trans, reg=reg,
                                                         id_blank=id_blank)
         return ElectronicRegistration(xml, json)
@@ -97,12 +97,12 @@ class API(object):
                                                         advert_domain=advert_domain, lang=lang)
         return ChangeFood(xml, json['PIT'])
 
-    def refund_amount(self, id_trans: int, id_blank: int, doc: int, lang: Lang.RU=Lang.RU):
+    def refund_amount(self, id_trans: int, id_blank: str, doc: int, lang: Lang.RU=Lang.RU):
         xml, json = self.__request_wrapper.make_request('RefundAmount', id_trans=id_trans, id_blank=id_blank,
                                                         doc=doc, lang=lang)
         return RefundAmount(xml, json)
 
-    def refund(self, id_trans: int, id_blank: int, doc: int, stan: str=None, lang: Lang.RU=Lang.RU):
+    def refund(self, id_trans: int, id_blank: str, doc: int, stan: str=None, lang: Lang.RU=Lang.RU):
         xml, json = self.__request_wrapper.make_request('Refund', id_trans=id_trans, id_blank=id_blank,
                                                         doc=doc, stan=stan, lang=lang)
         return Refund(xml, json)

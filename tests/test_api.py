@@ -1,12 +1,13 @@
 import os
+import json
 import unittest
 from ufs_sdk import API
 from datetime import datetime
 from ufs_sdk.exceptions import UfsTrainListError
-from ufs_sdk.wrapper import ReferenceParamsTimeTable, AdditionalInfoTimeTable, TrainTimeTable, PassDoc
+from ufs_sdk.wrapper import PassDoc
 from ufs_sdk.wrapper.types import (TimeSw, DirectionGroup, CarCategories, Services, Confirm, ElectronicRegistration,
                                    Test, PrintFlag, RzhdStatus, Registration, ReferenceCode, InOneKupe, Bedding,
-                                   FullKupe, RemoteCheckIn, PayType, Storey, Placedemands)
+                                   FullKupe, RemoteCheckIn, PayType, Storey, Placedemands, TicketFormat)
 import mock
 
 
@@ -478,8 +479,10 @@ class TestAPI(unittest.TestCase):
         self.assertEquals(electronic_registration.blank[0].ticket_identifier, 5164702)
         self.assertEquals(electronic_registration.blank[0].electronic_registration, ElectronicRegistration.CONFIRM)
 
-    def get_ticket_blank(self):
-        pass
+    def test_get_ticket_blank(self):
+        get_ticket_blank = self.api.get_ticket_blank(1, TicketFormat.HTML)
+        html_file = open('tests/data/GetTicketBlank.xml', 'r').read()
+        self.assertEquals(get_ticket_blank.content, html_file)
 
     def test_available_food(self):
         available_food = self.api.available_food(48715620, '')

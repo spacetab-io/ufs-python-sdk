@@ -32,6 +32,8 @@ class RequestWrapper(object):
         if get:
             params = self.get_params(kwargs)
             response = self.session.make_api_request(method_name, params, get)
+            if method_name == 'GetTicketBlank':
+                return response
             return self.get_json_xml(response, method_name)
 
     # Пытаться напрямую конвертировать их xml в объект - жопа
