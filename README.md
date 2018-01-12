@@ -1,5 +1,5 @@
-Ufs SDK
----------------
+Ufs SDK [![CircleCI](https://circleci.com/gh/tmconsulting/ufs-python-sdk.svg?style=svg)](https://circleci.com/gh/tmconsulting/ufs-python-sdk)
+----------------
 
 Данное SDK позволяет получить доступ к методам Ufs и исправляет недостатки их системы.
 * [Установка](#Установка)
