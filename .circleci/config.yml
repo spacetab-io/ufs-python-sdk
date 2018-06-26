@@ -30,11 +30,15 @@ jobs:
       - checkout
       - restore_cache:
           key: v1-dependency-cache-{{ checksum "setup.py" }}
+      - run:
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements/develop.txt
       - save_cache:
           key: v1-dependency-cache-{{ checksum "setup.py" }}
           paths:
             - "venv"
-
       - run:
           name: init .pypirc
           command: |
@@ -46,10 +50,10 @@ jobs:
             echo -e "username = $PYPI_USERNAME" >> ~/.pypirc
             echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
       - run:
-          name: create packages
+          name: create  packages
           command: |
             . venv/bin/activate
-            python setup.py sdist upload -r pypi
+            python3 setup.py sdist upload -r pypi
 workflows:
   version: 2
   build_and_deploy:

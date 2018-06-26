@@ -1,5 +1,5 @@
-Ufs SDK
----------------
+Ufs SDK [![CircleCI](https://circleci.com/gh/tmconsulting/ufs-python-sdk.svg?style=svg)](https://circleci.com/gh/tmconsulting/ufs-python-sdk)
+----------------
 
 Данное SDK позволяет получить доступ к методам Ufs и исправляет недостатки их системы.
 * [Установка](#Установка)
@@ -11,7 +11,7 @@ Ufs SDK
 
 ## Установка
 ```
-pip3 install ufs_python_sdk
+pip3 install ufs_sdk
 ```
 
 ## Подключение
@@ -19,7 +19,7 @@ pip3 install ufs_python_sdk
 Для подключения необходимо иметь логин, пароль и терминал.
 
 ```python
-from ufs_python_sdk import API
+from ufs_sdk import API
 
 api = API('username', 'password', 'terminal')
 
@@ -28,8 +28,8 @@ api = API('username', 'password', 'terminal')
 Далее для работы понадобятся enum структуры и обёртка для PassDoc(для метода BuyTickets)
 
 ```python
-from ufs_python_sdk.wrapper.types import (...)
-from ufs_python_sdk.wrapper import PassDoc
+from ufs_sdk.wrapper.types import (...)
+from ufs_sdk.wrapper import PassDoc
 ```
 
 ## Методы
