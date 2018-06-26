@@ -309,6 +309,7 @@ class TestAPI(unittest.TestCase):
         self.assertEquals(car_list_ex.trains[0].cars[0].car_info.up_near_wc_place, None)
         self.assertEquals(car_list_ex.trains[0].cars[0].car_info.down_side_near_wc_place, None)
         self.assertEquals(car_list_ex.trains[0].cars[0].car_info.up_side_near_wc_place, None)
+        self.assertEquals(car_list_ex.trains[0].cars[0].car_info.schema, 'TVER_2/4_V1')
         self.assertEquals(car_list_ex.trains[0].cars[0].is_discount, False)
         self.assertEquals(car_list_ex.trains[0].cars[0].is_reservation, False)
         self.assertEquals(car_list_ex.trains[0].cars[0].available_tariffs, [1, 9, 10])
