@@ -117,7 +117,7 @@ train_list = api.train_list('МОСКВА', 'АГАПОВКА', 24, 12)
 
 Пример запроса:
 ```python
-station_route = api.station_route(4043, 5, 8, True, True)
+station_route = api.car_list_ex(4043, 5, 8, True, True)
  ```
 
 #### Ответ:

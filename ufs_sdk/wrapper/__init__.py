@@ -465,6 +465,8 @@ class CarInfoCarListEx(object):
         self.down_side_near_wc_place = get_item(json.get('DownSideNearWcPlace'), PlacesCarListEx)
         # Верхнее боковое место у туалета (место 38)
         self.up_side_near_wc_place = get_item(json.get('UpSideNearWcPlace'), PlacesCarListEx)
+        # Схема вагона
+        self.schema = json.get('SCHEMA')
 
 
 class CarCarListEx(object):
