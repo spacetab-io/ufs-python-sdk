@@ -200,6 +200,11 @@ class GeneralInformation(object):
         self.route_params = get_item(json.get('PP'), RouteParams)
         # Шифры ВЦ, в которых найдены места"""
         self.cipher = json.get('WM')
+        # Разница между часовыми поясами отправления поезда
+        self.origin_time_zone_difference = get_item(json.get('DeltaDepartureLocalDate'), int)
+        # Разница между часовыми поясами прибытия поезда
+        self.destination_time_zone_difference = get_item(json.get('DeltaArrivalLocalDate'), int)
+
 
 
 class CarInfoTrainList(object):
@@ -363,9 +368,6 @@ class TrainList(object):
         # Признак неполной (урезанной по времени) справки. Его наличие означает, что показаны не все поезда.
         # Чтобы просмотреть все, необходимо указать более узкий диапазон времени отправления или прибытия
         self.is_full_reference = get_bool_item(json.get('U', False))
-
-        self.origin_time_zone_difference = get_item(json.get('DeltaDepartureLocalDate'), int)
-        self.destination_time_zone_difference = get_item(json.get('DeltaArrivalLocalDate'), int)
 
 
 class RouteCarListEx(object):
