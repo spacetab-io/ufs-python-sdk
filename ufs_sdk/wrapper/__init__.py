@@ -359,10 +359,13 @@ class TrainList(object):
         # Общая информация по запросу
         self.general_information = get_item(json.get('Z3'), GeneralInformation)
         # Информация о поезде
-        self.trains = get_array(json.get('N'), TrainTrainList)
+        self.trains: [TrainTrainList] = get_array(json.get('N'), TrainTrainList)
         # Признак неполной (урезанной по времени) справки. Его наличие означает, что показаны не все поезда.
         # Чтобы просмотреть все, необходимо указать более узкий диапазон времени отправления или прибытия
         self.is_full_reference = get_bool_item(json.get('U', False))
+
+        self.origin_time_zone_difference = get_item(json.get('DeltaDepartureLocalDate'), int)
+        self.destination_time_zone_difference = get_item(json.get('DeltaArrivalLocalDate'), int)
 
 
 class RouteCarListEx(object):
