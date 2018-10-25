@@ -30,9 +30,9 @@ class API(object):
         return StationRoute(xml, json['S'])
 
     def train_list(self, from_: 'str or int', to: 'str or int', day: int, month: int, advert_domain: str=None,
-                   lang: str=Lang.RU, time_sw: TimeSw=TimeSw.NO_SW, time_from: int=None, time_to: int=None,
-                   train_with_seat: TrainWithSeat=None, join_train_complex: bool=None, grouping_type: GrouppingType=None,
-                   join_trains: JoinTrains=None, search_option: SearchOption=None):
+                   lang: str=Lang.RU, time_sw: TimeSw=TimeSw.NO_SW, time_from: int=TimeSw.TRAIN_DISPATCH, time_to: int=None,
+                   train_with_seat: TrainWithSeat=TrainWithSeat.FREE_PLACE, join_train_complex: bool=False, grouping_type: GrouppingType=GrouppingType.TYPE,
+                   join_trains: JoinTrains=JoinTrains.WITH_BONDING, search_option: SearchOption=SearchOption.DEFAULT):
         xml, json = self.__request_wrapper.make_request('TrainList', from_=from_, to=to, day=day, month=month,
                                                         advert_domain=advert_domain, time_sw=time_sw, lang=lang,
                                                         time_from=time_from, time_to=time_to, train_with_seat=train_with_seat,

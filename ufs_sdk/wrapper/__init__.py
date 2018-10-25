@@ -307,7 +307,7 @@ class TrainTrainList(object):
         # Номер поезда, отображаемый пассажиру. Данный номер поезда печатается в контрольном купоне
         self.client_number = json.get('N2')
         # Категория поезда
-        self.category = [item for item in json.get('KN')]
+        self.category = json.get('KN')
         # Наименование фирменного поезда
         self.train_name = json.get('NN')
         # Маршрут поезда
