@@ -169,7 +169,7 @@ class CarListEx(object):
         # Общая информация по запросу
         self.general_information = get_item(json.get('Z3'), GeneralInformation)
         # Информация о поезде
-        self.trains = get_array(json.get('N'), TrainCarListEx)
+        self.train = get_item(json.get('N'), TrainCarListEx)
 
         self.xml = xml
         self.json = json
