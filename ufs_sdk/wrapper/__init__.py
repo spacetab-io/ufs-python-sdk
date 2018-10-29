@@ -527,6 +527,8 @@ class CarCarListEx(object):
 
 class TrainCarListEx(object):
     def __init__(self, json):
+        json = json[0]
+        
         # Номер поезда
         self.number = json.get('N1')
         # Номер поезда, отображаемый пассажиру. Данный номер поезда печатается в контрольном купоне
