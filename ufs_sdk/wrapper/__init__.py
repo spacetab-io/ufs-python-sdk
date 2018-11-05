@@ -258,9 +258,9 @@ class CarTrainList(object):
         # Стоимость билета. Разделитель точка. Один знак после разделителя
         self.ticket_price = get_item(json.get('TF'), float)
         # Минимальная стоимость сервиса. Разделитель точка. Один знак после разделителя
-        self.min_ticket_price = get_item(json.get('TF1'), float)
+        self.min_service_price = get_item(json.get('TF1'), float)
         # Стоимость максимальная. Разделитель точка. Один знак после разделителя
-        self.max_service_price = get_item(json.get('TF2'), float)
+        self.max_price = get_item(json.get('TF2'), float)
         # Стоимость сервиса. Разделитель точка. Один знак после разделителя
         self.service_price = get_item(json.get('TF3'), float)
         # Признак стоимости за два места
@@ -498,9 +498,9 @@ class CarCarListEx(object):
         # Стоимость билета. Разделитель точка. Один знак после разделителя
         self.ticket_price = get_item(json.get('TF'), float)
         # Минимальная стоимость сервиса. Разделитель точка. Один знак после разделителя
-        self.min_ticket_price = get_item(json.get('TF1'), float)
+        self.min_service_price = get_item(json.get('TF1'), float)
         # Стоимость максимальная. Разделитель точка. Один знак после разделителя
-        self.max_service_price = get_item(json.get('TF2'), float)
+        self.max_price = get_item(json.get('TF2'), float)
         # Стоимость сервиса. Разделитель точка. Один знак после разделителя
         self.service_price = get_item(json.get('TF3'), float)
         # Признак участия поезда в программе «Динамическое ценообразование»
@@ -519,7 +519,7 @@ class CarCarListEx(object):
         # Тег обязателен для DirectionGroup=0,2
         self.available_tariffs = get_list_from_string(json.get('AvailableTariffs'), int)
         # Возможность применения карт лояльности при оформлении билетов в данный вагон.
-        self.is_loyalty_cards = json.get('LoyaltyCards')
+        self.is_loyalty_cards = get_list_from_string(json.get('LoyaltyCards'), str)
         # Признак «выкуп купе целиком».
         # Если в ответе тег FullKupe отображается, то в данном вагоне возможен выкуп всего купе целиком.
         self.is_full_kupe = get_bool_item(json.get('FullKupe'))
