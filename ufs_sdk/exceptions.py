@@ -17,7 +17,8 @@ class UfsAPIError(Exception):
     def __str__(self):
         msg = 'Method: %s\n' % self.method
         for item in self.error_data:
-            msg += '    %s: %s\n' % (item.tag, item.text)
+            if item is not None:
+                msg += '    %s: %s\n' % (item.tag, item.text)
         return msg
 
 

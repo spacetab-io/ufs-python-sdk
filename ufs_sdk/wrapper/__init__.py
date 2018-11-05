@@ -1,4 +1,5 @@
-from ufs_sdk.utils import get_array, get_item, get_bool_item, get_list_from_string
+from ufs_sdk.utils import (get_array, get_item, get_bool_item, get_list_from_string, get_datetime,
+                            get_compare_datetime)
 
 
 class DateTime(object):
@@ -714,7 +715,7 @@ class PassengerInfo(object):
         # Гражданство пассажира
         self.citizenship = json.get('GR')
         # Дата рождения в формате ddMMyyyy
-        self.birth_date = json.get('GD')
+        self.birth_date = get_compare_datetime(json.get('GD'))
 
 
 class TicketInfo(object):
@@ -774,11 +775,11 @@ class ExternalData(object):
 
 class Warnings(object):
     def __init__(self, json):
-        # code N Да Код предупреждения
+        # Код предупреждения
         self.code = get_item(json.get('code'), int)
-        # text C Да Описание предупреждения
+        # Описание предупреждения
         self.text = json.get('text')
-        # ExternalData S Да (Таблица 100)
+
         self.external_data = get_item(None if json.get('ExternalData') is None else json['ExternalData'].get('Data'), ExternalData)
 
 
@@ -792,3 +793,210 @@ class PrintPoints(object):
         # Opposite – точка распечатки находится до станции отправления,
         # Forward – точка распечатки находится впереди по маршруту.
         self.direction = json.get('Direction')
+
+
+class Tier(object):
+    def __init__(self, json):
+        if type(json) is str:
+            self.data = json
+            self.desc = None
+        else:
+            self.data = json.get('data')
+            self.desc = json.get('description')
+
+
+class BlankXml(object):
+    def __init__(self, json):
+        self.ordinal_id = get_item(json.get('PR'), int)
+        self.number = get_item(json.get('NEB'), int)
+        self.amount_with_nds = get_item(json.get('TF'), float)
+        self.tf4 = get_item(json.get('TF4'), float)
+        self.tf5 = get_item(json.get('TF5'), float)
+        self.additional_price = get_item(json.get('STB'), float)
+        self.base_fare = get_item(json.get('STP'), float)
+        self.tfb = get_item(json.get('TFB'), float)
+        self.stv1 = get_item(json.get('STV1'), float)
+        self.stv2 = get_item(json.get('STV2'), float)
+        self.stv3 = get_item(json.get('STV3'), float)
+        self.info = get_item(json.get('DL'), str)
+        self.category = get_item(json.get('GT'), str)
+        self.tier = get_item(json.get('CM'), Tier)   
+        self.passenger = get_item(json.get('PI'), PassengerInfo)
+        self.places = get_item(json.get('H'), str)
+        self.id = get_item(json.get('IDBlank'), int)
+        self.rp = get_bool_item(json.get('PIT'))
+        self.ereg = get_item(json.get('ER'), str)
+
+        self.json = json
+
+
+class OrderItemXml(object):
+    def __init__(self, json):
+        self.carrier = get_item(json.get('PER'), str)
+        self.carrier_inn = get_item(json.get('INN'), int)
+        self.carrier_country_code = get_item(json.get('GOS'), str)
+        self.created_at = get_compare_datetime(json.get('D2'), json.get('TB'))
+        self.train_number = get_item(json.get('N1'), str)
+        self.departure = get_compare_datetime(json.get('D3'), json.get('T1'))
+        self.train_category = get_item(json.get('KN'), str)
+        self.train_name = get_item(json.get('KN1'), str)
+        self.origin = get_item(json.get('C')[0], str)
+        self.destination = get_item(json.get('C')[1], str)
+        self.origin_code = get_item(json.get('CC1'), int)
+        self.destination_code = get_item(json.get('CC2'), int)
+        self.car_number = get_item(json.get('VH'), int)
+        self.segment_type = get_item(json.get('SegmentType'), str)
+        self.car_type = get_item(json.get('KV'), str)
+        self.service_class = get_item(json.get('KL'), str)
+        self.gender_cabin = get_item(json.get('R'), str)
+        self.carrier_name = get_item(json.get('VB'), str)
+        self.train_brand = get_item(json.get('BRN'), str)
+        self.places_quantity = get_item(json.get('M1'), int)
+        self.places = get_list_from_string(json.get('H'), str)
+        self.amount_with_nds = get_item(json.get('TF0'), float)
+        self.additional_info = get_item(json.get('GA'), str)
+        self.time_info = get_item(json.get('GB'), str)
+        self.high_comfort = get_item(json.get('R0'), str)
+        self.arrival = get_compare_datetime(json.get('D1'), json.get('T4'))
+        self.start_departure = get_item(json.get('DZ'), str)
+        self.main_departure = get_item(json.get('DepartureTime'), DateTime)
+        self.delta_departure_tz = get_item(json.get('DeltaDepartureLocalDate'), int)
+        self.main_arrival = get_item(json.get('ArrivalTime'), DateTime)
+        self.delta_arrival_tz = get_item(json.get('DeltaArrivalLocalDate'), int)
+        self.blanks = get_array(json.get('ET'), BlankXml)
+        self.amount_ticekt = get_item(json.get('Amount'), float)
+        self.ufs_transaction_id = get_item(json.get('IDTrans'), int)
+        self.status = get_item(json.get('Status'), str)
+        self.balance = get_item(json.get('Balance'), float)
+        self.balance_limit = get_item(json.get('BalanceLimit'), float) 
+        self.print_point = get_item(json.get('PrintPoint'), str)
+        self.print_phone = get_item(json.get('PrintPhone'), str)
+        self.test = get_item(json.get('Test'), str)
+        self.is_print = get_bool_item(json.get('IsEticketPrintPoint'))
+        self.confirm_till = get_item(json.get('ConfirmTimeLimit'), DateTime)
+        self.long_reservation = get_bool_item(json.get('reservation'))
+        self.reservation_type = get_item(json.get('ReservationType'), str)
+        self.client_fee = get_item(json.get('ClientFee'), float)
+        self.client_tax_percent = get_item(json.get('ClientTaxPercent'), float)
+        self.id = get_item(json.get('OrderId'), int)
+
+        self.json = json
+
+
+class BlankTransInfo(object):
+    def __init__(self, json):
+        self.id = get_item(json.get('ID'), int)
+        self.previous_id = get_item(json.get('PrevID'), int)
+        self.return_flag = get_item(json.get('RetFlag'), int)
+        self.amount = get_item(json.get('Amount'), float)
+        self.amount_nds = get_item(json.get('AmountNDS'), float)
+        self.service_nds = get_item(json.get('ServiceNDS'), float)
+        self.ticket_amount = get_item(json.get('TicketAmount'), float)
+        self.reservation_seat_amount = get_item(json.get('ReservedSeatAmount'), float)
+        self.tariff_rate_nds = get_item(json.get('TariffRateNds'), float)
+        self.service_rate_nds = get_item(json.get('ServiceRateNds'), float)
+        self.fee_rate_nds_commission = get_item(json.get('CommissionFeeRateNds'), float)
+        self.reclame_rate_nds = get_item(json.get('ReclamationCollectRateNds'), float)
+        self.return_tariff_nds = get_item(json.get('TariffReturnNds'), float)
+        self.return_service_nds = get_item(json.get('ServiceReturnNds'), float)
+        self.return_fee_rate_nds_commission = get_item(json.get('CommissionFeeReturnNds'), float)
+        self.return_reclame_rate_nds = get_item(json.get('ReclamationCollectReturnNds'), float)
+        self.return_ticket_amount = get_item(json.get('TicketReturnAmount'), float)
+        self.return_reservation_seat_amount = get_item(json.get('ReservedSeatReturnAmount'), float)
+        self.return_service_amount = get_item(json.get('ServiceReturnAmount'), float)
+        self.return_reclame_amount = get_item(json.get('ReclamationCollectReturnAmount'), float)
+        self.spec_info = get_item(json.get('DL'), str)
+        self.tariff_type = get_item(json.get('TariffType'), str)
+        self.nubmer = get_item(json.get('TicketNum'), str)
+        self.krs_nubmer = get_item(json.get('RefundReceiptNum'), str)
+        self.ereg_set_at = get_item(json.get('RegTime'), DateTime)
+        self.ereg = get_item(json.get('RemoteCheckin'), int)
+        self.is_original_print = get_item(json.get('PrintFlag'), int)
+        self.rzhd_status = get_item(json.get('RzhdStatus'), int)
+        self.passenger_card_nubmer = get_item(json.get('PassengerCard'), str)
+        self.ticket_token = get_item(json.get('TicketToken'), int)
+        self.food = get_item(json.get('Food', {}), Food)
+
+        self.json = json
+
+
+class PasssengerTransInfo(object):
+    def __init__(self, json):
+        self.id = get_item(json.get('ID'), int)
+        self.blank_id = get_item(json.get('BlankID'), int)
+        self.type = get_item(json.get('Type'), str)
+        self.doc_type = get_item(json.get('DocType'), str)
+        self.doc_number = get_item(json.get('DocNubmer'), str)
+        self.fio = get_item(json.get('Name'), str)
+        self.citizenship = get_item(json.get('Citizenship'), str)
+        self.places = get_array(json.get('Place'), str)
+        self.place_tier = get_item(json.get('PlaceTier'), Tier)
+        self.sex = get_item(json.get('R'), str)
+        self.birthday = get_item(json.get('BirthDay'), DateTime)
+        
+
+        self.json = json
+
+
+class OrderItemTransInfo(object):
+    def __init__(self, json):
+        self.transaction_id = get_item(json.get('TransID'), int)
+        self.previous_transaction_id = get_item(json.get('PrevTransID'), int)
+        self.lang = get_item(json.get('Lang'), str)
+        self.last_refund_transaction_id = get_item(json.get('LastRefundTransID'), str)
+        self.stan = get_item(json.get('STAN'), int)
+        self.status = get_item(json.get('TStatus'), int)
+        self.detailed_status = get_item(json.get('RStatus'), int)
+        self.order_number = get_item(json.get('OrderNum'), int)
+        self.is_terminal_only_return = get_bool_item(json.get('IsReturnedOnRailwayTerminal'))
+        self.segment_type = get_item(json.get('SegmentType'), int)
+        self.comment = get_item(json.get('Comment'), str)
+        self.type = get_item(json.get('Type'), int)
+        self.create_at = get_item(json.get('CreateTime'), DateTime)
+        self.confirmed_at = get_item(json.get('ConfirmTime'), DateTime)
+        self.booked_at = get_item(json.get('BookingTime'), DateTime)
+        self.confirm_till = get_item(json.get('ConfirmTimeLimit'), DateTime)
+        self.amount = get_item(json.get('Amount'), float)
+        self.fee = get_item(json.get('Fee'), float)
+        self.places_qunatity = get_item(json.get('PlaceCount'), int)
+        self.train_number = get_item(json.get('TrainNum'), str)
+        self.car_number = get_item(json.get('CarNum'), int)
+        self.car_type = get_item(json.get('CarType'), str)
+        self.departure = get_item(json.get('DepartTime'), DateTime)
+        self.phone = get_item(json.get('Phone'), str)
+        self.email = get_item(json.get('Email'), str)
+        self.service_class = get_item(json.get('ServiceClass'), str)
+        self.origin = json.get('StationFrom', {}).get('data')
+        self.origin_code = json.get('StationFrom', {}).get('Code')
+        self.destination = json.get('StationTo', {}).get('data')
+        self.destination_code = json.get('StationTo', {}).get('Code')
+        self.gender_cabin = get_item(json.get('GenderClass'), int)
+        self.arrival = get_item(json.get('ArrivalTime'), DateTime)
+        self.carrier = get_item(json.get('Carrier'), str)
+        self.carrier_inn = get_item(json.get('CarrierInn'), int)
+        self.time_desc = get_item(json.get('TimeDescription'), str)
+        self.ereg_expire_at = get_item(json.get('ExpireSetEr'), DateTime)
+        self.direction = get_item(json.get('GroupDirection'), int)
+        self.terminal = get_item(json.get('Terminal'), str)
+        self.is_test = get_item(json.get('IsTest'), int)
+        self.domain = get_item(json.get('Domain'), str)
+        self.formpay = get_item(json.get('PayTypeId'), str)
+        self.ufs_profit = get_item(json.get('UfsProfit'), float)
+        self.is_international = get_bool_item(json.get('IsInternational'))        
+        self.change_food_till = get_item(json.get('ChangeFoodBefore'), DateTime)
+
+        self.blanks = get_array(json.get('Blank'), BlankTransInfo)
+        self.pax = get_array(json.get('Passenger'), PasssengerTransInfo)
+
+        self.json = json
+
+
+class OrderTransInfo(object):
+    def __init__(self, json):
+        self.id = get_item(json.get('Id'), int)
+        self.transaction_id = get_item(json.get('RootTransId'), int)
+        self.amount = get_item(json.get('Amount'), float)
+        self.client_fee = get_item(json.get('ClientFee'), float)
+        self.items = get_array(json.get('OrderItems', {}).get('OrderItem', []), OrderItemTransInfo)
+        
+        self.json = json

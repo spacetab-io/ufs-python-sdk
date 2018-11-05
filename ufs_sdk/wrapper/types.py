@@ -1,3 +1,46 @@
+class BonusCardType:
+    BONUS_CARD = 'BonusCard'
+    UNIVERSAL_CARD = 'UniversalCard'
+    RZHD_BINNUS_DISCOUNT = 'RzdBonusDiscount'
+
+
+class SegmentType:
+    # Неопределенный
+    UNKNOWN = 'Unknow'
+    # Одиночный ЖД сегмент
+    RAILWAY = 'Railway'
+    # Паромный сегмент
+    FERRY = 'Ferry'
+    # ЖД сегмент, но в заказе еще есть паромный сегмент
+    RAILWAY_FERRY = 'Railwaywithferry'
+    # Автобусный сегмент
+    BUS = 'Bus'
+    # ЖД сегмент, но в заказе есть еще сегмент с автобусом
+    RAILWAY_BUS = 'Railwaywithbus'
+    # ЖД сегмент, но в заказе есть еще паромный сегмент и сегмент с автобусом
+    RAILWAY_BUS_FERRY = 'Railwaywithbusandferry'
+    # Направление туда
+    THERE = 'There'
+    # Направление обратно
+    BACK = 'Back'
+    # ЖД сегмент, направление туда
+    RAILWAY_THERE = 'Railwaythere'
+    # ЖД сегмент, направление обратно
+    RAILWAY_BACK = 'Railwayback'
+
+class DocType:
+    PASSPORT = 'ПН'
+    BIRTH_CERTIFICATE = 'СР'
+    RUSSIAN_FOREIGN_PASSPORT = 'ЗП'
+    FOREIGN_PASSPORT = 'ЗЗ'
+    PASSPORT_SEAMAN = 'ПМ'
+    MILITARY_ID = 'ВБ'
+    USSR_PASSPORT = 'ПС'
+    MILITARY_OFFICER_CARD = 'УВ'
+    STATELESS_PERSON_ODENTITY_CARD = 'БГ'
+    RESIDENCE_PERMIT = 'ВЖ'
+    RUSSIAN_TEMPORARY_IDENTITY_CARD = 'СУ'
+
 
 class TimeSw:
     # Временной интервал не учитывается
@@ -313,7 +356,7 @@ class Storey:
     SECOND_STOREY = 2
 
 
-class Placedemands:
+class PlaceDemands:
     # Места не у стола
     NO_TABLE = 'Н'
     # Места у стола (обычные места)

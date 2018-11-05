@@ -1,14 +1,15 @@
+from . import request
 from .utils import get_item
 from .session import Session
-from .utils import get_array, get_bool_item, get_datetime, get_list_from_string
 from .wrapper.requests import RequestWrapper
+from .utils import get_array, get_bool_item, get_datetime, get_list_from_string
 from .wrapper.types import (TimeSw, Lang, TrainWithSeat, GrouppingType, JoinTrains, SearchOption, Confirm, Registration,
-                            ReferenceCode, InOneKupe, Bedding, FullKupe, RemoteCheckIn, PayType, Storey, Placedemands,
-                            TicketFormat)
+                            ReferenceCode, InOneKupe, Bedding, FullKupe, RemoteCheckIn, PayType, Storey, PlaceDemands,
+                            TicketFormat, PayType)
 from .wrapper import (Clarify, TimeTable, AdditionalInfoStationRoute, RouteParamsStationRoute, TrainList,
                       GeneralInformation, TrainCarListEx, Blank, DateTime, BlankUpdateOrderInfo, Order,
                       BlankElectronicRegistration, Food, BlankRefund, Cards, PassDoc, TicketInfo, Fee, Warnings,
-                      PrintPoints)
+                      PrintPoints, OrderItemXml, OrderTransInfo)
 
 
 class API(object):
@@ -53,7 +54,7 @@ class API(object):
                    n_car: int=None, service_class: str=None, sex: str=None, diapason=None, n_up: int=None,
                    n_down: int=None, bedding: Bedding=None, stan: str=None, advert_domain: str=None, phone: int=None,
                    lang: Lang=Lang.RU, id_cust: int=None, storey: Storey=None, time=None, comment: str=None,
-                   placedemands: Placedemands=None, international_service_class=None, full_kupe: FullKupe=None):
+                   placedemands: PlaceDemands=None, international_service_class=None, full_kupe: FullKupe=None):
         xml, json = self.__request_wrapper.make_request('BuyTicket', from_=from_, to=to, day=day, month=month,
                                                         train=train, type_car=type_car, pass_doc=pass_doc.pass_doc,
                                                         in_one_kupe=in_one_kupe, remote_check_in=remote_check_in,
@@ -65,6 +66,15 @@ class API(object):
                                                         international_service_class=international_service_class,
                                                         full_kupe=full_kupe)
         return BuyTicket(xml, json)
+
+    def buy_tickets_xml(self, segments: [request.Segment], passengers: [request.Passenger], formpay: PayType,
+                        lang: Lang=Lang.RU, phone: str=None, email: str=None):
+        
+        order = request.Order(segments, passengers, formpay, lang, phone, email)
+
+        xml, json = self.__request_wrapper.make_request('BuyTicketXml', order.xml)
+
+        return OrderXML(xml, json['Order'])
 
     def confirm_ticket(self, id_trans: int, confirm: Confirm, site_fee: int=None, lang: Lang=Lang.RU):
         xml, json = self.__request_wrapper.make_request('ConfirmTicket', id_trans=id_trans, confirm=confirm,
@@ -112,6 +122,12 @@ class API(object):
         xml, json = self.__request_wrapper.make_request('GetCatalog', code=code, all_languages=all_languages, lang=lang,
                                                         is_description=is_description)
         return GetCatalog(xml, json)
+
+    def trans_info(self, id_trans: int, n_born: int=None, stan: str=None, lang: Lang=Lang.RU):
+
+        xml, json = self.__request_wrapper.make_request('TransInfo', id_trans=id_trans, n_born=n_born, stan=stan, lang=lang)
+
+        return TransInfo(xml, json)
 
     @property
     def last_response(self):
@@ -433,4 +449,77 @@ class BuyTicket(object):
             self.print_points = None
 
         self.xml = xml
+        self.json = json
+
+
+class OrderXML(object):
+    def __init__(self, xml, json):
+        # Номер заказа в системе «УФС»
+        self.order_id = get_item(json.get('Id'), int)
+        # Сумма всего заказа
+        self.amount = get_item(json.get('Amount'), float)
+        # Идентификатор родительской транзакции
+        self.transaction_id = get_item(json.get('RootTransId'), int)
+        # Информация о каждом сегменте
+        self.items = get_array(json.get('OrderItems', {}).get('OrderItem'), OrderItemXml)
+        # Комиссия с клиента за оформленный заказ
+        self.client_fee = get_item(json.get('ClientFee'), float)
+        # Процент по комиссии
+        self.client_tax_percent = get_item(json.get('ClientTaxPercent'), float)
+
+        self.json = json
+
+
+class TransInfo(object):
+    def __init__(self, xml, json):
+        self.transaction_id = get_item(json.get('TransID'), int)
+        self.previous_transaction_id = get_item(json.get('PrevTransID'), int)
+        self.lang = get_item(json.get('Lang'), str)
+        self.last_refund_transaction_id = get_item(json.get('LastRefundTransID'), int)
+        self.stan = get_item(json.get('STAN'), str)
+        self.status = get_item(json.get('TStatus'), int)
+        self.detailed_status = get_item(json.get('RStatus'), int)
+        self.order_num = get_item(json.get('OrderNum'), int)
+        self.segment_type = get_item(json.get('SegmentType'), str)
+        self.is_terminal_only_return = get_bool_item(json.get('IsReturnedOnRailwayTerminal'))
+        self.comment = get_item(json.get('Comment'), str)
+        self.type = get_item(json.get('Type'), int)
+        self.create_at = get_item(json.get('CreateTime'), DateTime)
+        self.confirmed_at = get_item(json.get('ConfirmTime'), DateTime)
+        self.booked_at = get_item(json.get('BookingTime'), DateTime)
+        self.confirm_till = get_item(json.get('ConfirmTimeLimit'), DateTime)
+        self.amount = get_item(json.get('Amount'), float)
+        self.fee = get_item(json.get('Fee'), float)
+        self.places_qunatity = get_item(json.get('PlaceCount'), int)
+        self.train_number = get_item(json.get('TrainNum'), str)
+        self.car_number = get_item(json.get('CarNum'), int)
+        self.car_type = get_item(json.get('CarType'), str)
+        self.departure_at = get_item(json.get('DepartTime'), DateTime)
+        self.delta_departure_tz = get_item(json.get('DeltaDepartureLocalDate'), int)
+        self.delta_arrival_tz = get_item(json.get('DeltaArrivalLocalDate'), int)
+        self.phone = get_item(json.get('Phone'), str)
+        self.email = get_item(json.get('Email'), str)
+        self.service_class = get_item(json.get('ServiceClass'), str)
+        self.origin = json.get('StationFrom', {}).get('data')
+        self.origin_code = json.get('StationFrom', {}).get('Code')
+        self.destination = json.get('StationTo', {}).get('data')
+        self.destination_code = json.get('StationTo', {}).get('Code')
+        self.gender_cabin = get_item(json.get('GenderClass'), int)
+        self.arrival = get_item(json.get('ArrivalTime'), DateTime)
+        self.carrier = get_item(json.get('Carrier'), str)
+        self.carrier_inn = get_item(json.get('CarrierInn'), int)
+        self.time_desc = get_item(json.get('TimeDescription'), str)
+        self.ereg_expire_at = get_item(json.get('ExpireSetEr'), DateTime)
+        self.direction = get_item(json.get('GroupDirection'), int)
+        self.terminal = get_item(json.get('Terminal'), str)
+        self.is_test = get_item(json.get('IsTest'), int)
+        self.domain = get_item(json.get('Domain'), str)
+        self.formpay = get_item(json.get('PayTypeId'), str)
+        self.ufs_profit = get_item(json.get('UfsProfit'), float)
+        self.is_suburban = get_bool_item(json.get('IsSuburbanTrain'))
+        self.full_return = get_bool_item(json.get('QM')) or get_bool_item(json.get('DM'))
+        self.is_international = get_bool_item(json.get('IsInternational'))        
+        self.order = get_item(json.get('Order'), OrderTransInfo)
+        self.change_food_till = get_item(json.get('ChangeFoodBefore'), DateTime)
+
         self.json = json

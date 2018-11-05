@@ -20,15 +20,15 @@ class Session(object):
         self.last_response_data = None
         self.last_request_data = None
 
-    def make_api_request(self, method, params, get):
-        response = self.__send_api_request(method, params, get)
+    def make_api_request(self, method, params=None, xml=None):
+        response = self.__send_api_request(method, params, xml)
         response_data = ElementTree.fromstring(response.text)
         if method == 'GetTicketBlank':
             if response_data.tag == 'html' or response.headers['Content-Type'] == 'application/pdf':
                 return response
 
-        if 'AdditionalInfo' in [item.tag for item in response_data]:
-            raise UfsTrainListError(method, response_data)
+        #if 'AdditionalInfo' in [item.tag for item in response_data]:
+        #    raise UfsTrainListError(method, response_data)
         if 'Error' in [item.tag for item in response_data]:
             raise UfsAPIError(method, response_data)
 
@@ -36,12 +36,15 @@ class Session(object):
 
         return response_data
 
-    def __send_api_request(self, method, params, get):
-        if get:
+    def __send_api_request(self, method, params=None, xml=None):
+        if xml is None:
             url = '{}/{}?terminal={}{}'.format(Session.API_URL, method, self.terminal, params)
             self.last_request_data = params
             response = self.requests_session.get(url, timeout=120)
             return response
         else:
-            # post запрос, добавлю далее по необходимости
-            pass
+            url = '{}/{}?terminal={}'.format(Session.API_URL, method, self.terminal)
+            self.last_request_data = xml
+            response = self.requests_session.post(url, data=ElementTree.tostring(xml, encoding='utf8'), 
+                                                    headers={'Content-Type': '', 'Content-Encoding': 'gzip'})
+            return response

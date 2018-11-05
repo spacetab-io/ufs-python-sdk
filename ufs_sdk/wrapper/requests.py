@@ -18,24 +18,28 @@ REQUEST_PARAM_NAMES = {
     'blanks_id': 'BlanksId',
     'food_allowance_code': 'FoodAllowanceCode',
     'all_languages': 'AllLanguages',
-    'is_description': 'IsDescription'
+    'is_description': 'IsDescription',
+    'n_born': 'Nborn'
 }
 # Называть переменные разными именами ? Не, не слышал
-ARRAYS = ['SC', 'N', 'C', 'CK', 'Blank', 'CO_SERVICES', 'LOYALTY_CARDS', 'Warning', 'EPrintPoint']
+ARRAYS = ['SC', 'N', 'C', 'CK', 'Blank', 'CO_SERVICES', 'LOYALTY_CARDS', 'Warning', 'EPrintPoint', 'OrderItem', 'ET', 'Passenger', 'Place']
 
 
 class RequestWrapper(object):
     def __init__(self, session):
         self.session = session
 
-    def make_request(self, method_name, get=True, **kwargs):
-        if get:
+    def make_request(self, method_name, xml=None, **kwargs):
+        if xml is None:
             params = self.get_params(kwargs)
-            response = self.session.make_api_request(method_name, params, get)
+            response = self.session.make_api_request(method_name, params, xml)
             if method_name == 'GetTicketBlank':
                 return response
             return self.get_json_xml(response, method_name)
-
+        else:
+            response = self.session.make_api_request(method_name, xml=xml)
+            return self.get_json_xml(response, method_name)
+            
     # Пытаться напрямую конвертировать их xml в объект - жопа
     # Для этого использую слой конвертации в json, где исправляются имена и их чудеса с массивами
     def get_json_xml(self, response, method_name):
@@ -121,8 +125,8 @@ class RequestWrapper(object):
     def get_item(item):
         if item.text is None:
             return True
-        if item.tag in ['ArrivalTime', 'DepartureTime', 'ConfirmTimeLimit', 'ExpireSetEr', 'ChangeFoodBefore',
-                        'ChangeFoodBefore', 'ConfirmTimeLimit']:
+        if item.tag in ['ArrivalTime', 'DepartureTime', 'DepartTime', 'ConfirmTimeLimit', 'ExpireSetEr', 'ChangeFoodBefore',
+                        'ConfirmTime', 'BookingTime', 'CreateTime', 'RegTime', 'BirthDay']:
             return get_ufs_datetime(item)
         if item.tag in ['C']:
             tag_data = item.text
