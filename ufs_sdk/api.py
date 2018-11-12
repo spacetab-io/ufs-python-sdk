@@ -1,3 +1,4 @@
+import logging
 from . import request
 from .utils import get_item
 from .session import Session
@@ -13,8 +14,8 @@ from .wrapper import (Clarify, TimeTable, AdditionalInfoStationRoute, RouteParam
 
 
 class API(object):
-    def __init__(self, username: str, password: str, terminal: str):
-        self.__session = Session(username, password, terminal)
+    def __init__(self, username: str, password: str, terminal: str, logger: logging.Logger=None):
+        self.__session = Session(username, password, terminal, logger)
         self.__request_wrapper = RequestWrapper(self.__session)
 
     def time_table(self, from_: 'str or int', to: 'str or int', day: int, month: int, time_sw: TimeSw=TimeSw.NO_SW,
@@ -90,7 +91,7 @@ class API(object):
                                                         id_blank=id_blank)
         return ElectronicRegistration(xml, json)
 
-    def get_ticket_blank(self, id_trans: int, format: TicketFormat=TicketFormat.HTML):
+    def get_ticket_blank(self, id_trans: int, format: TicketFormat=TicketFormat.PDF):
         response = self.__request_wrapper.make_request('GetTicketBlank', id_trans=id_trans, format=format,
                                                        force_new_tech=1)
         return GetTicketBlank(response, format)
