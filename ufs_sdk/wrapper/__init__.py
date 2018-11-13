@@ -930,7 +930,7 @@ class PasssengerTransInfo(object):
         self.blank_id = get_item(json.get('BlankID'), int)
         self.type = get_item(json.get('Type'), str)
         self.doc_type = get_item(json.get('DocType'), str)
-        self.doc_number = get_item(json.get('DocNubmer'), str)
+        self.doc_number = get_item(json.get('DocNum'), str)
         self.fio = get_item(json.get('Name'), str)
         self.citizenship = get_item(json.get('Citizenship'), str)
         self.places = get_array(json.get('Place'), str)
