@@ -656,6 +656,7 @@ class BlankRefund(object):
     def __init__(self, json):
         # Атрибут ID N Да Идентификатор билета в системе «УФС»
         self.ticket_identifier = get_item(json.get('ID'), int)
+        self.previous_ticket_identifier = get_item(json.get('PrevID'), int)
         # Ставка НДС с тарифа (в процентах)
         self.tariff_nds = get_item(json.get('STV1'), float)
         # Ставка НДС с сервиса (в процентах)
@@ -682,6 +683,8 @@ class BlankRefund(object):
         self.fine_amount = get_item(json.get('ESKV'), float)
         # Сумма к возврату по данному билету
         self.amount = get_item(json.get('Amount'), float)
+
+        self.json = json
 
 
 class Cards(object):

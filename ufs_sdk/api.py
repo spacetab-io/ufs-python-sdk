@@ -93,9 +93,9 @@ class API(object):
                                                         id_blank=id_blank)
         return ElectronicRegistration(xml, json)
 
-    def get_ticket_blank(self, id_trans: int, format: TicketFormat=TicketFormat.PDF):
+    def get_ticket_blank(self, id_trans: int, format: TicketFormat=TicketFormat.PDF, blank_id=None):
         response = self.__request_wrapper.make_request('GetTicketBlank', id_trans=id_trans, format=format,
-                                                       force_new_tech=1)
+                                                       blank_id=blank_id)
         return GetTicketBlank(response, format)
 
     def available_food(self, id_trans: int, advert_domain: str, lang: Lang.RU=Lang.RU):

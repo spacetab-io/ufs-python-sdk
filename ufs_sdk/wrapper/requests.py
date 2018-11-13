@@ -14,6 +14,7 @@ REQUEST_PARAM_NAMES = {
     'search_option': 'searchOption',
     'id_trans': 'IdTrans',
     'id_blank': 'IdBlank',
+    'blank_id': 'BlankID',
     'force_new_tech': 'ForceNewTech',
     'blanks_id': 'BlanksId',
     'food_allowance_code': 'FoodAllowanceCode',

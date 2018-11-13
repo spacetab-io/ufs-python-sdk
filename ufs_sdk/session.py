@@ -48,7 +48,7 @@ class Session(object):
             self.logger.debug('Request: %s',  url)
             self.last_request_data = params
             response = self.requests_session.get(url, timeout=120)
-            self.logger.debug('Response for: %s\n%s',  url, response)
+            self.logger.debug('Response for: %s\n%s',  url, response.text)
             return response
         else:
             url = '{}/{}?terminal={}'.format(Session.API_URL, method, self.terminal)
