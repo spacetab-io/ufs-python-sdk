@@ -638,9 +638,9 @@ class Order(object):
         self.root_id = get_item(json.get('RootTransId'), int)
         #
         if json.get('OrderItems') is not None:
-            self.order_item = get_item(json['OrderItems'].get('OrderItem'), OrderItem)
+            self.order_items = get_array(json['OrderItems'].get('OrderItem'), OrderItem)
         else:
-            self.order_item = None
+            self.order_items = []
 
 
 class BlankElectronicRegistration(object):
@@ -650,6 +650,7 @@ class BlankElectronicRegistration(object):
         # Признак наличия электронной регистрации
         self.electronic_registration = get_item(json.get('RemoteCheckIn'), int)
 
+        self.json = json
 
 class BlankRefund(object):
     def __init__(self, json):

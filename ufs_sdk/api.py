@@ -86,7 +86,9 @@ class API(object):
         xml, json = self.__request_wrapper.make_request('UpdateOrderInfo', id_trans=id_trans)
         return UpdateOrderInfo(xml, json)
 
-    def electronic_registration(self, id_trans: int, reg: Registration, id_blank: str=None):
+    def electronic_registration(self, id_trans: int, reg: Registration, id_blank: [int]=None):
+        if id_blank is not None:
+            id_blank = ','.join([str(item) for item in id_blank])
         xml, json = self.__request_wrapper.make_request('ElectronicRegistration', id_trans=id_trans, reg=reg,
                                                         id_blank=id_blank)
         return ElectronicRegistration(xml, json)
@@ -108,12 +110,16 @@ class API(object):
                                                         advert_domain=advert_domain, lang=lang)
         return ChangeFood(xml, json['PIT'])
 
-    def refund_amount(self, id_trans: int, id_blank: str, doc: int, lang: Lang.RU=Lang.RU):
+    def refund_amount(self, id_trans: int, id_blank: [int], doc: int, lang: Lang.RU=Lang.RU):
+        if id_blank is not None:
+            id_blank = ','.join([str(item) for item in id_blank])
         xml, json = self.__request_wrapper.make_request('RefundAmount', id_trans=id_trans, id_blank=id_blank,
                                                         doc=doc, lang=lang)
         return RefundAmount(xml, json)
 
-    def refund(self, id_trans: int, id_blank: str, doc: int, stan: str=None, lang: Lang.RU=Lang.RU):
+    def refund(self, id_trans: int, id_blank: [int], doc: int, stan: str=None, lang: Lang.RU=Lang.RU):
+        if id_blank is not None:
+            id_blank = ','.join([str(item) for item in id_blank])
         xml, json = self.__request_wrapper.make_request('Refund', id_trans=id_trans, id_blank=id_blank,
                                                         doc=doc, stan=stan, lang=lang)
         return Refund(xml, json)
@@ -231,7 +237,7 @@ class ElectronicRegistration(object):
         # Текущий статус операции: «0» – успешная
         self.status = get_item(json.get('Status'), int)
         # Информация о билете заказа
-        self.blank = get_array(json.get('Blank'), BlankElectronicRegistration)
+        self.blanks = get_array(json.get('Blank'), BlankElectronicRegistration)
 
         self.xml = xml
         self.json = json
@@ -402,7 +408,7 @@ class BuyTicket(object):
         # Время прибытия
         self.arrival_time = json.get('T4')
         # Информация о заказанных билетах
-        self.ticket_info = get_item(json.get('ET'), TicketInfo)
+        self.tickets_info = get_array(json.get('ET'), TicketInfo)
         # Время и дата отправления поезда
         self.departure_datetime = get_item(json.get('DepartureTime'), DateTime)
         # Время и дата прибытия поезда

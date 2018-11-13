@@ -3,8 +3,8 @@ import json
 import unittest
 from ufs_sdk import API
 from datetime import datetime
-from ufs_sdk.exceptions import UfsTrainListError
 from ufs_sdk.wrapper import PassDoc
+from ufs_sdk.exceptions import UfsTrainListError, UfsAPIError
 from ufs_sdk.wrapper.types import (TimeSw, DirectionGroup, CarCategories, Services, Confirm, ElectronicRegistration,
                                    Test, PrintFlag, RzhdStatus, Registration, ReferenceCode, InOneKupe, Bedding,
                                    FullKupe, RemoteCheckIn, PayType, Storey, PlaceDemands, TicketFormat)
@@ -38,7 +38,12 @@ class MockSession(object):
             url = url.replace('https://www.ufs-online.ru/webservices/Railway/Rest/Railway.svc/', '')
             url = url[:url.index('?terminal')]
 
+
         self.text = open('tests/data/{}.xml'.format(url), 'r', encoding='utf8').read()
+        
+        if url == 'GetTicketBlank':
+            self.headers['Content-Type'] = 'text/html'
+
         return self
 
 
@@ -132,8 +137,8 @@ class TestAPI(unittest.TestCase):
     def test_train_list_error(self):
         try:
             self.api.train_list('МОСКВА', 'КРЫМ', 24, 12)
-        except UfsTrainListError as ex:
-            self.assertEquals(UfsTrainListError, type(ex))
+        except UfsAPIError as ex:
+            self.assertEquals(UfsAPIError, type(ex))
 
     def test_train_list(self):
         train_list = self.api.train_list('МОСКВА', 'ПИТЕР', 24, 12)
@@ -365,32 +370,32 @@ class TestAPI(unittest.TestCase):
         self.assertEquals(buy_tickets.arrival_date, '03.03')
         self.assertEquals(buy_tickets.arrival_time, '10:26')
 
-        self.assertEquals(buy_tickets.ticket_info.ticket_number, 1)
-        self.assertEquals(buy_tickets.ticket_info.ticket_price, 35683.90)
-        self.assertEquals(buy_tickets.ticket_info.tariff_nds, 5438.23)
-        self.assertEquals(buy_tickets.ticket_info.service_nds, 0)
-        self.assertEquals(buy_tickets.ticket_info.ticket_eb_price, 0.0)
-        self.assertEquals(buy_tickets.ticket_info.ticket_platzkart_price, 0.0)
-        self.assertEquals(buy_tickets.ticket_info.ads_nds, 0.0)
-        self.assertEquals(buy_tickets.ticket_info.percent_tariff_nds, 0.0)
-        self.assertEquals(buy_tickets.ticket_info.percent_service_nds, 0.0)
-        self.assertEquals(buy_tickets.ticket_info.commission_nds, 0.0)
-        self.assertEquals(buy_tickets.ticket_info.privilege_info, None)
-        self.assertEquals(buy_tickets.ticket_info.ticket_category, 'ПОЛНЫЙ')
-        self.assertEquals(buy_tickets.ticket_info.place_tier, 'Н')
-        self.assertEquals(buy_tickets.ticket_info.place_tier_description, 'НИЖНЕЕ')
-        self.assertEquals(buy_tickets.ticket_info.passenger_info.doc, 'ЗЗ934647165')
-        self.assertEquals(buy_tickets.ticket_info.passenger_info.fio, 'Ivanov=Petr')
-        self.assertEquals(buy_tickets.ticket_info.passenger_info.identifier, 14656796)
-        self.assertEquals(buy_tickets.ticket_info.passenger_info.sex, 'M')
-        self.assertEquals(buy_tickets.ticket_info.passenger_info.citizenship, 'KEN')
-        self.assertEquals(buy_tickets.ticket_info.passenger_info.birth_date, '01051956')
+        self.assertEquals(buy_tickets.tickets_info[0].ticket_number, 1)
+        self.assertEquals(buy_tickets.tickets_info[0].ticket_price, 35683.90)
+        self.assertEquals(buy_tickets.tickets_info[0].tariff_nds, 5438.23)
+        self.assertEquals(buy_tickets.tickets_info[0].service_nds, 0)
+        self.assertEquals(buy_tickets.tickets_info[0].ticket_eb_price, 0.0)
+        self.assertEquals(buy_tickets.tickets_info[0].ticket_platzkart_price, 0.0)
+        self.assertEquals(buy_tickets.tickets_info[0].ads_nds, 0.0)
+        self.assertEquals(buy_tickets.tickets_info[0].percent_tariff_nds, 0.0)
+        self.assertEquals(buy_tickets.tickets_info[0].percent_service_nds, 0.0)
+        self.assertEquals(buy_tickets.tickets_info[0].commission_nds, 0.0)
+        self.assertEquals(buy_tickets.tickets_info[0].privilege_info, None)
+        self.assertEquals(buy_tickets.tickets_info[0].ticket_category, 'ПОЛНЫЙ')
+        self.assertEquals(buy_tickets.tickets_info[0].place_tier, 'Н')
+        self.assertEquals(buy_tickets.tickets_info[0].place_tier_description, 'НИЖНЕЕ')
+        self.assertEquals(buy_tickets.tickets_info[0].passenger_info.doc, 'ЗЗ934647165')
+        self.assertEquals(buy_tickets.tickets_info[0].passenger_info.fio, 'Ivanov=Petr')
+        self.assertEquals(buy_tickets.tickets_info[0].passenger_info.identifier, 14656796)
+        self.assertEquals(buy_tickets.tickets_info[0].passenger_info.sex, 'M')
+        self.assertEquals(buy_tickets.tickets_info[0].passenger_info.citizenship, 'KEN')
+        self.assertEquals(buy_tickets.tickets_info[0].passenger_info.birth_date, datetime(year=1956, month=5, day=1))
 
-        self.assertEquals(buy_tickets.ticket_info.place_list, '001,002')
-        self.assertEquals(buy_tickets.ticket_info.storey, None)
-        self.assertEquals(buy_tickets.ticket_info.blank_id, 5164203)
-        self.assertEquals(buy_tickets.ticket_info.place_count, 2)
-        self.assertEquals(buy_tickets.ticket_info.is_rp_selected, True)
+        self.assertEquals(buy_tickets.tickets_info[0].place_list, '001,002')
+        self.assertEquals(buy_tickets.tickets_info[0].storey, None)
+        self.assertEquals(buy_tickets.tickets_info[0].blank_id, 5164203)
+        self.assertEquals(buy_tickets.tickets_info[0].place_count, 2)
+        self.assertEquals(buy_tickets.tickets_info[0].is_rp_selected, True)
 
         self.assertEquals(buy_tickets.departure_datetime.date, self.datetime)
         self.assertEquals(buy_tickets.departure_datetime.time_offset, '+02:00')
@@ -461,24 +466,24 @@ class TestAPI(unittest.TestCase):
 
         self.assertEquals(update_order_info.order.id, 82596)
         self.assertEquals(update_order_info.order.root_id, 48715620)
-        self.assertEquals(update_order_info.order.order_item.id, 48715620)
-        self.assertEquals(update_order_info.order.order_item.status, 0)
+        self.assertEquals(update_order_info.order.order_items[0].id, 48715620)
+        self.assertEquals(update_order_info.order.order_items[0].status, 0)
 
-        self.assertEquals(update_order_info.order.order_item.blank[0].ticket_identifier, 5164702)
-        self.assertEquals(update_order_info.order.order_item.blank[0].electronic_registration, ElectronicRegistration.CONFIRM)
-        self.assertEquals(update_order_info.order.order_item.blank[0].print_flag, PrintFlag.NOT_PRINTED)
-        self.assertEquals(update_order_info.order.order_item.blank[0].rzhd_status, RzhdStatus.ELECTRONIC_REGISTRATION)
-        self.assertEquals(update_order_info.order.order_item.blank[0].food.code, 'Б')
-        self.assertEquals(update_order_info.order.order_item.blank[0].food.name, 'ЗАВТРАК-БЛИНЫ/СЫР')
-        self.assertEquals(update_order_info.order.order_item.blank[0].food.description, 'ЗАКУСКА СЫРНАЯ, БЛИНЫ, СУХАЯ ЧАСТЬ К РАЦИОНУ')
+        self.assertEquals(update_order_info.order.order_items[0].blank[0].ticket_identifier, 5164702)
+        self.assertEquals(update_order_info.order.order_items[0].blank[0].electronic_registration, ElectronicRegistration.CONFIRM)
+        self.assertEquals(update_order_info.order.order_items[0].blank[0].print_flag, PrintFlag.NOT_PRINTED)
+        self.assertEquals(update_order_info.order.order_items[0].blank[0].rzhd_status, RzhdStatus.ELECTRONIC_REGISTRATION)
+        self.assertEquals(update_order_info.order.order_items[0].blank[0].food.code, 'Б')
+        self.assertEquals(update_order_info.order.order_items[0].blank[0].food.name, 'ЗАВТРАК-БЛИНЫ/СЫР')
+        self.assertEquals(update_order_info.order.order_items[0].blank[0].food.description, 'ЗАКУСКА СЫРНАЯ, БЛИНЫ, СУХАЯ ЧАСТЬ К РАЦИОНУ')
 
     def test_electronic_registration(self):
         electronic_registration = self.api.electronic_registration(48715620, Registration.CONFIRM)
 
         self.assertEquals(electronic_registration.status, 0)
 
-        self.assertEquals(electronic_registration.blank[0].ticket_identifier, 5164702)
-        self.assertEquals(electronic_registration.blank[0].electronic_registration, ElectronicRegistration.CONFIRM)
+        self.assertEquals(electronic_registration.blanks[0].ticket_identifier, 5164702)
+        self.assertEquals(electronic_registration.blanks[0].electronic_registration, ElectronicRegistration.CONFIRM)
 
     def test_get_ticket_blank(self):
         get_ticket_blank = self.api.get_ticket_blank(1, TicketFormat.HTML)
@@ -513,7 +518,7 @@ class TestAPI(unittest.TestCase):
         self.assertEquals(change_food.food_description, 'ЗАКУСКА МЯСНАЯ, БЛИНЫ, СУХАЯ ЧАСТЬ К РАЦИОНУ')
 
     def test_refund_amount(self):
-        refund_amount = self.api.refund_amount(48715620, 1, 0)
+        refund_amount = self.api.refund_amount(48715620, [1], 0)
 
         self.assertEquals(refund_amount.status, 0)
         self.assertEquals(refund_amount.fee, 0.00)
@@ -536,7 +541,7 @@ class TestAPI(unittest.TestCase):
         self.assertEquals(refund_amount.blanks[0].amount, 6031.10)
 
     def test_refund(self):
-        refund = self.api.refund(48715620, 1, 0)
+        refund = self.api.refund(48715620, [1], 0)
 
         self.assertEquals(refund.status, 0)
         self.assertEquals(refund.fee, 0.00)
