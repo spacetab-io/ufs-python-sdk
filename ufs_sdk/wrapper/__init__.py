@@ -106,9 +106,9 @@ class TrainTimeTable(object):
         # Наименование фирменного поезда
         self.train_name = json.get('NN')
         # Время и дата отправления поезда
-        self.departure_time = get_item(json.get('DepartureTime'), DateTime)
+        self.departure_time = get_item(json.get('DepartureTime', {}), DateTime)
         # Время и дата прибытия поезда
-        self.arrival_time = get_item(json.get('ArrivalTime'), DateTime)
+        self.arrival_time = get_item(json.get('ArrivalTime', {}), DateTime)
 
 
 class TimeTable(object):
@@ -349,9 +349,9 @@ class TrainTrainList(object):
         # Признак пересечения границы Если в ответе тег CrossBorder отображается, то на поезд пересекает границу РФ
         self.cross_border = json.get('CrossBorder')
         # Время и дата отправления поезда
-        self.departure_time = get_item(json.get('DepartureTime'), DateTime)
+        self.departure_time = get_item(json.get('DepartureTime', {}), DateTime)
         # Время и дата прибытия поезда
-        self.arrival_time = get_item(json.get('ArrivalTime'), DateTime)
+        self.arrival_time = get_item(json.get('ArrivalTime', {}), DateTime)
         # Информация о вокзале отправления и прибытия пассажира
         self.passenger_railway_station = get_item(json.get('VOK'), PassengerRailwayStation)
         # Информация о вокзале отправления пассажира
@@ -435,10 +435,8 @@ class CarInfoCarListEx(object):
         self.default_free_places = json.get('MN')
         # Признак выбора РП.
         self.is_rp_selected = get_bool_item(json.get('PIT'))
-        # Дата прибытия вагона в формате «ДД.ММ». Тег является обязательным для беспересадочного вагона
-        self.car_arrival_time = json.get('D1')
-        # Время прибытия вагона на станцию прибытия пассажира Тег является обязательным для беспересадочного вагона
-        self.car_passenger_arrival_time = json.get('T4')
+        # Дата и время прибытия вагона. Тег является обязательным для беспересадочного вагона
+        self.arrival = get_compare_datetime(json.get('D1'), json.get('T4'))
         # Номера мест в отсеке
         self.place_numbers = json.get('MCP')
         # Номера откидных мест
@@ -570,9 +568,9 @@ class TrainCarListEx(object):
         # Признак пригородного поезда
         self.is_suburban_train = get_bool_item(json.get('IsSuburbanTrain'))
         # Время и дата отправления поезда
-        self.departure_time = get_item(json.get('DepartureTime'), DateTime)
+        self.departure_time = get_item(json.get('DepartureTime', {}), DateTime)
         # Время и дата прибытия поезда
-        self.arrival_time = get_item(json.get('ArrivalTime'), DateTime)
+        self.arrival_time = get_item(json.get('ArrivalTime', {}), DateTime)
         # Информация о вокзале отправления и прибытия пассажира
         self.passenger_railway_station = get_item(json.get('VOK'), PassengerRailwayStation)
         # Информация о вокзале отправления пассажира
@@ -625,7 +623,7 @@ class OrderItem(object):
         # воспользоваться  услугой смены РП. Атрибут «timeOffset="+ЧЧ:ММ"» содержит информацию
         # о часовом поясе для данного элемента, где "+ЧЧ:ММ" разница в часах и минутах от
         # UTC(Всемирное координированное время) конкретного места
-        self.change_food_before = get_item(json.get('ChangeFoodBefore'), DateTime)
+        self.change_food_before = get_item(json.get('ChangeFoodBefore', {}), DateTime)
         # Информация о билете заказа
         self.blank = get_array(json.get('Blank'), BlankUpdateOrderInfo)
 
@@ -863,9 +861,9 @@ class OrderItemXml(object):
         self.high_comfort = get_item(json.get('R0'), str)
         self.arrival = get_compare_datetime(json.get('D1'), json.get('T4'))
         self.start_departure = get_item(json.get('DZ'), str)
-        self.main_departure = get_item(json.get('DepartureTime'), DateTime)
+        self.main_departure = get_item(json.get('DepartureTime', {}), DateTime)
         self.delta_departure_tz = get_item(json.get('DeltaDepartureLocalDate'), int)
-        self.main_arrival = get_item(json.get('ArrivalTime'), DateTime)
+        self.main_arrival = get_item(json.get('ArrivalTime', {}), DateTime)
         self.delta_arrival_tz = get_item(json.get('DeltaArrivalLocalDate'), int)
         self.blanks = get_array(json.get('ET'), BlankXml)
         self.amount_ticekt = get_item(json.get('Amount'), float)
@@ -877,7 +875,7 @@ class OrderItemXml(object):
         self.print_phone = get_item(json.get('PrintPhone'), str)
         self.test = get_item(json.get('Test'), str)
         self.is_print = get_bool_item(json.get('IsEticketPrintPoint'))
-        self.confirm_till = get_item(json.get('ConfirmTimeLimit'), DateTime)
+        self.confirm_till = get_item(json.get('ConfirmTimeLimit', {}), DateTime)
         self.long_reservation = get_bool_item(json.get('reservation'))
         self.reservation_type = get_item(json.get('ReservationType'), str)
         self.client_fee = get_item(json.get('ClientFee'), float)
@@ -913,7 +911,7 @@ class BlankTransInfo(object):
         self.tariff_type = get_item(json.get('TariffType'), str)
         self.nubmer = get_item(json.get('TicketNum'), str)
         self.krs_nubmer = get_item(json.get('RefundReceiptNum'), str)
-        self.ereg_set_at = get_item(json.get('RegTime'), DateTime)
+        self.ereg_set_at = get_item(json.get('RegTime', {}), DateTime)
         self.ereg = get_item(json.get('RemoteCheckin'), int)
         self.is_original_print = get_item(json.get('PrintFlag'), int)
         self.rzhd_status = get_item(json.get('RzhdStatus'), int)
@@ -936,7 +934,7 @@ class PasssengerTransInfo(object):
         self.places = get_array(json.get('Place'), str)
         self.place_tier = get_item(json.get('PlaceTier'), Tier)
         self.sex = get_item(json.get('R'), str)
-        self.birthday = get_item(json.get('BirthDay'), DateTime)
+        self.birthday = get_item(json.get('BirthDay', {}), DateTime)
         
 
         self.json = json
@@ -956,17 +954,17 @@ class OrderItemTransInfo(object):
         self.segment_type = get_item(json.get('SegmentType'), int)
         self.comment = get_item(json.get('Comment'), str)
         self.type = get_item(json.get('Type'), int)
-        self.create_at = get_item(json.get('CreateTime'), DateTime)
-        self.confirmed_at = get_item(json.get('ConfirmTime'), DateTime)
-        self.booked_at = get_item(json.get('BookingTime'), DateTime)
-        self.confirm_till = get_item(json.get('ConfirmTimeLimit'), DateTime)
+        self.create_at = get_item(json.get('CreateTime', {}), DateTime)
+        self.confirmed_at = get_item(json.get('ConfirmTime', {}), DateTime)
+        self.booked_at = get_item(json.get('BookingTime', {}), DateTime)
+        self.confirm_till = get_item(json.get('ConfirmTimeLimit', {}), DateTime)
         self.amount = get_item(json.get('Amount'), float)
         self.fee = get_item(json.get('Fee'), float)
         self.places_qunatity = get_item(json.get('PlaceCount'), int)
         self.train_number = get_item(json.get('TrainNum'), str)
         self.car_number = get_item(json.get('CarNum'), int)
         self.car_type = get_item(json.get('CarType'), str)
-        self.departure = get_item(json.get('DepartTime'), DateTime)
+        self.departure = get_item(json.get('DepartTime', {}), DateTime)
         self.phone = get_item(json.get('Phone'), str)
         self.email = get_item(json.get('Email'), str)
         self.service_class = get_item(json.get('ServiceClass'), str)
@@ -975,11 +973,11 @@ class OrderItemTransInfo(object):
         self.destination = json.get('StationTo', {}).get('data')
         self.destination_code = json.get('StationTo', {}).get('Code')
         self.gender_cabin = get_item(json.get('GenderClass'), int)
-        self.arrival = get_item(json.get('ArrivalTime'), DateTime)
+        self.arrival = get_item(json.get('ArrivalTime', {}), DateTime)
         self.carrier = get_item(json.get('Carrier'), str)
         self.carrier_inn = get_item(json.get('CarrierInn'), int)
         self.time_desc = get_item(json.get('TimeDescription'), str)
-        self.ereg_expire_at = get_item(json.get('ExpireSetEr'), DateTime)
+        self.ereg_expire_at = get_item(json.get('ExpireSetEr', {}), DateTime)
         self.direction = get_item(json.get('GroupDirection'), int)
         self.terminal = get_item(json.get('Terminal'), str)
         self.is_test = get_item(json.get('IsTest'), int)
@@ -987,7 +985,7 @@ class OrderItemTransInfo(object):
         self.formpay = get_item(json.get('PayTypeId'), str)
         self.ufs_profit = get_item(json.get('UfsProfit'), float)
         self.is_international = get_bool_item(json.get('IsInternational'))        
-        self.change_food_till = get_item(json.get('ChangeFoodBefore'), DateTime)
+        self.change_food_till = get_item(json.get('ChangeFoodBefore', {}), DateTime)
 
         self.blanks = get_array(json.get('Blank'), BlankTransInfo)
         self.pax = get_array(json.get('Passenger'), PasssengerTransInfo)
