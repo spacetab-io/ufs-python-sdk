@@ -269,7 +269,7 @@ class CarTrainList(object):
         # Признак стоимости за 4 места
         self.is_four_place = get_bool_item(json.get('QM'))
         # Информация о вагоне (Таблица 53)
-        self.car_info = get_item(json.get('CV'), CarInfoTrainList)
+        self.car_info = get_item(json.get('CV', [{}])[0], CarInfoTrainList)
         # Признак участия поезда в программе «Динамическое ценообразование»
         self.is_dynamic_price = get_bool_item(json.get('UD'))
         # Признак того, что на данную категорию вагонов снижена стоимость билетов
@@ -509,7 +509,7 @@ class CarCarListEx(object):
         # Признак стоимости за 4 места
         self.is_four_place = get_bool_item(json.get('QM'))
         # Информация о вагоне (Таблица 53)
-        self.car_info = get_item(json.get('CV'), CarInfoCarListEx)
+        self.car_info = get_array(json.get('CV'), CarInfoCarListEx)
         # Признак того, что на данную категорию вагонов снижена стоимость билетов
         self.is_discount = get_bool_item(json.get('Discount'))
         # Возможность трехчасового бронирования
