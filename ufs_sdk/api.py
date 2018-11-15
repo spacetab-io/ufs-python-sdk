@@ -14,8 +14,8 @@ from .wrapper import (Clarify, TimeTable, AdditionalInfoStationRoute, RouteParam
 
 
 class API(object):
-    def __init__(self, username: str, password: str, terminal: str, logger: logging.Logger=None):
-        self.__session = Session(username, password, terminal, logger)
+    def __init__(self, username: str, password: str, terminal: str, logger: logging.Logger=None, ssl_verify=True):
+        self.__session = Session(username, password, terminal, logger, ssl_verify)
         self.__request_wrapper = RequestWrapper(self.__session)
 
     def time_table(self, from_: 'str or int', to: 'str or int', day: int, month: int, time_sw: TimeSw=TimeSw.NO_SW,

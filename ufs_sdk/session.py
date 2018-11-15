@@ -8,12 +8,13 @@ from .exceptions import UfsAPIError, UfsTrainListError
 class Session(object):
     API_URL = 'https://www.ufs-online.ru/webservices/Railway/Rest/Railway.svc'
 
-    def __init__(self, username, password, terminal, logger: logging.Logger=None):
+    def __init__(self, username, password, terminal, logger: logging.Logger=None, ssl_verify=True):
         self.username = username
         self.password = password
         self.terminal = terminal
 
         self.requests_session = requests.Session()
+        self.requests_session.verify = ssl_verify
         self.requests_session.headers['Content-Encoding'] = 'gzip'
         self.requests_session.headers['Content-Type'] = 'application/json; charset=utf-8'
         self.requests_session.auth = HTTPBasicAuth(self.username, self.password)
