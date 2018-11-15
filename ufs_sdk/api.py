@@ -3,7 +3,7 @@ from . import request
 from .utils import get_item
 from .session import Session
 from .wrapper.requests import RequestWrapper
-from .utils import get_array, get_bool_item, get_datetime, get_list_from_string
+from .utils import get_array, get_bool_item, get_datetime, get_list_from_string, get_money
 from .wrapper.types import (TimeSw, Lang, TrainWithSeat, GrouppingType, JoinTrains, SearchOption, Confirm, Registration,
                             ReferenceCode, InOneKupe, Bedding, FullKupe, RemoteCheckIn, PayType, Storey, PlaceDemands,
                             TicketFormat, PayType)
@@ -180,8 +180,8 @@ class TrailListBuilder(object):
             self.data = Clarify(json['S'])
         else:
             self.data = TrainList(json['S'])
-            self.balance = get_item(json.get('Balance'), float)
-            self.balance_limit = get_item(json.get('BalanceLimit'), float)
+            self.balance = get_money(json.get('Balance'))
+            self.balance_limit = get_money(json.get('BalanceLimit'))
 
         self.xml = xml
         self.json = json
@@ -305,12 +305,12 @@ class RefundAmount(object):
         # Статус операции: «0» – успешная
         self.status = get_item(json.get('Status'), int)
         # Сумма сервисного сбора за возврат
-        self.fee = get_item(json.get('Fee'), float)
+        self.fee = get_money(json.get('Fee'))
         # Величина комиссионного сбора УФС в %, В случае, если комиссия является фиксированной величиной,
         # то передается в данном параметре «0»
         self.tax_percent = get_item(json.get('TaxPercent'), float)
         # Общая сумма к возврату
-        self.amount = get_item(json.get('Amount'), float)
+        self.amount = get_money(json.get('Amount'))
         # Информация о билете заказа
         self.blanks = get_array(json.get('Blank'), BlankRefund)
 
@@ -327,12 +327,12 @@ class Refund(object):
         # Время осуществления возврата
         self.refund_date = get_datetime(json.get('RefundTime'))
         # Сумма сервисного сбора за возврат
-        self.fee = get_item(json.get('Fee'), float)
+        self.fee = get_money(json.get('Fee'))
         # Величина комиссионного сбора УФС в %, В случае, если комиссия является фиксированной величиной,
         # то передается в данном параметре «0»
         self.tax_percent = get_item(json.get('TaxPercent'), float)
         # Общая сумма к возврату
-        self.amount = get_item(json.get('Amount'), float)
+        self.amount = get_money(json.get('Amount'))
         # Информация о билете заказа
         self.blanks = get_array(json.get('Blank'), BlankRefund)
 
@@ -396,7 +396,7 @@ class BuyTicket(object):
         # Номера мест в заказе
         self.place_number = get_list_from_string(json.get('H'), int)
         # Общая стоимость заказа с учетом НДС
-        self.total_price = get_item(json.get('TF0'), float)
+        self.total_price = get_money(json.get('TF0'))
         # Уведомление пассажира об особых условиях поездки
         self.special_conditions = json.get('GA')
         # Информация о времени отправления
@@ -414,15 +414,15 @@ class BuyTicket(object):
         # Время и дата прибытия поезда
         self.arrival_datetime = get_item(json.get('ArrivalTime'), DateTime)
         # Общая стоимость полученных билетов
-        self.amount = get_item(json.get('Amount'), float)
+        self.amount = get_money(json.get('Amount'))
         # Номер транзакции в системе «УФС»
         self.id_trans = get_item(json.get('IDTrans'), int)
         # Статус операции
         self.status = get_item(json.get('Status'), int)
         # Текущий баланс Агента
-        self.balance = get_item(json.get('Balance'), float)
+        self.balance = get_money(json.get('Balance'))
         # Актуальный кредит Агента в ЖД шлюзе
-        self.balance_limit = get_item(json.get('BalanceLimit'), float)
+        self.balance_limit = get_money(json.get('BalanceLimit'))
         # Точка распечатки (пункт выдачи заказа)
         self.print_point = json.get('PrintPoint')
         # Телефон пункта выдачи билетов заказа
@@ -441,7 +441,7 @@ class BuyTicket(object):
         # ReservationType EN Да Вид бронирования (Таблица 105)
         self.reservation_type = get_item(json.get('ReservationType'), int)
         # ClientFee N Да Вознаграждение агента
-        self.client_fee = get_item(json.get('ClientFee'), float)
+        self.client_fee = get_money(json.get('ClientFee'))
         # OrderId N Да Идентификатор заказа
         self.order_id = get_item(json.get('OrderId'), int)
         # Информирование о повторном бронировании
@@ -464,13 +464,13 @@ class OrderXML(object):
         # Номер заказа в системе «УФС»
         self.order_id = get_item(json.get('Id'), int)
         # Сумма всего заказа
-        self.amount = get_item(json.get('Amount'), float)
+        self.amount = get_money(json.get('Amount'))
         # Идентификатор родительской транзакции
         self.transaction_id = get_item(json.get('RootTransId'), int)
         # Информация о каждом сегменте
         self.items = get_array(json.get('OrderItems', {}).get('OrderItem'), OrderItemXml)
         # Комиссия с клиента за оформленный заказ
-        self.client_fee = get_item(json.get('ClientFee'), float)
+        self.client_fee = get_money(json.get('ClientFee'))
         # Процент по комиссии
         self.client_tax_percent = get_item(json.get('ClientTaxPercent'), float)
 
@@ -495,8 +495,8 @@ class TransInfo(object):
         self.confirmed_at = get_item(json.get('ConfirmTime'), DateTime)
         self.booked_at = get_item(json.get('BookingTime'), DateTime)
         self.confirm_till = get_item(json.get('ConfirmTimeLimit'), DateTime)
-        self.amount = get_item(json.get('Amount'), float)
-        self.fee = get_item(json.get('Fee'), float)
+        self.amount = get_money(json.get('Amount'))
+        self.fee = get_money(json.get('Fee'))
         self.places_qunatity = get_item(json.get('PlaceCount'), int)
         self.train_number = get_item(json.get('TrainNum'), str)
         self.car_number = get_item(json.get('CarNum'), int)
@@ -522,7 +522,7 @@ class TransInfo(object):
         self.is_test = get_item(json.get('IsTest'), int)
         self.domain = get_item(json.get('Domain'), str)
         self.formpay = get_item(json.get('PayTypeId'), str)
-        self.ufs_profit = get_item(json.get('UfsProfit'), float)
+        self.ufs_profit = get_money(json.get('UfsProfit'))
         self.is_suburban = get_bool_item(json.get('IsSuburbanTrain'))
         self.full_return = get_bool_item(json.get('QM')) or get_bool_item(json.get('DM'))
         self.is_international = get_bool_item(json.get('IsInternational'))        

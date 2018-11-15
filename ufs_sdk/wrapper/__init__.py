@@ -1,5 +1,5 @@
 from ufs_sdk.utils import (get_array, get_item, get_bool_item, get_list_from_string, get_datetime,
-                            get_compare_datetime)
+                            get_compare_datetime, get_money)
 
 
 class DateTime(object):
@@ -257,13 +257,13 @@ class CarTrainList(object):
         # Признак категории вагона
         self.car_category_belonging = json.get('R')
         # Стоимость билета. Разделитель точка. Один знак после разделителя
-        self.ticket_price = get_item(json.get('TF'), float)
+        self.ticket_price = get_money(json.get('TF'))
         # Минимальная стоимость сервиса. Разделитель точка. Один знак после разделителя
-        self.min_service_price = get_item(json.get('TF1'), float)
+        self.min_service_price = get_money(json.get('TF1'))
         # Стоимость максимальная. Разделитель точка. Один знак после разделителя
-        self.max_price = get_item(json.get('TF2'), float)
+        self.max_price = get_money(json.get('TF2'))
         # Стоимость сервиса. Разделитель точка. Один знак после разделителя
-        self.service_price = get_item(json.get('TF3'), float)
+        self.service_price = get_money(json.get('TF3'))
         # Признак стоимости за два места
         self.is_two_place = get_bool_item(json.get('DM'))
         # Признак стоимости за 4 места
@@ -381,7 +381,7 @@ class RouteCarListEx(object):
 
 class PlacesCarListEx(object):
     def __init__(self, json):
-        self.amount = json.get('Amount')
+        self.amount = get_money(json.get('Amount'))
         self.places = json.get('Places')
 
 
@@ -495,13 +495,13 @@ class CarCarListEx(object):
         # Признак категории вагона
         self.car_category_belonging = json.get('R')
         # Стоимость билета. Разделитель точка. Один знак после разделителя
-        self.ticket_price = get_item(json.get('TF'), float)
+        self.ticket_price = get_money(json.get('TF'))
         # Минимальная стоимость сервиса. Разделитель точка. Один знак после разделителя
-        self.min_service_price = get_item(json.get('TF1'), float)
+        self.min_service_price = get_money(json.get('TF1'))
         # Стоимость максимальная. Разделитель точка. Один знак после разделителя
-        self.max_price = get_item(json.get('TF2'), float)
+        self.max_price = get_money(json.get('TF2'))
         # Стоимость сервиса. Разделитель точка. Один знак после разделителя
-        self.service_price = get_item(json.get('TF3'), float)
+        self.service_price = get_money(json.get('TF3'))
         # Признак участия поезда в программе «Динамическое ценообразование»
         self.is_dynamic_price = get_bool_item(json.get('UD'))
         # Признак стоимости за два места
@@ -664,23 +664,23 @@ class BlankRefund(object):
         # Ставка НДС с рекламационногосбора (сбор за возврат) (в процентах)
         self.ads_nds = get_item(json.get('STV4'), float)
         # Сумма возвращаемого НДС со стоимости перевозки по ставке STV1
-        self.returning_tariff_nds = get_item(json.get('ETF4'), float)
+        self.returning_tariff_nds = get_money(json.get('ETF4'))
         # Сумма возвращаемого НДС со стоимости сервисных услуг по ставке STV2
-        self.returning_service_nds = get_item(json.get('ETF5'), float)
+        self.returning_service_nds = get_money(json.get('ETF5'))
         # Сумма возвращаемого НДС со стоимости комиссионного сбора по ставке STV3
-        self.returning_commission_nds = get_item(json.get('ETFC'), float)
+        self.returning_commission_nds = get_money(json.get('ETFC'))
         # Сумма взимаемого НДС со стоимости комиссионного сбора за возврат по ставке STV4
-        self.returning_ads_nds = get_item(json.get('ETFB'), float)
+        self.returning_ads_nds = get_money(json.get('ETFB'))
         # Сумма возвращаемой стоимости билетной части
-        self.returning_full_ticket_amount = get_item(json.get('ESB'), float)
+        self.returning_full_ticket_amount = get_money(json.get('ESB'))
         # Сумма возвращаемой стоимости плацкарты
-        self.returning_kupe_amount = get_item(json.get('ESP'), float)
+        self.returning_kupe_amount = get_money(json.get('ESP'))
         # Сумма возвращаемой стоимости сервисных услуг
-        self.returning_service_amount = get_item(json.get('ESS'), float)
+        self.returning_service_amount = get_money(json.get('ESS'))
         # Сумма штрафа за возврат
-        self.fine_amount = get_item(json.get('ESKV'), float)
+        self.fine_amount = get_money(json.get('ESKV'))
         # Сумма к возврату по данному билету
-        self.amount = get_item(json.get('Amount'), float)
+        self.amount = get_money(json.get('Amount'))
 
         self.json = json
 
@@ -725,17 +725,17 @@ class TicketInfo(object):
         # Да Порядковый номер билета в заказе
         self.ticket_number = get_item(json.get('PR'), int)
         # Да Стоимость билета с учетом НДС
-        self.ticket_price = get_item(json.get('TF'), float)
+        self.ticket_price = get_money(json.get('TF'))
         # НДС со стоимости перевозки по электронному билету
-        self.tariff_nds = get_item(json.get('TF4'), float)
+        self.tariff_nds = get_money(json.get('TF4'))
         # НДС со стоимости сервиса по электронному билету
-        self.service_nds = get_item(json.get('TF5'), float)
+        self.service_nds = get_money(json.get('TF5'))
         # Стоимость билетной части по ЭБ
-        self.ticket_eb_price = get_item(json.get('STB'), float)
+        self.ticket_eb_price = get_money(json.get('STB'))
         # Стоимость плацкарты по ЭБ
-        self.ticket_platzkart_price = get_item(json.get('STP'), float)
+        self.ticket_platzkart_price = get_money(json.get('STP'))
         # НДС со стоимости комиссионного сбора и дополнительнвх услуг
-        self.ads_nds = get_item(json.get('TFB'), float)
+        self.ads_nds = get_money(json.get('TFB'))
         # Ставка НДС с тарифа (в процентах)
         self.percent_tariff_nds = get_item(json.get('STV1'), float)
         # Ставка НДС с сервиса (в процентах)
@@ -811,12 +811,12 @@ class BlankXml(object):
     def __init__(self, json):
         self.ordinal_id = get_item(json.get('PR'), int)
         self.number = get_item(json.get('NEB'), int)
-        self.amount_with_nds = get_item(json.get('TF'), float)
-        self.tf4 = get_item(json.get('TF4'), float)
-        self.tf5 = get_item(json.get('TF5'), float)
-        self.additional_price = get_item(json.get('STB'), float)
-        self.base_fare = get_item(json.get('STP'), float)
-        self.tfb = get_item(json.get('TFB'), float)
+        self.amount_with_nds = get_money(json.get('TF'))
+        self.tf4 = get_money(json.get('TF4'))
+        self.tf5 = get_money(json.get('TF5'))
+        self.additional_price = get_money(json.get('STB'))
+        self.base_fare = get_money(json.get('STP'))
+        self.tfb = get_money(json.get('TFB'))
         self.stv1 = get_item(json.get('STV1'), float)
         self.stv2 = get_item(json.get('STV2'), float)
         self.stv3 = get_item(json.get('STV3'), float)
@@ -855,7 +855,7 @@ class OrderItemXml(object):
         self.train_brand = get_item(json.get('BRN'), str)
         self.places_quantity = get_item(json.get('M1'), int)
         self.places = get_list_from_string(json.get('H'), str)
-        self.amount_with_nds = get_item(json.get('TF0'), float)
+        self.amount_with_nds = get_money(json.get('TF0'))
         self.additional_info = get_item(json.get('GA'), str)
         self.time_info = get_item(json.get('GB'), str)
         self.high_comfort = get_item(json.get('R0'), str)
@@ -866,11 +866,11 @@ class OrderItemXml(object):
         self.main_arrival = get_item(json.get('ArrivalTime', {}), DateTime)
         self.delta_arrival_tz = get_item(json.get('DeltaArrivalLocalDate'), int)
         self.blanks = get_array(json.get('ET'), BlankXml)
-        self.amount_ticekt = get_item(json.get('Amount'), float)
+        self.amount_ticekt = get_money(json.get('Amount'))
         self.ufs_transaction_id = get_item(json.get('IDTrans'), int)
         self.status = get_item(json.get('Status'), str)
-        self.balance = get_item(json.get('Balance'), float)
-        self.balance_limit = get_item(json.get('BalanceLimit'), float) 
+        self.balance = get_money(json.get('Balance'))
+        self.balance_limit = get_money(json.get('BalanceLimit')) 
         self.print_point = get_item(json.get('PrintPoint'), str)
         self.print_phone = get_item(json.get('PrintPhone'), str)
         self.test = get_item(json.get('Test'), str)
@@ -878,7 +878,7 @@ class OrderItemXml(object):
         self.confirm_till = get_item(json.get('ConfirmTimeLimit', {}), DateTime)
         self.long_reservation = get_bool_item(json.get('reservation'))
         self.reservation_type = get_item(json.get('ReservationType'), str)
-        self.client_fee = get_item(json.get('ClientFee'), float)
+        self.client_fee = get_money(json.get('ClientFee'))
         self.client_tax_percent = get_item(json.get('ClientTaxPercent'), float)
         self.id = get_item(json.get('OrderId'), int)
 
@@ -890,11 +890,11 @@ class BlankTransInfo(object):
         self.id = get_item(json.get('ID'), int)
         self.previous_id = get_item(json.get('PrevID'), int)
         self.return_flag = get_item(json.get('RetFlag'), int)
-        self.amount = get_item(json.get('Amount'), float)
-        self.amount_nds = get_item(json.get('AmountNDS'), float)
-        self.service_nds = get_item(json.get('ServiceNDS'), float)
-        self.ticket_amount = get_item(json.get('TicketAmount'), float)
-        self.reservation_seat_amount = get_item(json.get('ReservedSeatAmount'), float)
+        self.amount = get_money(json.get('Amount'))
+        self.amount_nds = get_money(json.get('AmountNDS'))
+        self.service_nds = get_money(json.get('ServiceNDS'))
+        self.ticket_amount = get_money(json.get('TicketAmount'))
+        self.reservation_seat_amount = get_money(json.get('ReservedSeatAmount'))
         self.tariff_rate_nds = get_item(json.get('TariffRateNds'), float)
         self.service_rate_nds = get_item(json.get('ServiceRateNds'), float)
         self.fee_rate_nds_commission = get_item(json.get('CommissionFeeRateNds'), float)
@@ -958,8 +958,8 @@ class OrderItemTransInfo(object):
         self.confirmed_at = get_item(json.get('ConfirmTime', {}), DateTime)
         self.booked_at = get_item(json.get('BookingTime', {}), DateTime)
         self.confirm_till = get_item(json.get('ConfirmTimeLimit', {}), DateTime)
-        self.amount = get_item(json.get('Amount'), float)
-        self.fee = get_item(json.get('Fee'), float)
+        self.amount = get_money(json.get('Amount'))
+        self.fee = get_money(json.get('Fee'))
         self.places_qunatity = get_item(json.get('PlaceCount'), int)
         self.train_number = get_item(json.get('TrainNum'), str)
         self.car_number = get_item(json.get('CarNum'), int)
@@ -983,7 +983,7 @@ class OrderItemTransInfo(object):
         self.is_test = get_item(json.get('IsTest'), int)
         self.domain = get_item(json.get('Domain'), str)
         self.formpay = get_item(json.get('PayTypeId'), str)
-        self.ufs_profit = get_item(json.get('UfsProfit'), float)
+        self.ufs_profit = get_money(json.get('UfsProfit'))
         self.is_international = get_bool_item(json.get('IsInternational'))        
         self.change_food_till = get_item(json.get('ChangeFoodBefore', {}), DateTime)
 
@@ -997,8 +997,8 @@ class OrderTransInfo(object):
     def __init__(self, json):
         self.id = get_item(json.get('Id'), int)
         self.transaction_id = get_item(json.get('RootTransId'), int)
-        self.amount = get_item(json.get('Amount'), float)
-        self.client_fee = get_item(json.get('ClientFee'), float)
+        self.amount = get_money(json.get('Amount'))
+        self.client_fee =  get_money(json.get('ClientFee'))
         self.items = get_array(json.get('OrderItems', {}).get('OrderItem', []), OrderItemTransInfo)
         
         self.json = json

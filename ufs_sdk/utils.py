@@ -1,6 +1,11 @@
 from datetime import datetime
 
 
+def get_money(item):
+    if item not in ['', 'Unknown', 'NoValue', None]:
+        return int(float(item) * 100)
+    return None
+
 def get_array(items, item_class):
     if items is not None:
         return [item_class(item) for item in items]
