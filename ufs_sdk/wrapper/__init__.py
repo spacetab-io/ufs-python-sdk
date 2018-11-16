@@ -315,6 +315,8 @@ class TrainTrainList(object):
         # Категория поезда
         self.category = json.get('KN')
         # Наименование фирменного поезда
+        print(json.get('NN'), flush=True)
+        print(json ,flush=True)
         self.train_name = json.get('NN')
         # Маршрут поезда
         self.route = get_item(json.get('NP'), RouteTimeTable)
@@ -414,7 +416,7 @@ class CarInfoCarListEx(object):
         self.count_whole_kupe = get_item(json.get('KU'), int)
         # Выбор постельного белья Если данный тег вернулся, то есть возможность выбрать/отказаться от белья.
         # Если данного тега нет, то нет возможности выбора бель
-        self.linens = get_item(json.get('BL'), int)
+        self.linens = get_bool_item(json.get('BL'))
         # Номера свободных мест (через запятую). К номеру места может быть добавлен символ для гендерных вагонов
         self.free_places_list = get_list_from_string(json.get('H'), str)
         # Категория вагона
