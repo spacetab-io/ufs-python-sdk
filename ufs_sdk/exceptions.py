@@ -8,11 +8,17 @@ class UfsAPIError(Exception):
         super(UfsAPIError, self).__init__()
         self.method = method
         self.error_data = error_data
+        self.code = -1
+
+        for item in self.error_data:
+            if item.tag == 'Code':
+                self.code = int(item.text)
 
     def __str__(self):
         msg = 'Method: %s\n' % self.method
         for item in self.error_data:
-            msg += '    %s: %s\n' % (item.tag, item.text)
+            if item is not None:
+                msg += '    %s: %s\n' % (item.tag, item.text)
         return msg
 
 
