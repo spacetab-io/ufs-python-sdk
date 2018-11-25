@@ -14,7 +14,7 @@ def get_array(items, item_class):
 
 def get_item(item, item_class):
     if type(item) is not bool and item is not None:
-        return item_class(item)
+        return item_class(item) if type(item) is not int else int(float(item))
     return None
 
 
