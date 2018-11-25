@@ -658,13 +658,13 @@ class BlankRefund(object):
         self.ticket_identifier = get_item(json.get('ID'), int)
         self.previous_ticket_identifier = get_item(json.get('PrevID'), int)
         # Ставка НДС с тарифа (в процентах)
-        self.tariff_nds = get_item(json.get('STV1'), float)
+        self.tariff_nds = get_item(json.get('STV1'), int)
         # Ставка НДС с сервиса (в процентах)
-        self.service_nds = get_item(json.get('STV2'), float)
+        self.service_nds = get_item(json.get('STV2'), int)
         # Ставка НДС с комиссионного сбора (в процентах)
-        self.commission_nds = get_item(json.get('STV3'), float)
+        self.commission_nds = get_item(json.get('STV3'), int)
         # Ставка НДС с рекламационногосбора (сбор за возврат) (в процентах)
-        self.ads_nds = get_item(json.get('STV4'), float)
+        self.ads_nds = get_item(json.get('STV4'), int)
         # Сумма возвращаемого НДС со стоимости перевозки по ставке STV1
         self.returning_tariff_nds = get_money(json.get('ETF4'))
         # Сумма возвращаемого НДС со стоимости сервисных услуг по ставке STV2
