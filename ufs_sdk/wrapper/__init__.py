@@ -4,7 +4,7 @@ from ufs_sdk.utils import (get_array, get_item, get_bool_item, get_list_from_str
 
 class DateTime(object):
     def __init__(self, json):
-        self.date =кф json.get('Date')
+        self.date = json.get('Date')
         self.time_offset = json.get('TimeOffset')
         self.time_type = get_item(json.get('TimeType'), int)
 
