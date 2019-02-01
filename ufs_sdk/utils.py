@@ -52,14 +52,14 @@ def get_compare_datetime(date, time=None):
     
 def get_list_from_string(string, item_type):
     if string is not None and type(string) is str:
-        if ', ' in string:
-            return [item_type(item) for item in string.split(', ')]
-        elif ',' in string:
+        if ',' in string:
             return [item_type(item) for item in string.split(',')]
         elif '; ' in string:
             return [item_type(item) for item in string.split('; ')]
         elif ';' in string:
             return [item_type(item) for item in string.split(';')]
+        else:
+            return [item_type(item) for item in string.split(', ')]
     return None
 
 
