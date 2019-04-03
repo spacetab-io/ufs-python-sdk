@@ -10,7 +10,8 @@ from .wrapper.types import (TimeSw, Lang, TrainWithSeat, GrouppingType, JoinTrai
 from .wrapper import (Clarify, TimeTable, AdditionalInfoStationRoute, RouteParamsStationRoute, TrainList,
                       GeneralInformation, TrainCarListEx, Blank, DateTime, BlankUpdateOrderInfo, Order,
                       BlankElectronicRegistration, Food, BlankRefund, Cards, PassDoc, TicketInfo, Fee, Warnings,
-                      PrintPoints, OrderItemXml, OrderTransInfo)
+                      PrintPoints, OrderItemXml, OrderTransInfo, AdditionalInfoTrainRoute, TrainRouteData,
+                      RouteTimeTable)
 
 
 class API(object):
@@ -30,6 +31,12 @@ class API(object):
                                                         use_static_schedule=use_static_schedule,
                                                         suburban=suburban)
         return StationRoute(xml, json['S'])
+    
+    def train_route(self, day: int, month: int, from_: 'str or int', train: str, use_static_schedule: bool=False, suburban=None):
+        xml, json = self.__request_wrapper.make_request('TrainRoute', from_=from_, day=day, month=month,
+                                                        use_static_schedule=use_static_schedule,
+                                                        suburban=suburban, train=train)
+        return TrainRoute(xml, json['S'])
 
     def train_list(self, from_: 'str or int', to: 'str or int', day: int, month: int, advert_domain: str=None,
                    lang: str=Lang.RU, time_sw: TimeSw=TimeSw.NO_SW, time_from: int=TimeSw.TRAIN_DISPATCH, time_to: int=None,
@@ -165,6 +172,17 @@ class StationRoute(object):
         # УФС слишком крутые, им не надо описание данного поля. Нам, видимо, тоже...
         self.additional_info = get_item(json.get('Z1'), AdditionalInfoStationRoute)
         self.route_params = get_item(json.get('PP'), RouteParamsStationRoute)
+
+        self.xml = xml
+        self.json = json
+
+
+class TrainRoute(object):
+    def __init__(self, xml, json):
+        print(json)
+        self.additional_info = get_item(json.get('Z1'), AdditionalInfoTrainRoute)
+        self.route_params = get_item(json.get('NP'), RouteTimeTable)
+        self.routes = get_array(json.get('A'), TrainRouteData)
 
         self.xml = xml
         self.json = json

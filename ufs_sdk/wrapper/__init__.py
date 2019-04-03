@@ -360,6 +360,52 @@ class TrainTrainList(object):
         self.passenger_arrival_station = get_item(json.get('PassengerArrivalStation'), PassengerStation)
 
 
+class AdditionalInfoTrainRoute(object):
+    def __init__(self, json):
+        self.desc = json.get('S1')
+        self.train_number = json.get('N1')
+        self.departure_date = json.get('D1')
+        self.arrival_date = json.get('D2')
+
+
+class TrainRouteRouteInfo(object):
+    def __init__(self, json):
+        self.origin = json.get('C')[0]
+        self.destination = json.get('C')[1]
+
+
+class TrainRouteStationInfoStation(object):
+    def __init__(self, json):
+        self.code = get_item(json.get('Code'), int)
+        self.name = json.get('Name')
+        self.shortname = json.get('Shortname')
+        self.is_multi_station = get_bool_item(json.get('IsMultiStation'))
+        self.multi_station_code = get_item(json.get('MultiStationCode'), int)
+        self.alias = json.get('Alias')
+
+
+class TrainRouteStationInfo(object):
+    def __init__(self, json):
+        self.station_name = json.get('C')[0]
+        self.station_code = get_item(json.get('C1'), int)
+        self.arrival_date = get_item(json.get('D1'), str)
+        self.arrival_time = get_item(json.get('T6'), str)
+        self.stop_duration = get_item(json.get('T2'), int)
+        self.departure_time = get_item(json.get('T7'), str)
+        self.days_count = get_item(json.get('DayCount'), int)
+        self.distance = get_item(json.get('Distance'), int)
+        self.station_info = get_item(json.get('Station'), TrainRouteStationInfoStation)
+        self.local_departure_time = json.get('LocalDepartureTime')
+        self.local_arrival_time = json.get('LocalArrivalTime')
+
+
+class TrainRouteData(object):
+    def __init__(self, json):
+        self.desc = json.get('AA')
+        self.route_info = get_item(json.get('AP'), TrainRouteRouteInfo)
+        self.route_stops = get_array(json.get('AC'), TrainRouteStationInfo)
+        
+
 class TrainList(object):
     def __init__(self, json):
         # Общая информация по запросу

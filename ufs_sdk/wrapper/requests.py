@@ -23,7 +23,7 @@ REQUEST_PARAM_NAMES = {
     'n_born': 'Nborn'
 }
 # Называть переменные разными именами ? Не, не слышал
-ARRAYS = ['SC', 'N', 'C', 'CK', 'Blank', 'CO_SERVICES', 'LOYALTY_CARDS', 'Warning', 'EPrintPoint', 'OrderItem', 'ET', 'Passenger', 'Place', 'CV']
+ARRAYS = ['SC', 'A', 'AC', 'N', 'C', 'CK', 'Blank', 'CO_SERVICES', 'LOYALTY_CARDS', 'Warning', 'EPrintPoint', 'OrderItem', 'ET', 'Passenger', 'Place', 'CV']
 
 
 class RequestWrapper(object):

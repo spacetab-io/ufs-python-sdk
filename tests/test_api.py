@@ -22,26 +22,29 @@ class MockSession(object):
                     В первом случае возвращаем данные с уточнением станций
                     Во втором - инфу по конкретной станции
                 """
-        if 'TimeTable' in url:
-            if str('МОСКВА') in url:
-                url = 'TimeTableClarify'
-            else:
-                url = 'TimeTable'
-        elif 'Train' in url:
-            if str('АГАПОВКА') in url:
-                url = 'TrainListClarify'
-            elif str('КРЫМ') in url:
-                url = 'TrainListError'
-            else:
-                url = 'TrainList'
-        else:
-            url = url.replace('https://www.ufs-online.ru/webservices/Railway/Rest/Railway.svc/', '')
-            url = url[:url.index('?terminal')]
+        new_url = None
+        if 'TrainRoute' not in url:
+            if 'TimeTable' in url:
+                if str('МОСКВА') in url:
+                    new_url = 'TimeTableClarify'
+                else:
+                    new_url = 'TimeTable'
+            elif 'Train' in url:
+                if str('АГАПОВКА') in url:
+                    new_url = 'TrainListClarify'
+                elif str('КРЫМ') in url:
+                    new_url = 'TrainListError'
+                else:
+                    new_url = 'TrainList'
+
+        if new_url is None:
+            new_url = url.replace('https://www.ufs-online.ru/webservices/Railway/Rest/Railway.svc/', '')
+            new_url = new_url[:new_url.index('?terminal')]
 
 
-        self.text = open('tests/data/{}.xml'.format(url), 'r', encoding='utf8').read()
+        self.text = open('tests/data/{}.xml'.format(new_url), 'r', encoding='utf8').read()
         
-        if url == 'GetTicketBlank':
+        if new_url == 'GetTicketBlank':
             self.headers['Content-Type'] = 'text/html'
 
         return self
@@ -125,6 +128,40 @@ class TestAPI(unittest.TestCase):
         self.assertEquals(station_route.route_params.trains[0].travel_time, '00:01:00')
         self.assertEquals(station_route.route_params.trains[0].passenger_arrival_time, '00:01:00')
         self.assertEquals(station_route.route_params.trains[0].train_days_activity, 'ежедн.')
+
+    def test_train_route(self):
+        train_route = self.api.train_route(1, 1, 1, 1)
+
+        self.assertEquals(train_route.additional_info.desc, 'РАСПИСАНИЕ ДВИЖЕНИЯ ПОЕЗДА')
+        self.assertEquals(train_route.additional_info.train_number, '002А')
+        self.assertEquals(train_route.additional_info.departure_date, '10.04')
+        self.assertEquals(train_route.additional_info.arrival_date, '03.04')
+
+        self.assertEquals(train_route.route_params.origin, 'МОСКВА ОКТ')
+        self.assertEquals(train_route.route_params.destination, 'С-ПЕТЕР-ГЛ')
+        self.assertEquals(train_route.route_params.origin_code, 2006004)
+        self.assertEquals(train_route.route_params.destination_code, 2004001)
+
+        self.assertEquals(train_route.routes[0].desc, 'ОСНОВНОЙ МАРШРУТ')
+
+        self.assertEquals(train_route.routes[0].route_info.origin, 'МОСКВА ОКТ')
+        self.assertEquals(train_route.routes[0].route_info.destination, 'С-ПЕТЕР-ГЛ')
+
+        self.assertEquals(train_route.routes[0].route_stops[0].station_name, 'МОСКВА ОКТ')
+        self.assertEquals(train_route.routes[0].route_stops[0].station_code, 2006004)
+        self.assertEquals(train_route.routes[0].route_stops[0].arrival_date, None)
+        self.assertEquals(train_route.routes[0].route_stops[0].arrival_time, None)
+        self.assertEquals(train_route.routes[0].route_stops[0].stop_duration, 0)
+        self.assertEquals(train_route.routes[0].route_stops[0].days_count, None)
+        self.assertEquals(train_route.routes[0].route_stops[0].distance, 0)
+        self.assertEquals(train_route.routes[0].route_stops[0].local_departure_time, '23:55:00')
+        self.assertEquals(train_route.routes[0].route_stops[0].local_arrival_time, None)
+        self.assertEquals(train_route.routes[0].route_stops[0].station_info.name, 'МОСКВА ОКТЯБРЬСКАЯ')
+        self.assertEquals(train_route.routes[0].route_stops[0].station_info.shortname, None)
+        self.assertEquals(train_route.routes[0].route_stops[0].station_info.code, 2006004)
+        self.assertEquals(train_route.routes[0].route_stops[0].station_info.is_multi_station, False)
+        self.assertEquals(train_route.routes[0].route_stops[0].station_info.multi_station_code, 2000000)
+        self.assertEquals(train_route.routes[0].route_stops[0].station_info.alias, 'МОСКВА')
 
     def test_train_list_clarify(self):
         train_list = self.api.train_list('МОСКВА', 'АГАПОВКА', 24, 12)
@@ -273,47 +310,47 @@ class TestAPI(unittest.TestCase):
         self.assertEquals(car_list_ex.train.cars[0].is_two_place, False)
         self.assertEquals(car_list_ex.train.cars[0].is_four_place, False)
 
-        self.assertEquals(car_list_ex.train.cars[0].car_info.is_electronic_registration, True)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.car_num, 11)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.free_places, None)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.kupe_down_free_places, 12)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.kupe_up_free_places, 0)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.kupe_down_side_free_places, None)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.kupe_up_side_free_places, None)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.man_places, None)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.women_places, None)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.whole_kupe, 12)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.mixed_kupe, None)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.count_whole_kupe, 0)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.linens, None)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.free_places_list, ['1Ц', '2Ц', '3Ц', '4Ц', '5Ц', '6Ц', '11Ц', '12Ц', '13Ц', '14Ц', '15Ц', '16Ц'])
-        self.assertEquals(car_list_ex.train.cars[0].car_info.car_category, 'Л')
-        self.assertEquals(car_list_ex.train.cars[0].car_info.is_two_storey, False)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.route_type, None)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.table_free_places, None)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.playground_free_places, None)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.table_playground_free_places, None)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.animals_free_places, None)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.default_free_places, None)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.is_rp_selected, True)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.arrival, datetime.now().replace(month=8, day=21, hour=7, minute=20, second=0, microsecond=0))
-        self.assertEquals(car_list_ex.train.cars[0].car_info.place_numbers, None)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.folding_place_numbers, None)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.animals_place_numbers, None)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.mother_place_numbers, None)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.children_place_numbers, None)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.is_floating, False)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.place_type_number, None)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.subtype, None)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.up_place, None)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.down_place, None)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.down_side_place, None)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.up_side_place, None)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.down_near_wc_place, None)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.up_near_wc_place, None)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.down_side_near_wc_place, None)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.up_side_near_wc_place, None)
-        self.assertEquals(car_list_ex.train.cars[0].car_info.schema, 'TVER_2/4_V1')
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].is_electronic_registration, True)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].car_num, 11)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].free_places, None)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].kupe_down_free_places, 12)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].kupe_up_free_places, 0)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].kupe_down_side_free_places, None)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].kupe_up_side_free_places, None)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].man_places, None)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].women_places, None)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].whole_kupe, 12)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].mixed_kupe, None)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].count_whole_kupe, 0)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].linens, False)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].free_places_list, ['1Ц', '2Ц', '3Ц', '4Ц', '5Ц', '6Ц', '11Ц', '12Ц', '13Ц', '14Ц', '15Ц', '16Ц'])
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].car_category, 'Л')
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].is_two_storey, False)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].route_type, None)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].table_free_places, None)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].playground_free_places, None)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].table_playground_free_places, None)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].animals_free_places, None)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].default_free_places, None)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].is_rp_selected, True)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].arrival, datetime.now().replace(month=8, day=21, hour=7, minute=20, second=0, microsecond=0))
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].place_numbers, None)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].folding_place_numbers, None)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].animals_place_numbers, None)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].mother_place_numbers, None)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].children_place_numbers, None)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].is_floating, False)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].place_type_number, None)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].subtype, None)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].up_place, None)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].down_place, None)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].down_side_place, None)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].up_side_place, None)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].down_near_wc_place, None)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].up_near_wc_place, None)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].down_side_near_wc_place, None)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].up_side_near_wc_place, None)
+        self.assertEquals(car_list_ex.train.cars[0].car_info[0].schema, 'TVER_2/4_V1')
         self.assertEquals(car_list_ex.train.cars[0].is_discount, False)
         self.assertEquals(car_list_ex.train.cars[0].is_reservation, False)
         self.assertEquals(car_list_ex.train.cars[0].available_tariffs, [1, 9, 10])

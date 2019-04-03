@@ -1,43 +1,65 @@
 <UFS_RZhD_Gate>
- <System>
-   <CurrentTime timeOffset="+03:00">04.08.2016 16:30:33</CurrentTime>
- </System>
-  <S>
- <Z1>
-  <S1>РАСПИСАНИЕ ДВИЖЕНИЯ ПОЕЗДА</S1>
-  <N1>016А</N1>
-  <D1>02.02</D1>
-  <K>18</K>
-  <D2>01.02</D2>
- </Z1>
- <NP>
-  <C>МОСКВА ОКТ</C>
-  <C>МУРМАНСК</C>
-  <C1>2006004</C1>
-  <C2>2004200</C2>
- </NP>
- <A>
-  <AA>ОСНОВНОЙ МАРШРУТ</AA>
-  <AP>
-  <C>МОСКВА ОКТ</C>
-  <C>МУРМАНСК</C>
-  </AP>
-  <AC>
-   <C>МОСКВА</C>
-   <C1>2000000</C1>
-   <D1></D1>
-   <T6></T6>
-   <T2></T2>
-   <T7>00:41</T7>
-  </AC>
-  <AC>
-   <C>МУРМАНСК</C>
-   <C1>2004200</C1>
-   <D1>03.02</D1>
-   <T6>11:55</T6>
-   <T2></T2>
-   <T7></T7>
-  </AC>
- </A>
- </S>
+	<System>
+		<CurrentTime timeOffset="+03:00">03.04.2019 14:56:56</CurrentTime>
+	</System>
+	<S>
+		<Z1>
+			<S1>РАСПИСАНИЕ ДВИЖЕНИЯ ПОЕЗДА</S1>
+			<N1>002А</N1>
+			<NN>Красная Стрела</NN>
+			<CarrierName>ФПК</CarrierName>
+			<D1>10.04</D1>
+			<K></K>
+			<D2>03.04</D2>
+		</Z1>
+		<NP>
+			<C>МОСКВА ОКТ</C>
+			<C>С-ПЕТЕР-ГЛ</C>
+			<C1>2006004</C1>
+			<C2>2004001</C2>
+		</NP>
+		<A>
+			<AA>ОСНОВНОЙ МАРШРУТ</AA>
+			<AP>
+				<C>МОСКВА ОКТ</C>
+				<C>С-ПЕТЕР-ГЛ</C>
+			</AP>
+			<AC>
+				<Station>
+					<Code>2006004</Code>
+					<Alias>МОСКВА</Alias>
+					<Name>МОСКВА ОКТЯБРЬСКАЯ</Name>
+					<ShortName>МОСКВА ОКТ</ShortName>
+					<MultiStationCode>2000000</MultiStationCode>
+				</Station>
+				<C>МОСКВА ОКТ</C>
+				<C1>2006004</C1>
+				<D1></D1>
+				<T6></T6>
+				<T2>0000</T2>
+				<T7>23:55</T7>
+				<DayCount></DayCount>
+				<Distance>0</Distance>
+				<LocalDepartureTime>23:55:00</LocalDepartureTime>
+			</AC>
+			<AC>
+				<Station>
+					<Code>2004001</Code>
+					<Alias>САНКТ-ПЕТЕРБУРГ</Alias>
+					<Name>САНКТ-ПЕТЕРБУРГ-ГЛАВН.</Name>
+					<ShortName>С-ПЕТЕР-ГЛ</ShortName>
+					<MultiStationCode>2004000</MultiStationCode>
+				</Station>
+				<C>С-ПЕТЕР-ГЛ</C>
+				<C1>2004001</C1>
+				<D1>11.04</D1>
+				<T6>07:55</T6>
+				<T2>0000</T2>
+				<T7></T7>
+				<DayCount></DayCount>
+				<Distance>632</Distance>
+				<LocalArrivalTime>07:55:00</LocalArrivalTime>
+			</AC>
+		</A>
+	</S>
 </UFS_RZhD_Gate>
