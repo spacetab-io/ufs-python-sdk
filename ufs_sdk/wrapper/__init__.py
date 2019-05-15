@@ -533,7 +533,7 @@ class CarCarListEx(object):
         # Список услуг
         self.services = get_list_from_string(json.get('CO_SRV'), str)
         # Список услуг
-        self.services_info = get_list_from_string(json.get('CO_DESC'), str)
+        self.services_info = json.get('CO_DESC')
         # Государство/дорога принадлежности вагона
         self.country_way = json.get('W2')
         # Владелец вагона
